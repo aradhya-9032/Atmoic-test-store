@@ -1,0 +1,104 @@
+{% comment %}
+  Automotive Product Card
+  Shared card used by:
+  - Automotive Products
+  - Automotive Product Tabs
+
+  IMPORTANT: This is a snippet. Do not add a schema to this file.
+{% endcomment %}
+
+<article class="apc-card">
+  <div class="apc-card__image">
+
+    {% if section.settings.show_stock_badge %}
+      {% if product.available %}
+        <span class="apc-card__badge">
+          {{ section.settings.in_stock_text | default: 'IN STOCK' }}
+        </span>
+      {% else %}
+        <span class="apc-card__badge apc-card__badge--special">
+          {{ section.settings.special_order_text | default: 'SPECIAL ORDER' }}
+        </span>
+      {% endif %}
+    {% endif %}
+
+    {% if section.settings.show_wishlist %}
+      <button
+        type="button"
+        class="apc-card__wish"
+        aria-label="Add {{ product.title | escape }} to wishlist"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/>
+        </svg>
+      </button>
+    {% endif %}
+
+    <a
+      href="{{ product.url }}"
+      class="apc-card__image-link"
+      aria-label="{{ product.title | escape }}"
+    >
+      {% if product.featured_image %}
+        {{
+          product.featured_image
+          | image_url: width: 1000
+          | image_tag:
+            loading: 'lazy',
+            widths: '360,540,720,900,1000',
+            sizes: '(min-width: 1200px) 16vw, (min-width: 750px) 30vw, 50vw',
+            class: 'apc-card__img',
+            alt: product.featured_image.alt | default: product.title
+        }}
+      {% else %}
+        <div class="apc-card__placeholder">
+          {{ 'product-1' | placeholder_svg_tag }}
+        </div>
+      {% endif %}
+    </a>
+
+    {% if section.settings.show_hover_add_to_cart and product.available %}
+      <form
+        method="post"
+        action="{{ routes.cart_add_url }}"
+        class="apc-card__form"
+      >
+        <input
+          type="hidden"
+          name="id"
+          value="{{ product.selected_or_first_available_variant.id }}"
+        >
+        <input type="hidden" name="quantity" value="1">
+
+        <button type="submit" class="apc-card__cart">
+          {{ section.settings.add_to_cart_text | default: '+ Add to cart' }}
+        </button>
+      </form>
+    {% endif %}
+
+  </div>
+
+  <div class="apc-card__content">
+
+    {% if section.settings.show_vendor and product.vendor != blank %}
+      <div class="apc-card__vendor">
+        {{ product.vendor }}
+      </div>
+    {% endif %}
+
+    <a href="{{ product.url }}" class="apc-card__title">
+      {{ product.title }}
+    </a>
+
+    {% if section.settings.show_price %}
+      <div class="apc-card__price">
+        {{ product.price | money }}
+
+        {% if product.compare_at_price > product.price %}
+          <del>{{ product.compare_at_price | money }}</del>
+        {% endif %}
+      </div>
+    {% endif %}
+
+  </div>
+</article>

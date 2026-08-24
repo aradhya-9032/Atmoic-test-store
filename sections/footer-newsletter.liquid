@@ -1,0 +1,273 @@
+<section class="atomic-footer-newsletter">
+  <div
+    class="atomic-newsletter-background"
+    style="
+      background-image:
+        linear-gradient(
+          rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }}),
+          rgba(0,0,0,{{ section.settings.overlay_opacity | divided_by: 100.0 }})
+        ),
+        url('{{ section.settings.background_image | image_url: width: 2000 }}');
+    "
+  >
+    <div class="atomic-newsletter-box">
+
+      {% if section.settings.heading != blank %}
+        <h2>
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.description != blank %}
+        <div class="atomic-newsletter-description">
+          {{ section.settings.description }}
+        </div>
+      {% endif %}
+
+      {% form 'customer', class: 'atomic-newsletter-form' %}
+
+        <input
+          type="hidden"
+          name="contact[tags]"
+          value="newsletter"
+        >
+
+        <input
+          type="email"
+          name="contact[email]"
+          placeholder="{{ section.settings.email_placeholder }}"
+          required
+        >
+
+        <button type="submit">
+          {{ section.settings.button_text }}
+        </button>
+
+      {% endform %}
+
+      {% if form.posted_successfully? %}
+        <p class="atomic-newsletter-success">
+          {{ section.settings.success_message }}
+        </p>
+      {% endif %}
+
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+
+.atomic-footer-newsletter {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.atomic-newsletter-background {
+  min-height: 290px;
+
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 35px 20px;
+
+  box-sizing: border-box;
+}
+
+.atomic-newsletter-box {
+  width: 350px;
+  max-width: 100%;
+
+  background: #ffffff;
+
+  padding: 38px 35px;
+
+  box-sizing: border-box;
+
+  text-align: center;
+}
+
+.atomic-newsletter-box h2 {
+  margin: 0 0 24px;
+
+  color: #111111 !important;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  line-height: 1.4;
+
+  text-transform: uppercase;
+}
+
+.atomic-newsletter-description {
+  margin-bottom: 24px;
+
+  color: #111111;
+
+  font-size: 12px;
+
+  line-height: 1.7;
+}
+
+.atomic-newsletter-form {
+  display: flex;
+
+  width: 100%;
+
+  gap: 10px;
+}
+
+.atomic-newsletter-form input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 40px;
+
+  padding: 0 12px;
+
+  border: 1px solid #dddddd;
+
+  background: #ffffff;
+
+  color: #111111;
+
+  font-size: 12px;
+
+  box-sizing: border-box;
+}
+
+.atomic-newsletter-form input::placeholder {
+  color: #777777;
+}
+
+.atomic-newsletter-form button {
+  width: 110px;
+
+  height: 40px;
+
+  border: none;
+
+  background: #e3262e;
+
+  color: #ffffff;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  cursor: pointer;
+}
+
+.atomic-newsletter-form button:hover {
+  background: #c91f26;
+}
+
+.atomic-newsletter-success {
+  margin: 15px 0 0;
+
+  color: #16803c;
+
+  font-size: 12px;
+}
+
+@media screen and (max-width: 600px) {
+
+  .atomic-newsletter-background {
+    min-height: 320px;
+
+    padding: 25px 15px;
+  }
+
+  .atomic-newsletter-box {
+    width: 100%;
+
+    padding: 30px 20px;
+  }
+
+  .atomic-newsletter-form {
+    flex-direction: column;
+  }
+
+  .atomic-newsletter-form button {
+    width: 100%;
+  }
+
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "Footer Newsletter",
+  "tag": "section",
+  "class": "atomic-footer-newsletter-section",
+
+  "enabled_on": {
+    "groups": ["footer"]
+  },
+
+  "settings": [
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Newsletter background image"
+    },
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Subscribe to our newsletter"
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Promotions, new products arrivals and latest releases. Sales and discounts. Directly to your inbox.</p>"
+    },
+    {
+      "type": "text",
+      "id": "email_placeholder",
+      "label": "Email placeholder",
+      "default": "Your e-mail"
+    },
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Subscribe"
+    },
+    {
+      "type": "text",
+      "id": "success_message",
+      "label": "Success message",
+      "default": "Thank you for subscribing!"
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "Footer Newsletter",
+      "category": "Footer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,589 @@
+{% comment %}
+  Automotive Products
+  Main featured product grid.
+  Uses the shared automotive-product-card snippet.
+{% endcomment %}
+
+<section
+  id="AutomotiveFeaturedProducts-{{ section.id }}"
+  class="afp"
+  style="
+    --afp-bg: {{ section.settings.background_color }};
+    --afp-text: {{ section.settings.text_color }};
+    --afp-gap: {{ section.settings.card_gap }}px;
+    --afp-top: {{ section.settings.padding_top }}px;
+    --afp-bottom: {{ section.settings.padding_bottom }}px;
+    --apc-columns: {{ section.settings.products_per_row }};
+    --apc-gap: {{ section.settings.card_gap }}px;
+    --apc-text: {{ section.settings.text_color }};
+    --apc-card-bg: {{ section.settings.card_background }};
+    --apc-badge-bg: {{ section.settings.badge_background }};
+    --apc-badge-text: {{ section.settings.badge_text_color }};
+  "
+>
+  <div class="afp__inner">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="afp__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    {% assign collection = section.settings.collection %}
+
+    {% if collection != blank and collection.products_count > 0 %}
+
+      <div class="afp__grid">
+        {% for product in collection.products limit: section.settings.products_to_show %}
+          {% render 'automotive-product-card',
+            product: product,
+            section: section
+          %}
+        {% endfor %}
+      </div>
+
+      {% if section.settings.show_view_all %}
+        <div class="afp__view-all">
+          <a href="{{ collection.url }}">
+            {{ section.settings.view_all_text }}
+          </a>
+        </div>
+      {% endif %}
+
+    {% elsif collection != blank %}
+
+      <div class="afp__empty">
+        {{ section.settings.empty_collection_text }}
+      </div>
+
+    {% elsif request.design_mode %}
+
+      <div class="afp__editor-message">
+        Select a collection from the Theme Editor.
+      </div>
+
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #AutomotiveFeaturedProducts-{{ section.id }}.afp {
+    width: 100%;
+    background: var(--afp-bg);
+    color: var(--afp-text);
+    padding: var(--afp-top) 0 var(--afp-bottom);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} *,
+  #AutomotiveFeaturedProducts-{{ section.id }} *::before,
+  #AutomotiveFeaturedProducts-{{ section.id }} *::after {
+    box-sizing: border-box;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__inner {
+    width: 100%;
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 0 48px;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__heading {
+    margin: 0 0 34px;
+    text-align: center;
+    font-size: 26px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: var(--afp-text);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__grid {
+    display: grid;
+    grid-template-columns: repeat(var(--apc-columns), minmax(0, 1fr));
+    column-gap: var(--afp-gap);
+    row-gap: 55px;
+    width: 100%;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card {
+    position: relative;
+    min-width: 0;
+    background: var(--apc-card-bg);
+    color: var(--apc-text);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__image {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #fff;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__image-link {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    object-fit: contain;
+    transition: transform .35s ease;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card:hover .apc-card__img {
+    transform: scale(1.04);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__placeholder {
+    width: 100%;
+    height: 100%;
+    display: grid;
+    place-items: center;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__placeholder svg {
+    width: 70%;
+    height: 70%;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__badge {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    z-index: 5;
+    padding: 5px 9px;
+    background: var(--apc-badge-bg);
+    color: var(--apc-badge-text);
+    font-size: 11px;
+    line-height: 1;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__badge--special {
+    background: #f2f2f2;
+    color: #111;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish {
+    position: absolute;
+    top: 7px;
+    right: 7px;
+    z-index: 7;
+    width: 36px;
+    height: 36px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: rgba(255,255,255,.92);
+    color: #333;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish svg {
+    width: 21px;
+    height: 21px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.5;
+    transition: transform .2s ease, fill .2s ease;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish:hover svg {
+    transform: scale(1.1);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish.is-added {
+    color: #e21d2d;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish.is-added svg {
+    fill: currentColor;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__form {
+    position: absolute;
+    left: 50%;
+    bottom: 12px;
+    z-index: 6;
+    width: calc(100% - 24px);
+    margin: 0;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate(-50%, 14px);
+    transition: opacity .25s ease, transform .25s ease, visibility .25s ease;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card:hover .apc-card__form {
+    opacity: 1;
+    visibility: visible;
+    transform: translate(-50%, 0);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__cart {
+    width: 100%;
+    min-height: 54px;
+    border: 1px solid #ddd;
+    background: rgba(255,255,255,.97);
+    color: #282828;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background .2s ease, color .2s ease;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__cart:hover {
+    background: #111;
+    color: #fff;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__content {
+    padding: 15px 0 0;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__vendor {
+    margin-bottom: 7px;
+    font-size: 12px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__title {
+    display: block;
+    color: inherit;
+    font-size: 15px;
+    line-height: 1.45;
+    text-decoration: none;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__title:hover {
+    text-decoration: underline;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__price {
+    margin-top: 10px;
+    font-size: 16px;
+    line-height: 1.3;
+    font-weight: 700;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__price del {
+    margin-left: 7px;
+    color: #777;
+    font-size: 13px;
+    font-weight: 400;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__view-all {
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__view-all a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 110px;
+    min-height: 42px;
+    padding: 0 24px;
+    background: #e52b20;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-decoration: none;
+    transition: background .2s ease, transform .2s ease;
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__view-all a:hover {
+    background: #111;
+    transform: translateY(-2px);
+  }
+
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__empty,
+  #AutomotiveFeaturedProducts-{{ section.id }} .afp__editor-message {
+    padding: 45px 20px;
+    border: 1px dashed #ddd;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  @media (max-width: 1100px) {
+    #AutomotiveFeaturedProducts-{{ section.id }} .afp__inner {
+      padding: 0 28px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .afp__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      column-gap: 20px;
+      row-gap: 42px;
+    }
+  }
+
+  @media (max-width: 750px) {
+    #AutomotiveFeaturedProducts-{{ section.id }} .afp__inner {
+      padding: 0 16px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .afp__heading {
+      font-size: 21px;
+      margin-bottom: 24px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .afp__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      column-gap: 14px;
+      row-gap: 30px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__content {
+      padding-top: 10px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__vendor {
+      font-size: 10px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__title {
+      font-size: 12px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__price {
+      font-size: 13px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__badge {
+      top: 6px;
+      left: 6px;
+      padding: 4px 6px;
+      font-size: 9px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish {
+      top: 4px;
+      right: 4px;
+      width: 30px;
+      height: 30px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__wish svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .apc-card__cart {
+      min-height: 44px;
+      font-size: 13px;
+    }
+
+    #AutomotiveFeaturedProducts-{{ section.id }} .afp__view-all {
+      margin-top: 35px;
+    }
+  }
+</style>
+
+<script>
+(() => {
+  const section = document.getElementById('AutomotiveFeaturedProducts-{{ section.id }}');
+  if (!section || section.dataset.initialized === 'true') return;
+  section.dataset.initialized = 'true';
+
+  section.querySelectorAll('.apc-card__wish').forEach((button) => {
+    button.addEventListener('click', (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const added = button.classList.toggle('is-added');
+      button.setAttribute(
+        'aria-label',
+        added ? 'Remove from wishlist' : 'Add to wishlist'
+      );
+    });
+  });
+})();
+</script>
+
+{% schema %}
+{
+  "name": "Automotive Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "FEATURED PRODUCTS"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Product collection"
+    },
+    {
+      "type": "range",
+      "id": "products_to_show",
+      "label": "Products to show",
+      "min": 2,
+      "max": 24,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "select",
+      "id": "products_per_row",
+      "label": "Products per row",
+      "options": [
+        {"value": "2", "label": "2"},
+        {"value": "3", "label": "3"},
+        {"value": "4", "label": "4"},
+        {"value": "5", "label": "5"},
+        {"value": "6", "label": "6"}
+      ],
+      "default": "6"
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 8,
+      "max": 60,
+      "step": 2,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_price",
+      "label": "Show price",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock_badge",
+      "label": "Show stock badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "in_stock_text",
+      "label": "In stock text",
+      "default": "IN STOCK"
+    },
+    {
+      "type": "text",
+      "id": "special_order_text",
+      "label": "Special order text",
+      "default": "SPECIAL ORDER"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_hover_add_to_cart",
+      "label": "Show hover Add to Cart",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_to_cart_text",
+      "label": "Add to cart text",
+      "default": "+ Add to cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_view_all",
+      "label": "Show View All button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "view_all_text",
+      "label": "View All button text",
+      "default": "VIEW ALL"
+    },
+    {
+      "type": "text",
+      "id": "empty_collection_text",
+      "label": "Empty collection message",
+      "default": "No products available in this collection."
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "badge_background",
+      "label": "Stock badge background",
+      "default": "#008b68"
+    },
+    {
+      "type": "color",
+      "id": "badge_text_color",
+      "label": "Stock badge text color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 30
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 120,
+      "step": 2,
+      "unit": "px",
+      "default": 40
+    }
+  ],
+  "presets": [
+    {
+      "name": "Automotive Products"
+    }
+  ]
+}
+{% endschema %}

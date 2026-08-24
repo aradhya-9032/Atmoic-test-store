@@ -1,0 +1,245 @@
+<section
+  class="honda-civic-collection"
+  style="
+    --honda-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --honda-button: {{ section.settings.button_color }};
+    --honda-button-text: {{ section.settings.button_text_color }};
+  "
+>
+  <div class="honda-civic-collection__image">
+
+    {% if section.settings.image != blank %}
+      {{
+        section.settings.image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          class: 'honda-civic-collection__img'
+      }}
+    {% endif %}
+
+    <div class="honda-civic-collection__overlay"></div>
+
+    <div class="honda-civic-collection__content">
+
+      {% if section.settings.heading != blank %}
+        <h2>
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+      {% if section.settings.button_text != blank %}
+        <a
+          href="{{ section.settings.button_link | default: '#' }}"
+          class="honda-civic-collection__button"
+        >
+          {{ section.settings.button_text }}
+        </a>
+      {% endif %}
+
+    </div>
+
+  </div>
+</section>
+
+
+{% stylesheet %}
+
+.honda-civic-collection {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.honda-civic-collection__image {
+  position: relative;
+  width: 100%;
+  height: 390px;
+  overflow: hidden;
+}
+
+.honda-civic-collection__img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* DARK OVERLAY */
+
+.honda-civic-collection__overlay {
+  position: absolute;
+  inset: 0;
+
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.05),
+    rgba(5, 15, 28, var(--honda-overlay))
+  );
+}
+
+
+/* CONTENT */
+
+.honda-civic-collection__content {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-end;
+
+  padding: 0 20px 43px;
+
+  text-align: center;
+}
+
+.honda-civic-collection__content h2 {
+  margin: 0 0 25px;
+  font-family:"Russo One", san serif;
+  color: #ffffff;
+
+  font-size: 42px;
+  line-height: 1.15;
+
+  font-weight: 800;
+
+  text-transform: none;
+
+  letter-spacing: 0;
+}
+
+
+/* BUTTON */
+
+.honda-civic-collection__button {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-width: 168px;
+  min-height: 40px;
+
+  padding: 12px 25px;
+
+  background: var(--honda-button);
+  color: var(--honda-button-text);
+
+  text-decoration: none;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  text-transform: uppercase;
+
+  transition: transform .2s ease, opacity .2s ease;
+}
+
+.honda-civic-collection__button:hover {
+  transform: translateY(-2px);
+  opacity: .9;
+}
+
+
+/* MOBILE */
+
+@media screen and (max-width: 749px) {
+
+  .honda-civic-collection__image {
+    height: 420px;
+  }
+
+  .honda-civic-collection__content {
+    padding: 0 20px 35px;
+  }
+
+  .honda-civic-collection__content h2 {
+    font-size: 30px;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+
+{
+  "name": "Honda Civic Collection",
+
+  "tag": "section",
+
+  "class": "honda-civic-collection-section",
+
+  "settings": [
+
+    {
+      "type": "image_picker",
+      "id": "image",
+      "label": "Background image"
+    },
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collections for Honda Civic Type R (FL5)"
+    },
+
+    {
+      "type": "text",
+      "id": "button_text",
+      "label": "Button text",
+      "default": "Shop the collection"
+    },
+
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button link"
+    },
+
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Dark overlay",
+      "min": 0,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 55
+    },
+
+    {
+      "type": "color",
+      "id": "button_color",
+      "label": "Button color",
+      "default": "#e3261b"
+    },
+
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Button text color",
+      "default": "#ffffff"
+    }
+
+  ],
+
+  "presets": [
+    {
+      "name": "Honda Civic Collection"
+    }
+  ]
+
+}
+
+{% endschema %}

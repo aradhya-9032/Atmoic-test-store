@@ -1,0 +1,402 @@
+<section
+  class="porsche-collections"
+  style="
+    --section-height: {{ section.settings.section_height }}px;
+    --overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+  "
+>
+  {% if section.settings.background_image != blank %}
+    <div
+      class="porsche-collections__background"
+      style="background-image: url('{{ section.settings.background_image | image_url: width: 2400 }}');"
+    ></div>
+  {% endif %}
+
+  <div class="porsche-collections__overlay"></div>
+
+  <div class="porsche-collections__content">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="porsche-collections__heading">
+        {{ section.settings.heading }}
+      </h2>
+    {% endif %}
+
+    <div class="porsche-collections__grid">
+
+      {% for block in section.blocks %}
+        <a
+          href="{{ block.settings.link }}"
+          class="porsche-collections__card"
+          {{ block.shopify_attributes }}
+        >
+
+          <span class="porsche-collections__red-square"></span>
+
+          <h3 class="porsche-collections__title">
+            {{ block.settings.title }}
+          </h3>
+
+          <span class="porsche-collections__link">
+            {{ block.settings.link_text }}
+            <span class="arrow"> &gt; </span>
+          </span>
+
+        </a>
+      {% endfor %}
+
+    </div>
+
+  </div>
+</section>
+
+{% stylesheet %}
+
+.porsche-collections {
+  position: relative;
+  width: 100%;
+  height: var(--section-height);
+  min-height: 500px;
+  overflow: hidden;
+  color: #fff;
+}
+
+.porsche-collections__background {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.porsche-collections__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background: rgba(0, 0, 0, var(--overlay-opacity));
+}
+
+.porsche-collections__content {
+  position: relative;
+  z-index: 2;
+
+  width: 100%;
+  height: 100%;
+
+  padding: 65px 5%;
+  box-sizing: border-box;
+}
+
+.porsche-collections__heading {
+  margin: 0 0 32px;
+  font-family:"Russo One", san serif;
+  color: #fff;
+
+  font-size: 42px;
+  line-height: 1.1;
+  font-weight: 800;
+
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.porsche-collections__grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 310px);
+
+  gap: 15px;
+
+  width: 625px;
+}
+
+.porsche-collections__card {
+  position: relative;
+
+  display: block;
+
+  min-height: 145px;
+
+  padding: 42px 18px 18px;
+
+  box-sizing: border-box;
+
+  background: rgba(30, 30, 30, 0.45);
+
+  color: #fff;
+
+  text-decoration: none;
+
+  transition:
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.porsche-collections__card:hover {
+  background: rgba(20, 20, 20, 0.72);
+
+  transform: translateY(-2px);
+}
+
+.porsche-collections__red-square {
+  position: absolute;
+
+  top: 18px;
+  left: 18px;
+
+  width: 13px;
+  height: 13px;
+
+  background: #ff1f27;
+}
+
+.porsche-collections__title {
+  margin: 0 0 12px;
+
+  color: #fff;
+
+  font-size: 21px;
+  line-height: 1.25;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.porsche-collections__link {
+  display: inline-block;
+
+  color: #fff;
+
+  font-size: 12px;
+  line-height: 1;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  text-decoration: underline;
+}
+
+.porsche-collections__link .arrow {
+  margin-left: 4px;
+
+  text-decoration: none;
+}
+
+.porsche-collections__card:hover .porsche-collections__link {
+  color: #ff1f27;
+}
+
+
+/* =========================
+   TABLET
+   ========================= */
+
+@media screen and (max-width: 999px) {
+
+  .porsche-collections__content {
+    padding: 50px 30px;
+  }
+
+  .porsche-collections__heading {
+    font-size: 36px;
+    font-family:"Russo One", san serif;
+  }
+
+  .porsche-collections__grid {
+    grid-template-columns: repeat(2, minmax(240px, 310px));
+
+    width: 100%;
+    max-width: 625px;
+  }
+
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media screen and (max-width: 749px) {
+
+  .porsche-collections {
+    height: auto;
+    min-height: auto;
+  }
+
+  .porsche-collections__content {
+    height: auto;
+
+    padding: 40px 20px 50px;
+  }
+
+  .porsche-collections__heading {
+    margin-bottom: 25px;
+
+    font-size: 30px;
+  }
+
+  .porsche-collections__grid {
+    grid-template-columns: 1fr;
+
+    width: 100%;
+
+    gap: 12px;
+  }
+
+  .porsche-collections__card {
+    min-height: 130px;
+  }
+
+  .porsche-collections__title {
+    font-size: 18px;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+
+{
+  "name": "Porsche Collections",
+
+  "tag": "section",
+
+  "class": "porsche-collections-section",
+
+  "settings": [
+
+    {
+      "type": "image_picker",
+      "id": "background_image",
+      "label": "Background image"
+    },
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collections for Porsche 911"
+    },
+
+    {
+      "type": "range",
+      "id": "section_height",
+      "label": "Section height",
+      "min": 400,
+      "max": 900,
+      "step": 10,
+      "unit": "px",
+      "default": 650
+    },
+
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay",
+      "min": 0,
+      "max": 70,
+      "step": 5,
+      "unit": "%",
+      "default": 15
+    }
+
+  ],
+
+  "blocks": [
+
+    {
+      "type": "collection",
+
+      "name": "Collection",
+
+      "settings": [
+
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection title",
+          "default": "Porsche 911 GT3 (997)"
+        },
+
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection link"
+        },
+
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "Explore collection"
+        }
+
+      ]
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "Porsche Collections",
+
+      "blocks": [
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (997)"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (997)"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (991)"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (991)"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (992)"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (992)"
+          }
+        }
+
+      ]
+    }
+
+  ]
+
+}
+
+{% endschema %}

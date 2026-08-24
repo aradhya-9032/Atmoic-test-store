@@ -1,0 +1,479 @@
+<section
+  id="VehicleFinder-{{ section.id }}"
+  class="vehicle-finder"
+  style="
+    --vf-bg: {{ section.settings.background_color }};
+    --vf-text: {{ section.settings.text_color }};
+    --vf-field-bg: {{ section.settings.field_background }};
+    --vf-field-border: {{ section.settings.field_border }};
+    --vf-search-bg: {{ section.settings.search_background }};
+    --vf-search-text: {{ section.settings.search_text }};
+    --vf-clear-bg: {{ section.settings.clear_background }};
+    --vf-clear-text: {{ section.settings.clear_text }};
+    --vf-padding-top: {{ section.settings.padding_top }}px;
+    --vf-padding-bottom: {{ section.settings.padding_bottom }}px;
+  "
+>
+  <div class="vehicle-finder__inner">
+
+    {% if section.settings.heading != blank %}
+      <h2 class="vehicle-finder__heading">{{ section.settings.heading }}</h2>
+    {% endif %}
+
+    <div class="vehicle-finder__form">
+
+      <div class="vehicle-finder__field">
+        <label for="VF-Year-{{ section.id }}">{{ section.settings.year_label }}</label>
+        <select id="VF-Year-{{ section.id }}" class="vf-select" data-vf-year>
+          <option value="">{{ section.settings.year_placeholder }}</option>
+          {% for year in (2008..2026) reversed %}
+            <option value="{{ year }}">{{ year }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="vehicle-finder__field">
+        <label for="VF-Make-{{ section.id }}">{{ section.settings.make_label }}</label>
+        <select id="VF-Make-{{ section.id }}" class="vf-select" data-vf-make disabled>
+          <option value="">{{ section.settings.make_placeholder }}</option>
+          <option value="BMW">BMW</option>
+          <option value="MITSUBISHI">MITSUBISHI</option>
+          <option value="NISSAN">NISSAN</option>
+          <option value="PORSCHE">PORSCHE</option>
+          <option value="SUBARU">SUBARU</option>
+        </select>
+      </div>
+
+      <div class="vehicle-finder__field">
+        <label for="VF-Model-{{ section.id }}">{{ section.settings.model_label }}</label>
+        <select id="VF-Model-{{ section.id }}" class="vf-select" data-vf-model disabled>
+          <option value="">{{ section.settings.model_placeholder }}</option>
+        </select>
+      </div>
+
+      <button type="button" class="vehicle-finder__search" data-vf-search disabled>
+        {{ section.settings.search_label }}
+      </button>
+
+      <button type="button" class="vehicle-finder__clear" data-vf-clear>
+        {{ section.settings.clear_label }}
+      </button>
+
+    </div>
+
+    <p class="vehicle-finder__message" data-vf-message hidden></p>
+  </div>
+</section>
+
+{% stylesheet %}
+  .vehicle-finder {
+    width: 100%;
+    padding-top: var(--vf-padding-top);
+    padding-bottom: var(--vf-padding-bottom);
+    background: var(--vf-bg);
+    color: var(--vf-text);
+  }
+
+  .vehicle-finder *,
+  .vehicle-finder *::before,
+  .vehicle-finder *::after {
+    box-sizing: border-box;
+  }
+
+  .vehicle-finder__inner {
+    width: 100%;
+    max-width: 1900px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  .vehicle-finder__heading {
+    font-family:"Russo One", san serif;
+    margin: 0 0 26px;
+    text-align: center;
+    font-size: 22px;
+    line-height: 1.2;
+    font-weight: 700;
+    text-transform: uppercase;
+  }
+
+  .vehicle-finder__form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 0.62fr 0.62fr;
+    gap: 38px;
+    align-items: end;
+  }
+
+  .vehicle-finder__field label {
+    display: block;
+    margin: 0 0 9px;
+    font-size: 16px;
+    line-height: 1.2;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+
+  .vf-select {
+    display: block;
+    width: 100%;
+    height: 47px;
+    padding: 0 42px 0 18px;
+    border: 1px solid var(--vf-field-border);
+    border-radius: 0;
+    background: var(--vf-field-bg);
+    color: var(--vf-text);
+    font: inherit;
+    font-size: 17px;
+    cursor: pointer;
+  }
+
+  .vf-select:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .vehicle-finder__search,
+  .vehicle-finder__clear {
+    width: 100%;
+    height: 47px;
+    border-radius: 0;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .vehicle-finder__search {
+    border: 1px solid var(--vf-search-bg);
+    background: var(--vf-search-bg);
+    color: var(--vf-search-text);
+  }
+
+  .vehicle-finder__search:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+
+  .vehicle-finder__clear {
+    border: 1px solid var(--vf-field-border);
+    background: var(--vf-clear-bg);
+    color: var(--vf-clear-text);
+  }
+
+  .vehicle-finder__message {
+    margin: 14px 0 0;
+    text-align: center;
+    font-size: 14px;
+  }
+
+  @media screen and (max-width: 900px) {
+    .vehicle-finder__form {
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+  }
+
+  @media screen and (max-width: 600px) {
+    .vehicle-finder__inner {
+      padding: 0 16px;
+    }
+
+    .vehicle-finder__heading {
+      font-size: 18px;
+    }
+
+    .vehicle-finder__form {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
+{% endstylesheet %}
+
+<script>
+  (() => {
+    const section = document.getElementById('VehicleFinder-{{ section.id }}');
+    if (!section || section.dataset.initialized === 'true') return;
+
+    section.dataset.initialized = 'true';
+
+    const year = section.querySelector('[data-vf-year]');
+    const make = section.querySelector('[data-vf-make]');
+    const model = section.querySelector('[data-vf-model]');
+    const search = section.querySelector('[data-vf-search]');
+    const clear = section.querySelector('[data-vf-clear]');
+    const message = section.querySelector('[data-vf-message]');
+
+    /*
+      Vehicle data confirmed from the supplied screenshots.
+
+      The screenshots show these makes:
+      BMW, MITSUBISHI, NISSAN, PORSCHE, SUBARU
+
+      The screenshots show these BMW models:
+      M3 (E90)
+      M3 (E92)
+      M3 LCI (E90)
+
+      More model lists can be added here once the client's remaining
+      dropdown values are supplied.
+    */
+    const vehicleData = {
+      BMW: [
+        'M3 (E90)',
+        'M3 (E92)',
+        'M3 LCI (E90)'
+      ],
+
+      MITSUBISHI: [],
+      NISSAN: [],
+      PORSCHE: [],
+      SUBARU: []
+    };
+
+    const setDisabled = (element, disabled) => {
+      element.disabled = disabled;
+    };
+
+    const resetModels = () => {
+      model.innerHTML = '';
+
+      const option = document.createElement('option');
+      option.value = '';
+      option.textContent = '{{ section.settings.model_placeholder }}';
+
+      model.appendChild(option);
+    };
+
+    const hideMessage = () => {
+      message.hidden = true;
+      message.textContent = '';
+    };
+
+    /* YEAR -> ENABLE MAKE */
+    year.addEventListener('change', () => {
+      const hasYear = Boolean(year.value);
+
+      setDisabled(make, !hasYear);
+      setDisabled(model, true);
+      setDisabled(search, true);
+
+      make.value = '';
+      resetModels();
+      hideMessage();
+    });
+
+    /* MAKE -> ENABLE MODEL */
+    make.addEventListener('change', () => {
+      const selectedMake = make.value;
+
+      resetModels();
+      setDisabled(model, true);
+      setDisabled(search, true);
+      hideMessage();
+
+      if (!selectedMake) return;
+
+      const models = vehicleData[selectedMake] || [];
+
+      if (models.length > 0) {
+        models.forEach((modelName) => {
+          const option = document.createElement('option');
+          option.value = modelName;
+          option.textContent = modelName;
+          model.appendChild(option);
+        });
+
+        setDisabled(model, false);
+      } else {
+        /*
+          Keep the third dropdown disabled until actual model data
+          is available. This prevents the client from selecting
+          invalid/fake vehicle models.
+        */
+        const option = document.createElement('option');
+        option.value = '';
+        option.textContent = 'No models available';
+        model.appendChild(option);
+      }
+    });
+
+    /* MODEL -> ENABLE SEARCH */
+    model.addEventListener('change', () => {
+      setDisabled(search, !model.value);
+      hideMessage();
+    });
+
+    /* SEARCH */
+    search.addEventListener('click', () => {
+      if (!year.value || !make.value || !model.value) return;
+
+      const params = new URLSearchParams({
+        year: year.value,
+        make: make.value,
+        model: model.value
+      });
+
+      /*
+        Final product-fitment URL can be connected here.
+
+        Example:
+        window.location.href = `/search?${params.toString()}`;
+
+        For now we show the selected vehicle so the UI logic can
+        be tested without inventing the client's final URL.
+      */
+      message.hidden = false;
+      message.textContent =
+        `Selected vehicle: ${year.value} ${make.value} ${model.value}`;
+    });
+
+    /* CLEAR */
+    clear.addEventListener('click', () => {
+      year.value = '';
+      make.value = '';
+      resetModels();
+
+      setDisabled(make, true);
+      setDisabled(model, true);
+      setDisabled(search, true);
+
+      hideMessage();
+    });
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Vehicle Finder",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "CHOOSE YOUR CAR FOR A PERFECT FIT"
+    },
+    {
+      "type": "text",
+      "id": "year_label",
+      "label": "Year label",
+      "default": "YEAR"
+    },
+    {
+      "type": "text",
+      "id": "make_label",
+      "label": "Make label",
+      "default": "MAKE"
+    },
+    {
+      "type": "text",
+      "id": "model_label",
+      "label": "Model label",
+      "default": "MODEL"
+    },
+    {
+      "type": "text",
+      "id": "year_placeholder",
+      "label": "Year placeholder",
+      "default": "Select Year"
+    },
+    {
+      "type": "text",
+      "id": "make_placeholder",
+      "label": "Make placeholder",
+      "default": "Select Make"
+    },
+    {
+      "type": "text",
+      "id": "model_placeholder",
+      "label": "Model placeholder",
+      "default": "Select Model"
+    },
+    {
+      "type": "text",
+      "id": "search_label",
+      "label": "Search button label",
+      "default": "SEARCH"
+    },
+    {
+      "type": "text",
+      "id": "clear_label",
+      "label": "Clear button label",
+      "default": "CLEAR"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Background",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111111"
+    },
+    {
+      "type": "color",
+      "id": "field_background",
+      "label": "Field background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "field_border",
+      "label": "Field border",
+      "default": "#999999"
+    },
+    {
+      "type": "color",
+      "id": "search_background",
+      "label": "Search button background",
+      "default": "#e62b20"
+    },
+    {
+      "type": "color",
+      "id": "search_text",
+      "label": "Search button text",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "clear_background",
+      "label": "Clear button background",
+      "default": "#eeeeee"
+    },
+    {
+      "type": "color",
+      "id": "clear_text",
+      "label": "Clear button text",
+      "default": "#111111"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 1,
+      "unit": "px",
+      "default": 28
+    }
+  ],
+  "presets": [
+    {
+      "name": "Vehicle Finder"
+    }
+  ]
+}
+{% endschema %}

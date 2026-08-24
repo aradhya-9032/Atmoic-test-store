@@ -1,0 +1,494 @@
+<section
+  class="gt4-collections"
+  style="
+    --gt4-bg: {{ section.settings.background_color }};
+    --gt4-card-bg: {{ section.settings.card_background }};
+    --gt4-text: {{ section.settings.text_color }};
+    --gt4-accent: {{ section.settings.accent_color }};
+  "
+>
+  <div class="gt4-collections__container">
+
+    <!-- LEFT HEADING -->
+    <div class="gt4-collections__heading">
+      {% if section.settings.heading != blank %}
+        <h2>{{ section.settings.heading }}</h2>
+      {% endif %}
+    </div>
+
+    <!-- TOP RIGHT CARD -->
+    {% if section.blocks.size > 0 %}
+      {% assign block = section.blocks[0] %}
+
+      <a
+        href="{{ block.settings.link | default: '#' }}"
+        class="gt4-card gt4-card--top"
+        {{ block.shopify_attributes }}
+      >
+        <span class="gt4-card__dot"></span>
+
+        <h3>{{ block.settings.title }}</h3>
+
+        <span class="gt4-card__link">
+          {{ block.settings.link_text }}
+          <span> &gt; </span>
+        </span>
+      </a>
+    {% endif %}
+
+    <!-- RIGHT IMAGE -->
+    <div class="gt4-image gt4-image--right">
+      {% if section.settings.right_image != blank %}
+        {{
+          section.settings.right_image
+          | image_url: width: 1200
+          | image_tag:
+            loading: 'lazy',
+            class: 'gt4-image__img'
+        }}
+      {% endif %}
+    </div>
+
+    <!-- BOTTOM LEFT IMAGE -->
+    <div class="gt4-image gt4-image--left">
+      {% if section.settings.left_image != blank %}
+        {{
+          section.settings.left_image
+          | image_url: width: 1000
+          | image_tag:
+            loading: 'lazy',
+            class: 'gt4-image__img'
+        }}
+      {% endif %}
+    </div>
+
+    <!-- BOTTOM MIDDLE CARD -->
+    {% if section.blocks.size > 1 %}
+      {% assign block = section.blocks[1] %}
+
+      <a
+        href="{{ block.settings.link | default: '#' }}"
+        class="gt4-card gt4-card--bottom-left"
+        {{ block.shopify_attributes }}
+      >
+        <span class="gt4-card__dot"></span>
+
+        <h3>{{ block.settings.title }}</h3>
+
+        <span class="gt4-card__link">
+          {{ block.settings.link_text }}
+          <span> &gt; </span>
+        </span>
+      </a>
+    {% endif %}
+
+    <!-- BOTTOM RIGHT CARD -->
+    {% if section.blocks.size > 2 %}
+      {% assign block = section.blocks[2] %}
+
+      <a
+        href="{{ block.settings.link | default: '#' }}"
+        class="gt4-card gt4-card--bottom-right"
+        {{ block.shopify_attributes }}
+      >
+        <span class="gt4-card__dot"></span>
+
+        <h3>{{ block.settings.title }}</h3>
+
+        <span class="gt4-card__link">
+          {{ block.settings.link_text }}
+          <span> &gt; </span>
+        </span>
+      </a>
+    {% endif %}
+
+  </div>
+</section>
+
+
+{% stylesheet %}
+
+.gt4-collections {
+  width: 100%;
+  background: var(--gt4-bg);
+  padding: 38px;
+  box-sizing: border-box;
+}
+
+.gt4-collections__container {
+  display: grid;
+
+  grid-template-columns:
+    1fr
+    1fr
+    1fr
+    1fr;
+
+  grid-template-rows:
+    145px
+    145px;
+
+  gap: 15px;
+
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+
+/* =========================
+   HEADING
+   ========================= */
+
+.gt4-collections__heading {
+  grid-column: 1 / 3;
+  grid-row: 1;
+
+  display: flex;
+  align-items: center;
+  font-family:"Russo One", san serif;
+  padding: 20px 0;
+}
+
+.gt4-collections__heading h2 {
+  margin: 0;
+  font-family:"Russo One", san serif;
+  max-width: 520px;
+
+  color: var(--gt4-text);
+
+  font-size: 34px;
+  line-height: 1.05;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: .5px;
+}
+
+
+/* =========================
+   CARDS
+   ========================= */
+
+.gt4-card {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  padding: 25px 34px;
+
+  background: var(--gt4-card-bg);
+
+  color: var(--gt4-text);
+
+  text-decoration: none;
+
+  box-sizing: border-box;
+
+  transition:
+    transform .2s ease,
+    background .2s ease;
+}
+
+.gt4-card:hover {
+  transform: translateY(-2px);
+}
+
+.gt4-card__dot {
+  position: absolute;
+
+  top: 38px;
+  left: 34px;
+
+  width: 11px;
+  height: 11px;
+
+  background: var(--gt4-accent);
+}
+
+.gt4-card h3 {
+  margin: 25px 0 12px;
+
+  font-size: 17px;
+  line-height: 1.2;
+
+  font-weight: 700;
+
+  text-transform: uppercase;
+}
+
+.gt4-card__link {
+  font-size: 10px;
+
+  font-weight: 600;
+
+  text-transform: uppercase;
+
+  text-decoration: underline;
+}
+
+.gt4-card__link span {
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.gt4-card:hover .gt4-card__link {
+  color: var(--gt4-accent);
+}
+
+
+/* TOP RIGHT CARD */
+
+.gt4-card--top {
+  grid-column: 3;
+  grid-row: 1;
+}
+
+
+/* BOTTOM LEFT CARD */
+
+.gt4-card--bottom-left {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+
+/* BOTTOM RIGHT CARD */
+
+.gt4-card--bottom-right {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+
+/* =========================
+   IMAGES
+   ========================= */
+
+.gt4-image {
+  overflow: hidden;
+  background: #ddd;
+}
+
+.gt4-image__img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  transition: transform .4s ease;
+}
+
+.gt4-image:hover .gt4-image__img {
+  transform: scale(1.03);
+}
+
+
+/* RIGHT IMAGE */
+
+.gt4-image--right {
+  grid-column: 4;
+  grid-row: 1 / 3;
+}
+
+
+/* LEFT IMAGE */
+
+.gt4-image--left {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+
+/* =========================
+   MOBILE
+   ========================= */
+
+@media screen and (max-width: 749px) {
+
+  .gt4-collections {
+    padding: 20px;
+  }
+
+  .gt4-collections__container {
+    display: grid;
+
+    grid-template-columns: 1fr;
+
+    grid-template-rows: auto;
+
+    gap: 12px;
+  }
+
+  .gt4-collections__heading {
+    grid-column: auto;
+    grid-row: auto;
+
+    min-height: 120px;
+  }
+
+  .gt4-collections__heading h2 {
+    font-size: 28px;
+  }
+
+  .gt4-card--top,
+  .gt4-card--bottom-left,
+  .gt4-card--bottom-right,
+  .gt4-image--left,
+  .gt4-image--right {
+    grid-column: auto;
+    grid-row: auto;
+  }
+
+  .gt4-card {
+    min-height: 140px;
+  }
+
+  .gt4-image {
+    min-height: 220px;
+  }
+
+  .gt4-image--right {
+    min-height: 300px;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+
+{
+  "name": "GT4 Collections",
+
+  "tag": "section",
+
+  "class": "gt4-collections-section",
+
+  "settings": [
+
+    {
+      "type": "image_picker",
+      "id": "left_image",
+      "label": "Left image"
+    },
+
+    {
+      "type": "image_picker",
+      "id": "right_image",
+      "label": "Right image"
+    },
+
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Collections for Porsche GT4 / GT4RS"
+    },
+
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f5f5f5"
+    },
+
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#111111"
+    },
+
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#ff2525"
+    }
+
+  ],
+
+  "blocks": [
+
+    {
+      "type": "collection",
+
+      "name": "Collection",
+
+      "settings": [
+
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Collection title",
+          "default": "GT4 / SPYDER 981"
+        },
+
+        {
+          "type": "url",
+          "id": "link",
+          "label": "Collection link"
+        },
+
+        {
+          "type": "text",
+          "id": "link_text",
+          "label": "Link text",
+          "default": "Explore collection"
+        }
+
+      ]
+    }
+
+  ],
+
+  "presets": [
+
+    {
+      "name": "GT4 Collections",
+
+      "blocks": [
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 / SPYDER 981"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 RS / SPYDER RS 982/718"
+          }
+        },
+
+        {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 / SPYDER 982/718"
+          }
+        }
+
+      ]
+    }
+
+  ]
+
+}
+
+{% endschema %}

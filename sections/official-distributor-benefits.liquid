@@ -1,0 +1,675 @@
+<section
+  class="atomic-distributor-benefits"
+  style="
+    --adb-top-bg: {{ section.settings.top_background }};
+    --adb-bottom-bg: {{ section.settings.bottom_background }};
+    --adb-heading: {{ section.settings.heading_color }};
+    --adb-first-text: {{ section.settings.first_description_color }};
+    --adb-second-text: {{ section.settings.second_description_color }};
+    --adb-benefit-heading: {{ section.settings.benefit_heading_color }};
+    --adb-benefit-text: {{ section.settings.benefit_text_color }};
+    --adb-icon: {{ section.settings.icon_color }};
+  "
+>
+
+  {% if section.settings.show_distributor %}
+
+    <div class="adb-distributor">
+
+      {% if section.settings.heading != blank %}
+        <h2>
+          {{ section.settings.heading }}
+        </h2>
+      {% endif %}
+
+
+      {% if section.settings.first_description != blank %}
+        <div
+          class="adb-description adb-description--first"
+          style="color: {{ section.settings.first_description_color }} !important;"
+        >
+          {{ section.settings.first_description }}
+        </div>
+      {% endif %}
+
+
+      {% if section.settings.second_description != blank %}
+        <div
+          class="adb-description adb-description--second"
+          style="color: {{ section.settings.second_description_color }} !important;"
+        >
+          {{ section.settings.second_description }}
+        </div>
+      {% endif %}
+
+    </div>
+
+  {% endif %}
+
+
+  {% if section.settings.show_benefits %}
+
+    <div class="adb-benefits">
+
+      {% for block in section.blocks %}
+
+        {% if block.type == 'benefit' %}
+
+          <div
+            class="adb-benefit"
+            {{ block.shopify_attributes }}
+          >
+
+            {% if block.settings.show_icon %}
+
+              <div class="adb-benefit__icon">
+
+                {% case block.settings.icon %}
+
+                  {% when 'support' %}
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M4 13v-1a8 8 0 0 1 16 0v1"/>
+                      <path d="M4 13h3v5H4z"/>
+                      <path d="M17 13h3v5h-3z"/>
+                      <path d="M7 18c1 2 3 3 5 3h2"/>
+                    </svg>
+
+
+                  {% when 'shipping' %}
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M3 6h11v12H3z"/>
+                      <path d="M14 10h4l3 3v5h-7z"/>
+                      <circle cx="7" cy="19" r="2"/>
+                      <circle cx="18" cy="19" r="2"/>
+                    </svg>
+
+
+                  {% when 'authenticity' %}
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <circle cx="12" cy="9" r="5"/>
+                      <path d="M9 14l-2 7 5-3 5 3-2-7"/>
+                    </svg>
+
+
+                  {% when 'experience' %}
+
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                      <path d="M5 9h14v10H5z"/>
+                      <path d="M8 9V6h8v3"/>
+                      <path d="M3 9h18"/>
+                    </svg>
+
+                {% endcase %}
+
+              </div>
+
+            {% endif %}
+
+
+            {% if block.settings.title != blank %}
+
+              <h3>
+                {{ block.settings.title }}
+              </h3>
+
+            {% endif %}
+
+
+            {% if block.settings.description != blank %}
+
+              <p>
+                {{ block.settings.description }}
+              </p>
+
+            {% endif %}
+
+          </div>
+
+        {% endif %}
+
+      {% endfor %}
+
+    </div>
+
+  {% endif %}
+
+</section>
+
+
+{% stylesheet %}
+
+/* =========================================
+   MAIN SECTION
+   ========================================= */
+
+.atomic-distributor-benefits {
+  width: 100%;
+}
+
+.adb-distributor {
+  width: 100%;
+  box-sizing: border-box;
+
+  background: var(--adb-top-bg);
+
+  text-align: center;
+
+  padding: 18px 20px 24px;
+}
+
+.adb-distributor h2 {
+  max-width: 760px;
+  font-family:"Russo One", san serif;
+  margin: 0 auto 22px;
+
+  color: var(--adb-heading) !important;
+
+  font-size: 32px;
+  line-height: 1.15;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0;
+
+  text-align: center;
+}
+
+.adb-description {
+  max-width: 780px;
+
+  margin-left: auto;
+  margin-right: auto;
+
+  font-size: 13px;
+
+  line-height: 1.65;
+
+  font-weight: 400;
+
+  text-align: center;
+}
+
+.adb-description--first {
+  margin-bottom: 20px;
+
+  color: var(--adb-first-text) !important;
+}
+
+.adb-description--first p {
+  margin: 0;
+
+  color: var(--adb-first-text) !important;
+}
+
+.adb-description--second {
+  margin-bottom: 0;
+
+  color: var(--adb-second-text) !important;
+}
+
+.adb-description--second p {
+  margin: 0;
+
+  color: var(--adb-second-text) !important;
+}
+
+
+/* =========================================
+   FIRST DESCRIPTION
+   ========================================= */
+
+.adb-description--first,
+.adb-description--first p {
+  color: var(--adb-first-text) !important;
+}
+
+
+/* =========================================
+   SECOND DESCRIPTION
+   ========================================= */
+
+.adb-description--second,
+.adb-description--second p {
+  color: var(--adb-second-text) !important;
+}
+
+
+/* Remove default richtext margins */
+
+.adb-description p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+
+/* =========================================
+   BENEFITS SECTION
+   ========================================= */
+
+.adb-benefits {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+
+  background: var(--adb-bottom-bg);
+
+  padding: 30px 35px;
+}
+
+
+/* =========================================
+   BENEFIT ITEM
+   ========================================= */
+
+.adb-benefit {
+  padding: 0 25px;
+
+  text-align: center;
+
+  border-right: 1px solid rgba(255, 255, 255, .08);
+}
+
+
+.adb-benefit:last-child {
+  border-right: none;
+}
+
+
+/* =========================================
+   ICON
+   ========================================= */
+
+.adb-benefit__icon {
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  height: 30px;
+
+  margin-bottom: 10px;
+
+  color: var(--adb-icon);
+}
+
+
+.adb-benefit__icon svg {
+  width: 22px;
+  height: 22px;
+
+  fill: none;
+
+  stroke: currentColor;
+
+  stroke-width: 1.6;
+
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+
+/* =========================================
+   BENEFIT TITLE
+   ========================================= */
+
+.adb-benefit h3 {
+  margin: 0 auto 13px;
+
+  max-width: 260px;
+
+  color: var(--adb-benefit-heading) !important;
+
+  font-size: 14px;
+  line-height: 1.25;
+
+  font-weight: 800;
+
+  text-transform: uppercase;
+}
+
+
+/* =========================================
+   BENEFIT DESCRIPTION
+   ========================================= */
+
+.adb-benefit p {
+  max-width: 280px;
+
+  margin: 0 auto;
+
+  color: var(--adb-benefit-text) !important;
+
+  font-size: 12px;
+  line-height: 1.7;
+
+  font-weight: 500;
+}
+
+
+/* =========================================
+   MOBILE
+   ========================================= */
+
+@media screen and (max-width: 749px) {
+
+  .adb-distributor {
+    padding: 35px 20px;
+  }
+
+
+  .adb-distributor h2 {
+    font-size: 26px;
+  }
+
+
+  .adb-description {
+    font-size: 12px;
+  }
+
+
+  .adb-benefits {
+    grid-template-columns: 1fr;
+
+    gap: 30px;
+
+    padding: 35px 20px;
+  }
+
+
+  .adb-benefit {
+    padding: 0 10px;
+
+    border-right: none;
+
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+
+    padding-bottom: 25px;
+  }
+
+
+  .adb-benefit:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+
+{
+  "name": "Distributor Benefits",
+
+  "tag": "section",
+
+  "class": "atomic-distributor-benefits-section",
+
+
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Distributor information"
+    },
+
+
+    {
+      "type": "checkbox",
+      "id": "show_distributor",
+      "label": "Show distributor section",
+      "default": true
+    },
+
+
+    {
+      "type": "textarea",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Official Distributor of 50+ Global Brands"
+    },
+
+
+    {
+      "type": "richtext",
+      "id": "first_description",
+      "label": "First description",
+      "default": "<p>We are the authorized source for industry leaders like AKRAPOVIC, DODSON, PAGID, GIRODISC, RED LINE OIL, RECARO, EVENTURI, HKS, CSF, ADRO, AP Racing, BBS, Wheels, KW Automotive, GARRETT, and many more.</p>"
+    },
+
+
+    {
+      "type": "richtext",
+      "id": "second_description",
+      "label": "Second description",
+      "default": "<p>Every part sold through ATOMIC-SHOP is 100% authentic, directly from manufacturers, guaranteeing the best prices and full warranty coverage.</p>"
+    },
+
+
+    {
+      "type": "header",
+      "content": "Benefits"
+    },
+
+
+    {
+      "type": "checkbox",
+      "id": "show_benefits",
+      "label": "Show benefits section",
+      "default": true
+    },
+
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+
+
+    {
+      "type": "color",
+      "id": "top_background",
+      "label": "Top background",
+      "default": "#ffffff"
+    },
+
+
+    {
+      "type": "color",
+      "id": "bottom_background",
+      "label": "Benefits background",
+      "default": "#242424"
+    },
+
+
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#292929"
+    },
+
+
+    {
+      "type": "color",
+      "id": "first_description_color",
+      "label": "First description color",
+      "default": "#292929"
+    },
+
+
+    {
+      "type": "color",
+      "id": "second_description_color",
+      "label": "Second description color",
+      "default": "#292929"
+    },
+
+
+    {
+      "type": "color",
+      "id": "benefit_heading_color",
+      "label": "Benefit heading color",
+      "default": "#FFFFFF"
+    },
+
+
+    {
+      "type": "color",
+      "id": "benefit_text_color",
+      "label": "Benefit description color",
+      "default": "#FFFFFF"
+    },
+
+
+    {
+      "type": "color",
+      "id": "icon_color",
+      "label": "Icon color",
+      "default": "#FFFFFF"
+    }
+
+  ],
+
+
+  "blocks": [
+
+    {
+      "type": "benefit",
+
+      "name": "Benefit",
+
+      "settings": [
+
+        {
+          "type": "checkbox",
+          "id": "show_icon",
+          "label": "Show icon",
+          "default": true
+        },
+
+
+        {
+          "type": "select",
+          "id": "icon",
+          "label": "Icon",
+
+          "options": [
+
+            {
+              "value": "support",
+              "label": "Support"
+            },
+
+            {
+              "value": "shipping",
+              "label": "Shipping"
+            },
+
+            {
+              "value": "authenticity",
+              "label": "Authenticity"
+            },
+
+            {
+              "value": "experience",
+              "label": "Experience"
+            }
+
+          ],
+
+          "default": "support"
+        },
+
+
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title",
+          "default": "Expert Advice & Support"
+        },
+
+
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Description",
+          "default": "Our team has deep product knowledge. We help you select the right parts for your vehicle and performance goals."
+        }
+
+      ]
+
+    }
+
+  ],
+
+
+  "presets": [
+
+    {
+      "name": "Distributor Benefits",
+
+      "blocks": [
+
+        {
+          "type": "benefit",
+
+          "settings": {
+            "icon": "support",
+            "title": "Expert Advice & Support",
+            "description": "Our team has deep product knowledge. We help you select the right parts for your vehicle and performance goals."
+          }
+
+        },
+
+
+        {
+          "type": "benefit",
+
+          "settings": {
+            "icon": "shipping",
+            "title": "Fast & Reliable Shipping Across the UAE",
+            "description": "Get the parts you need delivered quickly and securely to your doorstep, anywhere in the Emirates."
+          }
+
+        },
+
+
+        {
+          "type": "benefit",
+
+          "settings": {
+            "icon": "authenticity",
+            "title": "Authenticity & Manufacturer Warranty",
+            "description": "Every part we sell is genuine and comes with a full manufacturer's warranty for your peace of mind."
+          }
+
+        },
+
+
+        {
+          "type": "benefit",
+
+          "settings": {
+            "icon": "experience",
+            "title": "Over 20 Years of Motorsport & Tuning Experience",
+            "description": "Our expertise is built on real-world racing experience, so we know what works."
+          }
+
+        }
+
+      ]
+
+    }
+
+  ]
+
+}
+
+{% endschema %}

@@ -6,280 +6,1080 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
-    "hero_jVaWmY": {
-      "type": "hero",
+    "automotive_hero_EMeJaB": {
+      "type": "automotive-hero",
       "blocks": {
-        "text_YLPk4p": {
-          "type": "text",
-          "name": "t:names.heading",
+        "slide_7c79LH": {
+          "type": "slide",
           "settings": {
-            "text": "<p>Browse our latest products</p>",
-            "text_color": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "max_width": "normal",
-            "alignment": "left",
-            "type_preset": "h2",
-            "font": "var(--font-body--family)",
-            "font_size": "1rem",
-            "line_height": "normal",
-            "letter_spacing": "normal",
-            "case": "none",
-            "wrap": "pretty",
-            "background": false,
-            "background_color": "#00000026",
-            "corner_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {}
+            "image": "shopify://shop_images/Slider4.jpg",
+            "heading": "",
+            "text": "",
+            "button_label": "",
+            "button_link": "",
+            "content_position": "left",
+            "overlay": true,
+            "overlay_opacity": 25
+          }
         },
-        "button_H9gpTf": {
-          "type": "button",
-          "name": "t:names.button",
+        "slide_rKHTNe": {
+          "type": "slide",
           "settings": {
-            "label": "Shop all",
-            "link": "shopify://collections/all",
-            "open_in_new_tab": false,
-            "style_class": "button-custom",
-            "custom_button_background": "rgba(0,0,0,0)",
-            "custom_button_text": "{{ settings.color_palette.background }}",
-            "custom_button_border": "{{ settings.color_palette.background }}",
-            "width": "fit-content",
-            "custom_width": 100,
-            "width_mobile": "fit-content",
-            "custom_width_mobile": 100
-          },
-          "blocks": {}
+            "image": "shopify://shop_images/Slider2.jpg",
+            "heading": "",
+            "text": "",
+            "button_label": "",
+            "button_link": "",
+            "content_position": "left",
+            "overlay": true,
+            "overlay_opacity": 25
+          }
+        },
+        "slide_NyTr3W": {
+          "type": "slide",
+          "settings": {
+            "image": "shopify://shop_images/Slider1.jpg",
+            "heading": "",
+            "text": "",
+            "button_label": "",
+            "button_link": "",
+            "content_position": "left",
+            "overlay": true,
+            "overlay_opacity": 25
+          }
         }
       },
       "block_order": [
-        "text_YLPk4p",
-        "button_H9gpTf"
+        "slide_7c79LH",
+        "slide_rKHTNe",
+        "slide_NyTr3W"
       ],
-      "name": "t:names.hero",
+      "name": "Automotive Hero Slider",
       "settings": {
-        "media_type_1": "image",
-        "media_type_2": "image",
-        "stack_media_on_mobile": false,
-        "custom_mobile_media": false,
-        "media_type_1_mobile": "image",
-        "media_type_2_mobile": "image",
-        "open_in_new_tab": false,
-        "content_direction": "column",
-        "vertical_on_mobile": true,
-        "horizontal_alignment": "space-between",
-        "vertical_alignment": "flex-end",
-        "align_baseline": true,
-        "horizontal_alignment_flex_direction_column": "center",
-        "vertical_alignment_flex_direction_column": "flex-end",
-        "gap": 24,
-        "section_width": "page-width",
-        "section_height": "medium",
-        "section_height_custom": 50,
-        "background_color": "rgba(0,0,0,0)",
-        "toggle_overlay": true,
-        "overlay_color": "#12121266",
-        "overlay_style": "solid",
-        "gradient_direction": "to bottom",
-        "blurred_reflection": false,
-        "reflection_opacity": 75,
-        "padding-block-start": 100,
-        "padding-block-end": 72
+        "height": 600,
+        "mobile_height": 500,
+        "autoplay": true,
+        "autoplay_speed": 5,
+        "show_arrows": false,
+        "show_dots": true
       }
     },
-    "product_list_fa6P9H": {
-      "type": "product-list",
+    "vehicle_finder_4QMjzU": {
+      "type": "vehicle-finder",
+      "name": "Vehicle Finder",
+      "settings": {
+        "heading": "CHOOSE YOUR CAR FOR A PERFECT FIT",
+        "year_label": "YEAR",
+        "make_label": "MAKE",
+        "model_label": "MODEL",
+        "year_placeholder": "Select Year",
+        "make_placeholder": "Select Make",
+        "model_placeholder": "Select Model",
+        "search_label": "SEARCH",
+        "clear_label": "CLEAR",
+        "background_color": "#eeeeee",
+        "text_color": "#111111",
+        "field_background": "#ffffff",
+        "field_border": "#999999",
+        "search_background": "#e62b20",
+        "search_text": "#ffffff",
+        "clear_background": "#eeeeee",
+        "clear_text": "#111111",
+        "padding_top": 28,
+        "padding_bottom": 28
+      }
+    },
+    "automotive_product_tabs_PNr43w": {
+      "type": "automotive-product-tabs",
       "blocks": {
-        "static-header": {
-          "type": "_product-list-content",
-          "name": "t:names.header",
-          "static": true,
+        "tab_YdJmhz": {
+          "type": "tab",
           "settings": {
-            "content_direction": "row",
-            "vertical_on_mobile": false,
-            "horizontal_alignment": "space-between",
-            "vertical_alignment": "flex-end",
-            "align_baseline": true,
-            "horizontal_alignment_flex_direction_column": "flex-start",
-            "vertical_alignment_flex_direction_column": "center",
-            "gap": 12,
-            "width": "fill",
-            "custom_width": 100,
-            "width_mobile": "fill",
-            "custom_width_mobile": 100,
-            "height": "fit",
-            "custom_height": 100,
-            "background_media": "none",
-            "video_position": "cover",
-            "background_image_position": "cover",
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_list_text_YFtzcL": {
-              "type": "_product-list-text",
-              "name": "t:names.collection_title",
-              "settings": {
-                "text": "<h3>{{ closest.collection.title }}</h3>",
-                "width": "fit-content",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "h4",
-                "font": "var(--font-body--family)",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_list_button_MWeP9V": {
-              "type": "_product-list-button",
-              "name": "t:names.product_list_button",
-              "settings": {
-                "label": "View all",
-                "open_in_new_tab": false,
-                "style_class": "link",
-                "width": "fit-content",
-                "custom_width": 100,
-                "width_mobile": "fit-content",
-                "custom_width_mobile": 100
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_list_text_YFtzcL",
-            "product_list_button_MWeP9V"
-          ]
+            "title": "NEW ARRIVALS",
+            "collection": "bmw-m4-g82"
+          }
         },
-        "static-product-card": {
-          "type": "_product-card",
-          "name": "t:names.product_card",
-          "static": true,
+        "tab_gNbEdQ": {
+          "type": "tab",
           "settings": {
-            "product_card_gap": 4,
-            "border": "none",
-            "border_width": 1,
-            "border_opacity": 100,
-            "border_radius": 0,
-            "padding-block-start": 0,
-            "padding-block-end": 0,
-            "padding-inline-start": 0,
-            "padding-inline-end": 0
-          },
-          "blocks": {
-            "product_card_gallery_677WP3": {
-              "type": "_product-card-gallery",
-              "name": "t:names.product_card_media",
-              "settings": {
-                "image_ratio": "adapt",
-                "border": "none",
-                "border_width": 1,
-                "border_opacity": 100,
-                "border_radius": 0,
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "product_title_YXxMTj": {
-              "type": "product-title",
-              "name": "t:names.product_title",
-              "settings": {
-                "width": "100%",
-                "max_width": "normal",
-                "alignment": "left",
-                "type_preset": "rte",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "wrap": "pretty",
-                "background": false,
-                "background_color": "#00000026",
-                "corner_radius": 0,
-                "padding-block-start": 4,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            },
-            "price_JQzVV4": {
-              "type": "price",
-              "name": "t:names.product_price",
-              "settings": {
-                "show_sale_price_first": true,
-                "show_installments": false,
-                "show_tax_info": false,
-                "type_preset": "h6",
-                "width": "100%",
-                "alignment": "left",
-                "font": "var(--font-body--family)",
-                "font_size": "1rem",
-                "line_height": "normal",
-                "letter_spacing": "normal",
-                "case": "none",
-                "padding-block-start": 0,
-                "padding-block-end": 0,
-                "padding-inline-start": 0,
-                "padding-inline-end": 0
-              },
-              "blocks": {}
-            }
-          },
-          "block_order": [
-            "product_card_gallery_677WP3",
-            "product_title_YXxMTj",
-            "price_JQzVV4"
-          ]
+            "title": "BEST SELLERS",
+            "collection": ""
+          }
+        },
+        "tab_z8nUVK": {
+          "type": "tab",
+          "settings": {
+            "title": "DISCOUNTS",
+            "collection": ""
+          }
+        },
+        "tab_AQrtb7": {
+          "type": "tab",
+          "settings": {
+            "title": "LATEST RELEASES",
+            "collection": ""
+          }
         }
       },
-      "name": "t:names.product_list",
+      "block_order": [
+        "tab_YdJmhz",
+        "tab_gNbEdQ",
+        "tab_z8nUVK",
+        "tab_AQrtb7"
+      ],
+      "name": "Automotive Product Tabs",
       "settings": {
-        "collection": "all",
-        "layout_type": "grid",
-        "carousel_on_mobile": false,
-        "max_products": 8,
-        "columns": 4,
-        "mobile_columns": "2",
-        "mobile_card_size": "60cqw",
-        "columns_gap": 8,
-        "rows_gap": 24,
-        "icons_style": "arrow",
-        "icons_shape": "none",
-        "section_width": "page-width",
-        "horizontal_alignment": "flex-start",
-        "gap": 28,
-        "background_color": "{{ settings.color_palette.background }}",
-        "padding-block-start": 48,
-        "padding-block-end": 48
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "tab_font_size": 14,
+        "tab_font_weight": "700",
+        "tab_spacing": 30,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "ADD TO CART",
+        "show_collection_link": true,
+        "collection_link_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "tab_text_color": "#666666",
+        "tab_active_color": "#111111",
+        "tab_border_color": "#dddddd",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 30
+      }
+    },
+    "automotive_video_hero_GkyCqV": {
+      "type": "automotive-video-hero",
+      "name": "Automotive Video Hero",
+      "settings": {
+        "youtube_video_url": "",
+        "autoplay": true,
+        "loop": true,
+        "eyebrow": "PRECISION. POWER. PERFECTION. BUILT FOR THOSE WHO DEMAND MORE",
+        "heading": "VW GOLF R MK8.5 PROJECT",
+        "button_text": "SHOP THE COLLECTION",
+        "button_link": "",
+        "youtube_text": "Watch the Nürburgring test drive with Misha Charoudin",
+        "youtube_link": "https://www.youtube.com/watch?v=sRmt9H8wOaI",
+        "youtube_count": "1.75M",
+        "height": 560,
+        "mobile_height": 500,
+        "content_width": 900,
+        "overlay_opacity": 45
+      }
+    },
+    "automotive_bmw_collections_34exWJ": {
+      "type": "automotive-bmw-collections",
+      "blocks": {
+        "collection_K3Kqbh": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-collection"
+          }
+        },
+        "collection_jdPXEN": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-m4-f82"
+          }
+        },
+        "collection_MeLw6V": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-collection"
+          }
+        },
+        "collection_G93Jjx": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-m3-g80"
+          }
+        },
+        "collection_MiCnkK": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-collection"
+          }
+        },
+        "collection_bw4Dq3": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-collection"
+          }
+        },
+        "collection_xVFFCG": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-collection"
+          }
+        },
+        "collection_pNNJyz": {
+          "type": "collection",
+          "settings": {
+            "collection": "bmw-collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_K3Kqbh",
+        "collection_jdPXEN",
+        "collection_MeLw6V",
+        "collection_G93Jjx",
+        "collection_MiCnkK",
+        "collection_bw4Dq3",
+        "collection_xVFFCG",
+        "collection_pNNJyz"
+      ],
+      "name": "BMW Collections",
+      "settings": {
+        "heading": "Collection for BMW",
+        "heading_size": 36,
+        "card_height": 315,
+        "mobile_card_height": 210,
+        "overlay_opacity": 15,
+        "hover_scale": 1.1
+      }
+    },
+    "automotive_products_UGkyeM": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-m3-g80",
+        "products_to_show": 6,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "ADD TO CART",
+        "show_view_all": false,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "porsche_collections_AzNThG": {
+      "type": "porsche-collections",
+      "blocks": {
+        "collection_iBYCWJ": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_qehQkj": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_ep7YjH": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_9FEqNc": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_E7iqxM": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_imUUad": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_iBYCWJ",
+        "collection_qehQkj",
+        "collection_ep7YjH",
+        "collection_9FEqNc",
+        "collection_E7iqxM",
+        "collection_imUUad"
+      ],
+      "name": "Porsche Collections",
+      "settings": {
+        "background_image": "shopify://shop_images/home-porsche-banner1.jpg",
+        "heading": "Collections for Porsche 911",
+        "section_height": 650,
+        "overlay_opacity": 15
+      }
+    },
+    "automotive_products_khb9iq": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-collection",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "porsche_gt4_collections_wgULHx": {
+      "type": "porsche-gt4-collections",
+      "blocks": {
+        "collection_REmAP6": {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 / SPYDER 981",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_HWB8fJ": {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 RS / SPYDER RS 982/718",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_g3cXpn": {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 / SPYDER 982/718",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_REmAP6",
+        "collection_HWB8fJ",
+        "collection_g3cXpn"
+      ],
+      "name": "GT4 Collections",
+      "settings": {
+        "left_image": "shopify://shop_images/home-Porcshe-GT4.jpg",
+        "right_image": "shopify://shop_images/home-porsche-img.jpg",
+        "heading": "Collections for Porsche GT4 / GT4RS",
+        "background_color": "#f5f5f5",
+        "card_background": "#ffffff",
+        "text_color": "#111111",
+        "accent_color": "#ff2525"
+      }
+    },
+    "automotive_products_VGaY3t": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-m3-g80",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "porsche_collections_9d77J4": {
+      "type": "porsche-collections",
+      "blocks": {
+        "collection_rWUGN9": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_6ppDHd": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_Ejw4qX": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_ckFwRH": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_E3LkN3": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_MhC48i": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_rWUGN9",
+        "collection_6ppDHd",
+        "collection_Ejw4qX",
+        "collection_ckFwRH",
+        "collection_E3LkN3",
+        "collection_MhC48i"
+      ],
+      "name": "Porsche Collections",
+      "settings": {
+        "background_image": "shopify://shop_images/home-ford-collections2.jpg",
+        "heading": "Collections for ford / jeep",
+        "section_height": 650,
+        "overlay_opacity": 15
+      }
+    },
+    "automotive_products_f6CkRB": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-collection",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "porsche_collections_M8DLxW": {
+      "type": "porsche-collections",
+      "blocks": {
+        "collection_zEPWga": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_crPLji": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_Bk9DLg": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_qhYTi7": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_rGf97W": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_LV78AK": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_zEPWga",
+        "collection_crPLji",
+        "collection_Bk9DLg",
+        "collection_qhYTi7",
+        "collection_rGf97W",
+        "collection_LV78AK"
+      ],
+      "name": "Porsche Collections",
+      "settings": {
+        "background_image": "shopify://shop_images/home-toyota.jpg",
+        "heading": "Collections for Toyota",
+        "section_height": 650,
+        "overlay_opacity": 15
+      }
+    },
+    "automotive_products_nYb83L": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-collection",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "nissan_gtr_collection_Ehenct": {
+      "type": "nissan-gtr-collection",
+      "name": "Nissan GT-R Collection",
+      "settings": {
+        "image": "shopify://shop_images/home-nissan-gtr-35-w.jpg",
+        "heading": "Collection for Nissan GT-R R35",
+        "button_text": "Shop the collection",
+        "button_link": "",
+        "background_color": "#ffffff",
+        "text_color": "#07182b",
+        "button_color": "#e3261b",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "automotive_products_UT6mXG": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-collection",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "porsche_collections_mYMTxQ": {
+      "type": "porsche-collections",
+      "blocks": {
+        "collection_LWdkTq": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_K77Ra3": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (997)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_6icRTh": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_ieyKP4": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (991)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_Gtw4iW": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_A83dUq": {
+          "type": "collection",
+          "settings": {
+            "title": "Porsche 911 GT3 RS (992)",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_LWdkTq",
+        "collection_K77Ra3",
+        "collection_6icRTh",
+        "collection_ieyKP4",
+        "collection_Gtw4iW",
+        "collection_A83dUq"
+      ],
+      "name": "Porsche Collections",
+      "settings": {
+        "background_image": "shopify://shop_images/home-subaru.jpg",
+        "heading": "Collections for Subaru",
+        "section_height": 650,
+        "overlay_opacity": 15
+      }
+    },
+    "automotive_products_tqqRpy": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-collection",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "porsche_gt4_collections_LpUXjV": {
+      "type": "porsche-gt4-collections",
+      "blocks": {
+        "collection_qjXcEy": {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 / SPYDER 981",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_9Y6kCF": {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 RS / SPYDER RS 982/718",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        },
+        "collection_PMAG3t": {
+          "type": "collection",
+          "settings": {
+            "title": "GT4 / SPYDER 982/718",
+            "link": "",
+            "link_text": "Explore collection"
+          }
+        }
+      },
+      "block_order": [
+        "collection_qjXcEy",
+        "collection_9Y6kCF",
+        "collection_PMAG3t"
+      ],
+      "name": "GT4 Collections",
+      "settings": {
+        "left_image": "shopify://shop_images/home-exo-x.jpg",
+        "right_image": "shopify://shop_images/home-mitsubishi.jpg",
+        "heading": "Collections for Mitsubishi",
+        "background_color": "#f5f5f5",
+        "card_background": "#ffffff",
+        "text_color": "#111111",
+        "accent_color": "#ff2525"
+      }
+    },
+    "automotive_products_e9QyeU": {
+      "type": "automotive-products",
+      "name": "Automotive Products",
+      "settings": {
+        "heading": "",
+        "collection": "bmw-collection",
+        "products_to_show": 12,
+        "products_per_row": "6",
+        "card_gap": 28,
+        "show_vendor": true,
+        "show_price": true,
+        "show_stock_badge": true,
+        "in_stock_text": "IN STOCK",
+        "special_order_text": "SPECIAL ORDER",
+        "show_wishlist": true,
+        "show_hover_add_to_cart": true,
+        "add_to_cart_text": "+ Add to cart",
+        "show_view_all": true,
+        "view_all_text": "VIEW ALL",
+        "empty_collection_text": "No products available in this collection.",
+        "background_color": "#ffffff",
+        "text_color": "#111111",
+        "card_background": "#ffffff",
+        "badge_background": "#008b68",
+        "badge_text_color": "#ffffff",
+        "padding_top": 30,
+        "padding_bottom": 40
+      }
+    },
+    "honda_civic_collection_mfcbzQ": {
+      "type": "honda-civic-collection",
+      "name": "Honda Civic Collection",
+      "settings": {
+        "image": "shopify://shop_images/honda-civic-type-r.jpg",
+        "heading": "Collections for Honda Civic Type R (FL5)",
+        "button_text": "Shop the collection",
+        "button_link": "",
+        "overlay_opacity": 55,
+        "button_color": "#e3261b",
+        "button_text_color": "#ffffff"
+      }
+    },
+    "brands_blog_section_zLpVXy": {
+      "type": "brands-blog-section",
+      "blocks": {
+        "brand_ifTzwW": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/DODSON.jpg",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "brand_gLrBtk": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/RED_LINE_OIL.jpg",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "brand_adyx9N": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/HKS.jpg",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "brand_PehL6M": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/EVENTURI.jpg",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "brand_jKmztf": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/CSF.jpg",
+            "name": "Brand",
+            "link": ""
+          }
+        },
+        "brand_M6emJx": {
+          "type": "brand",
+          "settings": {
+            "logo": "shopify://shop_images/ap-racing.jpg",
+            "name": "Brand",
+            "link": ""
+          }
+        }
+      },
+      "block_order": [
+        "brand_ifTzwW",
+        "brand_gLrBtk",
+        "brand_adyx9N",
+        "brand_PehL6M",
+        "brand_jKmztf",
+        "brand_M6emJx"
+      ],
+      "name": "Brands + Blog",
+      "settings": {
+        "show_brands": true,
+        "brands_heading": "Brands",
+        "show_brand_arrows": true,
+        "show_brands_button": true,
+        "brands_button_text": "View All",
+        "brands_button_link": "",
+        "show_blog": true,
+        "blog_heading": "Blog Posts",
+        "blog": "news",
+        "blog_limit": 3,
+        "blog_columns": "3",
+        "show_blog_image": true,
+        "show_blog_title": true,
+        "show_blog_excerpt": true,
+        "show_blog_button": true,
+        "blog_button_text": "Read More",
+        "background_color": "#ffffff",
+        "heading_color": "#17283b",
+        "button_color": "#e3261b",
+        "button_text_color": "#ffffff",
+        "card_border_color": "#dddddd"
+      }
+    },
+    "official_distributor_benefits_TqCjiC": {
+      "type": "official-distributor-benefits",
+      "blocks": {
+        "benefit_E8QFJW": {
+          "type": "benefit",
+          "settings": {
+            "show_icon": true,
+            "icon": "support",
+            "title": "Expert Advice & Support",
+            "description": "Our team has deep product knowledge. We help you select the right parts for your vehicle and performance goals."
+          }
+        },
+        "benefit_wqb9g4": {
+          "type": "benefit",
+          "settings": {
+            "show_icon": true,
+            "icon": "shipping",
+            "title": "Fast & Reliable Shipping Across the UAE",
+            "description": "Get the parts you need delivered quickly and securely to your doorstep, anywhere in the Emirates."
+          }
+        },
+        "benefit_c9RGQV": {
+          "type": "benefit",
+          "settings": {
+            "show_icon": true,
+            "icon": "authenticity",
+            "title": "Authenticity & Manufacturer Warranty",
+            "description": "Every part we sell is genuine and comes with a full manufacturer's warranty for your peace of mind."
+          }
+        },
+        "benefit_97aTC8": {
+          "type": "benefit",
+          "settings": {
+            "show_icon": true,
+            "icon": "experience",
+            "title": "Over 20 Years of Motorsport & Tuning Experience",
+            "description": "Our expertise is built on real-world racing experience, so we know what works."
+          }
+        }
+      },
+      "block_order": [
+        "benefit_E8QFJW",
+        "benefit_wqb9g4",
+        "benefit_c9RGQV",
+        "benefit_97aTC8"
+      ],
+      "name": "Distributor Benefits",
+      "settings": {
+        "show_distributor": true,
+        "heading": "Official Distributor of 50+ Global Brands",
+        "first_description": "<p>We are the authorized source for industry leaders like AKRAPOVIC, DODSON, PAGID, GIRODISC, RED LINE OIL, RECARO, EVENTURI, HKS, CSF, ADRO, AP Racing, BBS, Wheels, KW Automotive, GARRETT, and many more.</p>",
+        "second_description": "<p>Every part sold through ATOMIC-SHOP is 100% authentic, directly from manufacturers, guaranteeing the best prices and full warranty coverage.</p>",
+        "show_benefits": true,
+        "top_background": "{{ settings.color_palette.background }}",
+        "bottom_background": "{{ settings.color_palette.foreground }}",
+        "heading_color": "{{ settings.color_palette.foreground }}",
+        "first_description_color": "{{ settings.color_palette.foreground }}",
+        "second_description_color": "{{ settings.color_palette.foreground }}",
+        "benefit_heading_color": "#ffffff",
+        "benefit_text_color": "{{ settings.color_palette.background }}",
+        "icon_color": "#ffffff"
+      }
+    },
+    "faq_reference_VQKYhz": {
+      "type": "faq-reference",
+      "blocks": {
+        "faq_F6RNmy": {
+          "type": "faq",
+          "settings": {
+            "question": "Are your performance parts genuine?",
+            "answer": "<p>Yes, all our performance parts are genuine and sourced from trusted manufacturers.</p>"
+          }
+        },
+        "faq_zJHpbz": {
+          "type": "faq",
+          "settings": {
+            "question": "Are your performance parts genuine?",
+            "answer": "<p>Yes, all our performance parts are genuine and sourced from trusted manufacturers.</p>"
+          }
+        },
+        "faq_cgkLty": {
+          "type": "faq",
+          "settings": {
+            "question": "Are your performance parts genuine?",
+            "answer": "<p>Yes, all our performance parts are genuine and sourced from trusted manufacturers.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "faq_F6RNmy",
+        "faq_zJHpbz",
+        "faq_cgkLty"
+      ],
+      "name": "FAQ Reference",
+      "settings": {
+        "heading": "FREQUENTLY ASKED QUESTIONS (FAQ)"
       }
     }
   },
   "order": [
-    "hero_jVaWmY",
-    "product_list_fa6P9H"
+    "automotive_hero_EMeJaB",
+    "vehicle_finder_4QMjzU",
+    "automotive_product_tabs_PNr43w",
+    "automotive_video_hero_GkyCqV",
+    "automotive_bmw_collections_34exWJ",
+    "automotive_products_UGkyeM",
+    "porsche_collections_AzNThG",
+    "automotive_products_khb9iq",
+    "porsche_gt4_collections_wgULHx",
+    "automotive_products_VGaY3t",
+    "porsche_collections_9d77J4",
+    "automotive_products_f6CkRB",
+    "porsche_collections_M8DLxW",
+    "automotive_products_nYb83L",
+    "nissan_gtr_collection_Ehenct",
+    "automotive_products_UT6mXG",
+    "porsche_collections_mYMTxQ",
+    "automotive_products_tqqRpy",
+    "porsche_gt4_collections_LpUXjV",
+    "automotive_products_e9QyeU",
+    "honda_civic_collection_mfcbzQ",
+    "brands_blog_section_zLpVXy",
+    "official_distributor_benefits_TqCjiC",
+    "faq_reference_VQKYhz"
   ]
 }

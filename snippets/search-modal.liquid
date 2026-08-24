@@ -517,4 +517,106 @@
     --button-color: var(--color-foreground);
     --button-background-color: transparent;
   }
+  /* Automotive left search drawer */
+  .search-modal {
+    --search-border-radius: 0;
+  }
+
+  .search-modal__content {
+    --modal-width: 430px;
+
+    position: fixed;
+    inset: 0 auto 0 0;
+    width: var(--modal-width);
+    max-width: 92vw;
+    height: 100dvh;
+    max-height: 100dvh;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: #ffffff;
+    overflow: hidden;
+    transform: translateX(-100%);
+    box-shadow: 10px 0 35px rgb(0 0 0 / 18%);
+  }
+
+  .search-modal__content::backdrop {
+    background: rgb(0 0 0 / 45%);
+  }
+
+  .dialog-modal[open].search-modal__content {
+    transform: translateX(0);
+    animation: automotive-search-drawer-in 300ms ease-out forwards;
+    border-radius: 0;
+  }
+
+  .dialog-modal.search-modal__content.dialog-closing {
+    animation: automotive-search-drawer-out 220ms ease-in forwards;
+  }
+
+  .search-modal__content .predictive-search {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+  }
+
+  .search-modal__content .predictive-search-form {
+    width: 100%;
+    height: 100%;
+  }
+
+  .search-modal__content .predictive-search-form__header {
+    height: 94px;
+    padding: 0 22px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e5e5e5;
+    background: #ffffff;
+  }
+
+  .search-modal__content .predictive-search-form__header-inner {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .search-modal__content .search-input {
+    height: 54px;
+    font-size: 17px;
+  }
+
+  .search-modal__content .predictive-search__close-modal-button {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    margin-inline-start: 8px;
+  }
+
+  .search-modal__content .predictive-search-form__content-wrapper {
+    height: calc(100% - 94px);
+    max-height: none;
+    overflow-y: auto;
+  }
+
+  @keyframes automotive-search-drawer-in {
+    from { transform: translateX(-100%); }
+    to { transform: translateX(0); }
+  }
+
+  @keyframes automotive-search-drawer-out {
+    from { transform: translateX(0); }
+    to { transform: translateX(-100%); }
+  }
+
+  @media screen and (max-width: 749px) {
+    .search-modal__content {
+      width: 100%;
+      max-width: 100%;
+    }
+
+    .search-modal__content .predictive-search-form__header {
+      padding: 0 16px;
+    }
+  }
+
 {% endstylesheet %}

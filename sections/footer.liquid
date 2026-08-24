@@ -1,100 +1,503 @@
-
-
-{% liquid
-  if section.settings.background_color != blank
-    render 'contrast-override', background_color: section.settings.background_color, section_id: section.id
-  endif
-%}
-
 <div
-  class="section-background{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
-></div>
-<div
-  class="section section--{{ section.settings.section_width }}{% if section.settings.background_color != blank %} color-custom-{{ section.id }}{% endif %}"
+  class="atomic-main-footer"
+  style="
+    --atomic-footer-bg: {{ section.settings.background_color }};
+    --atomic-footer-text: {{ section.settings.text_color }};
+    --atomic-footer-heading: {{ section.settings.heading_color }};
+    --atomic-footer-link-hover: {{ section.settings.link_hover_color }};
+    --atomic-footer-size: {{ section.settings.font_size }}px;
+    --atomic-footer-top-padding: {{ section.settings.top_padding }}px;
+    --atomic-footer-bottom-padding: {{ section.settings.bottom_padding }}px;
+    --atomic-footer-bottom-border: {{ section.settings.bottom_border_color }};
+  "
 >
-  {% liquid
-    assign total_blocks = section.blocks.size
+  <div class="atomic-footer-inner">
 
-    # Grid layout calculations
-    assign grid_columns = total_blocks | at_most: 4
+    <!-- CUSTOMER SUPPORT -->
+    {% if section.settings.show_support %}
+      <div class="atomic-footer-column atomic-footer-support">
+        {% if section.settings.support_heading != blank %}
+          <h3 class="atomic-footer-heading">
+            {{ section.settings.support_heading }}
+          </h3>
+        {% endif %}
 
-    # Calculate last row counts using modulo arithmetic
-    # last_row_count = (total_blocks - 1) % N + 1
-    assign last_row_count = total_blocks | minus: 1 | modulo: 4 | plus: 1
-    assign tablet_last_row_count = total_blocks | minus: 1 | modulo: 2 | plus: 1
+        {% if section.settings.support_content != blank %}
+          <div class="atomic-footer-text">
+            {{ section.settings.support_content | newline_to_br }}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
 
-    # Check if there are orphaned elements (single item in last row)
-    assign has_isolated_grid_item_desktop = false
-    assign has_isolated_grid_item_tablet = false
+    <!-- COMPANY -->
+    {% if section.settings.show_company %}
+      <div class="atomic-footer-column">
+        {% if section.settings.company_heading != blank %}
+          <h3 class="atomic-footer-heading">
+            {{ section.settings.company_heading }}
+          </h3>
+        {% endif %}
 
-    if total_blocks > 4 and last_row_count == 1
-      assign has_isolated_grid_item_desktop = true
-    endif
+        {% if section.settings.company_links != blank %}
+          <ul class="atomic-footer-menu">
+            {% assign company_items = section.settings.company_links | newline_to_br | split: '<br />' %}
+            {% for item in company_items %}
+              {% assign parts = item | split: '|' %}
+              {% assign item_title = parts[0] | strip %}
+              {% assign item_url = parts[1] | strip %}
+              {% if item_title != blank %}
+                <li>
+                  {% if item_url != blank %}
+                    <a href="{{ item_url }}">{{ item_title }}</a>
+                  {% else %}
+                    <span>{{ item_title }}</span>
+                  {% endif %}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
 
-    if total_blocks == 5
-      assign has_isolated_grid_item_tablet = true
-    endif
-  %}
-  <div
-    class="
-      footer-content
-      spacing-style
-      {% if has_isolated_grid_item_desktop %}footer-content--isolated-grid-item-desktop{% endif %}
-      {% if has_isolated_grid_item_tablet %}footer-content--isolated-grid-item-tablet{% endif %}
-    "
-    style="
-      {%  render 'spacing-style', settings: section.settings %}
-      --footer-gap: {{ section.settings.gap }}px;
-      --grid-columns: {{ grid_columns }};
-      --last-row-count: {{ last_row_count }};
-      --tablet-last-row-count: {{ tablet_last_row_count }};
-    "
-  >
-    {% content_for 'blocks' %}
+    <!-- INFORMATION -->
+    {% if section.settings.show_information %}
+      <div class="atomic-footer-column">
+        {% if section.settings.information_heading != blank %}
+          <h3 class="atomic-footer-heading">
+            {{ section.settings.information_heading }}
+          </h3>
+        {% endif %}
+
+        {% if section.settings.information_links != blank %}
+          <ul class="atomic-footer-menu">
+            {% assign information_items = section.settings.information_links | newline_to_br | split: '<br />' %}
+            {% for item in information_items %}
+              {% assign parts = item | split: '|' %}
+              {% assign item_title = parts[0] | strip %}
+              {% assign item_url = parts[1] | strip %}
+              {% if item_title != blank %}
+                <li>
+                  {% if item_url != blank %}
+                    <a href="{{ item_url }}">{{ item_title }}</a>
+                  {% else %}
+                    <span>{{ item_title }}</span>
+                  {% endif %}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- POLICIES -->
+    {% if section.settings.show_policies %}
+      <div class="atomic-footer-column">
+        {% if section.settings.policies_heading != blank %}
+          <h3 class="atomic-footer-heading">
+            {{ section.settings.policies_heading }}
+          </h3>
+        {% endif %}
+
+        {% if section.settings.policies_links != blank %}
+          <ul class="atomic-footer-menu">
+            {% assign policies_items = section.settings.policies_links | newline_to_br | split: '<br />' %}
+            {% for item in policies_items %}
+              {% assign parts = item | split: '|' %}
+              {% assign item_title = parts[0] | strip %}
+              {% assign item_url = parts[1] | strip %}
+              {% if item_title != blank %}
+                <li>
+                  {% if item_url != blank %}
+                    <a href="{{ item_url }}">{{ item_title }}</a>
+                  {% else %}
+                    <span>{{ item_title }}</span>
+                  {% endif %}
+                </li>
+              {% endif %}
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <!-- FOLLOW US -->
+    {% if section.settings.show_follow %}
+      <div class="atomic-footer-column atomic-footer-follow">
+        {% if section.settings.follow_heading != blank %}
+          <h3 class="atomic-footer-heading">
+            {{ section.settings.follow_heading }}
+          </h3>
+        {% endif %}
+
+        {% if section.settings.follow_description != blank %}
+          <div class="atomic-footer-follow-text">
+            {{ section.settings.follow_description | newline_to_br }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.show_social %}
+          <div class="atomic-footer-social">
+            {% if section.settings.facebook_url != blank %}
+              <a
+                href="{{ section.settings.facebook_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook"
+              >
+                <span aria-hidden="true">f</span>
+              </a>
+            {% endif %}
+
+            {% if section.settings.instagram_url != blank %}
+              <a
+                href="{{ section.settings.instagram_url }}"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+              >
+                <span aria-hidden="true">◎</span>
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+
   </div>
+
+  <!-- BOTTOM UTILITY ROW -->
+  {% if section.settings.show_bottom_row %}
+    <div class="atomic-footer-bottom">
+      <div class="atomic-footer-bottom-inner">
+
+        <div class="atomic-footer-currency">
+          {% if section.settings.show_currency_selector and localization.available_countries.size > 1 %}
+            {% form 'localization', id: 'AtomicFooterCountryForm', class: 'atomic-footer-localization' %}
+              <label class="visually-hidden" for="AtomicFooterCountry">
+                Country or region
+              </label>
+
+              <select
+                id="AtomicFooterCountry"
+                name="country_code"
+                class="atomic-footer-country"
+                onchange="this.form.submit()"
+              >
+                {% for country in localization.available_countries %}
+                  <option
+                    value="{{ country.iso_code }}"
+                    {% if country.iso_code == localization.country.iso_code %}selected{% endif %}
+                  >
+                    {{ country.name }} ({{ country.currency.iso_code }} {{ country.currency.symbol }})
+                  </option>
+                {% endfor %}
+              </select>
+            {% endform %}
+          {% else %}
+            <span>{{ section.settings.currency_text }}</span>
+          {% endif %}
+        </div>
+
+        <div class="atomic-footer-copyright">
+          {% if section.settings.copyright_text != blank %}
+            {{ section.settings.copyright_text }}
+          {% else %}
+            © {{ 'now' | date: '%Y' }} {{ shop.name }}
+          {% endif %}
+        </div>
+
+        <div class="atomic-footer-payments">
+          {% if section.settings.payment_text != blank %}
+            <span class="atomic-footer-payment-text">
+              {{ section.settings.payment_text }}
+            </span>
+          {% endif %}
+
+          {% if section.settings.show_payment_icons %}
+            <div class="atomic-footer-payment-icons">
+              {% for type in shop.enabled_payment_types %}
+                {{ type | payment_type_svg_tag: class: 'atomic-footer-payment-icon' }}
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+
+      </div>
+    </div>
+  {% endif %}
 </div>
 
 {% stylesheet %}
-  .footer-content {
-    contain: content;
-    content-visibility: auto;
+  .atomic-main-footer {
+    width: 100%;
+    background: var(--atomic-footer-bg);
+    color: var(--atomic-footer-text);
+    box-sizing: border-box;
+  }
+
+  .atomic-main-footer,
+  .atomic-main-footer * {
+    box-sizing: border-box;
+  }
+
+  .atomic-footer-inner {
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: var(--atomic-footer-top-padding) 38px var(--atomic-footer-bottom-padding);
     display: grid;
-    grid-template-columns: 1fr;
-    gap: var(--footer-gap);
+    grid-template-columns:
+      minmax(230px, 1.5fr)
+      minmax(130px, 1fr)
+      minmax(130px, 1fr)
+      minmax(130px, 1fr)
+      minmax(230px, 1.5fr);
+    column-gap: 35px;
     align-items: start;
   }
 
-  .footer-content .menu__heading__default {
-    font-weight: var(--font-heading--weight);
+  .atomic-footer-column {
+    min-width: 0;
+  }
+
+  .atomic-footer-heading {
+    margin: 0 0 18px;
+    color: var(--atomic-footer-heading) !important;
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    text-transform: uppercase;
+    letter-spacing: 0;
+  }
+
+  .atomic-footer-text {
+    color: var(--atomic-footer-text);
+    font-size: var(--atomic-footer-size);
+    font-weight: 500;
+    line-height: 1.75;
+  }
+
+  .atomic-footer-menu {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .atomic-footer-menu li {
+    margin: 0;
+    padding: 0;
+  }
+
+  .atomic-footer-menu a {
+    color: var(--atomic-footer-text);
+    font-size: var(--atomic-footer-size);
+    font-weight: 500;
+    line-height: 1.6;
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .atomic-footer-menu a:hover {
+    color: var(--atomic-footer-link-hover);
+  }
+
+  .atomic-footer-follow-text {
+    max-width: 270px;
+    color: var(--atomic-footer-text);
+    font-size: var(--atomic-footer-size);
+    font-weight: 500;
+    line-height: 1.7;
+  }
+
+  .atomic-footer-social {
+    display: flex;
+    margin-top: 18px;
+  }
+
+  .atomic-footer-social a {
+    width: 43px;
+    height: 43px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    color: var(--atomic-footer-text);
+    text-decoration: none;
+    font-size: 18px;
+    transition:
+      background 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .atomic-footer-social a + a {
+    border-left: none;
+  }
+
+  .atomic-footer-social a:hover {
+    background: var(--atomic-footer-link-hover);
+    border-color: var(--atomic-footer-link-hover);
+    color: #ffffff;
+  }
+
+  /* BOTTOM ROW */
+  .atomic-footer-bottom {
+    width: 100%;
+    border-top: 1px solid var(--atomic-footer-bottom-border);
+  }
+
+  .atomic-footer-bottom-inner {
+    width: 100%;
+    max-width: 1400px;
+    min-height: 58px;
+    margin: 0 auto;
+    padding: 12px 38px;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    column-gap: 24px;
+  }
+
+  .atomic-footer-currency,
+  .atomic-footer-copyright,
+  .atomic-footer-payments {
+    color: var(--atomic-footer-text);
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .atomic-footer-copyright {
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .atomic-footer-payments {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .atomic-footer-payment-text {
+    white-space: nowrap;
+  }
+
+  .atomic-footer-payment-icons {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 5px;
+    flex-wrap: wrap;
+  }
+
+  .atomic-footer-payment-icon {
+    width: 34px;
+    height: auto;
+    max-height: 24px;
+  }
+
+  .atomic-footer-localization {
+    margin: 0;
+  }
+
+  .atomic-footer-country {
+    min-width: 105px;
+    max-width: 145px;
+    padding: 6px 24px 6px 8px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 0;
+    background: transparent;
+    color: var(--atomic-footer-text);
+    font-size: 11px;
+    cursor: pointer;
+  }
+
+  .atomic-footer-country option {
+    color: #222222;
+    background: #ffffff;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
   }
 
   @media screen and (min-width: 750px) and (max-width: 989px) {
-    .footer-content {
-      grid-template-columns: repeat(min(var(--grid-columns), 3), 1fr);
-      grid-auto-flow: row;
-    }
-
-    .footer-content[style*='--grid-columns: 4'] {
+    .atomic-footer-inner {
       grid-template-columns: repeat(2, 1fr);
+      row-gap: 40px;
+      column-gap: 30px;
+      padding-left: 30px;
+      padding-right: 30px;
     }
 
-    .footer-content--isolated-grid-item-tablet > :last-child {
-      grid-column: 1 / -1;
+    .atomic-footer-bottom-inner {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+
+    .atomic-footer-follow-text {
+      max-width: 350px;
     }
   }
 
-  @media screen and (min-width: 990px) {
-    .footer-content {
-      grid-template-columns: repeat(var(--grid-columns), 1fr);
+  @media screen and (max-width: 749px) {
+    .atomic-footer-inner {
+      grid-template-columns: 1fr;
+      row-gap: 35px;
+      padding: 40px 22px 30px;
     }
 
-    /* Single item centered */
-    .footer-content[style*='--grid-columns: 1'] {
+    .atomic-footer-column {
+      width: 100%;
+    }
+
+    .atomic-footer-heading {
+      margin-bottom: 12px;
+    }
+
+    .atomic-footer-follow-text {
+      max-width: 100%;
+    }
+
+    .atomic-footer-social {
+      margin-top: 15px;
+    }
+
+    .atomic-footer-bottom-inner {
+      grid-template-columns: 1fr;
+      row-gap: 12px;
       justify-items: center;
+      padding: 16px 22px;
     }
 
-    .footer-content--isolated-grid-item-desktop > :last-child {
-      grid-column: 1 / -1;
+    .atomic-footer-currency,
+    .atomic-footer-copyright,
+    .atomic-footer-payments {
+      text-align: center;
+      justify-content: center;
+    }
+
+    .atomic-footer-payments {
+      flex-wrap: wrap;
+    }
+
+    .atomic-footer-payment-icons {
+      justify-content: center;
     }
   }
 {% endstylesheet %}
@@ -102,7 +505,11 @@
 {% schema %}
 {
   "name": "t:names.footer",
+  "tag": "section",
   "class": "section-wrapper",
+  "enabled_on": {
+    "groups": ["footer"]
+  },
   "blocks": [
     {
       "type": "_divider"
@@ -147,117 +554,260 @@
       "type": "email-signup"
     }
   ],
-  "enabled_on": {
-    "groups": ["footer"]
-  },
   "settings": [
     {
-      "type": "select",
-      "id": "section_width",
-      "label": "t:settings.width",
-      "options": [
-        {
-          "value": "page-width",
-          "label": "t:options.page"
-        },
-        {
-          "value": "full-width",
-          "label": "t:options.full"
-        }
-      ],
-      "default": "page-width"
+      "type": "header",
+      "content": "Visibility"
     },
     {
-      "type": "range",
-      "id": "gap",
-      "label": "t:settings.gap",
-      "min": 0,
-      "max": 100,
-      "step": 1,
-      "unit": "px",
-      "default": 0
+      "type": "checkbox",
+      "id": "show_support",
+      "label": "Show customer support",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_company",
+      "label": "Show company",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_information",
+      "label": "Show information",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show policies",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_follow",
+      "label": "Show follow us",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Customer Support"
+    },
+    {
+      "type": "text",
+      "id": "support_heading",
+      "label": "Heading",
+      "default": "CUSTOMER SUPPORT"
+    },
+    {
+      "type": "textarea",
+      "id": "support_content",
+      "label": "Support content",
+      "default": "Monday - Friday 09:00 - 19:00\nSaturday 9:00 - 18:00\nSunday Closed\n\ninfo@atomic-shop.ae\n\nATOMIC-SHOP UAE (REDLINE and RECARO\noffice only)\n+971 4 358 0 877\n+971 50 256 0 448\n26th Street\nAl Quoz Industrial Area 2\nDubai, United Arab Emirates\n\nATOMIC-SHOP UAE (RABDAN Motorsport)\n+971 50 467 02 51\n14 10b Street\nAl Quoz Industrial Area 3\nDubai, United Arab Emirates"
+    },
+
+    {
+      "type": "header",
+      "content": "Company"
+    },
+    {
+      "type": "text",
+      "id": "company_heading",
+      "label": "Heading",
+      "default": "COMPANY"
+    },
+    {
+      "type": "textarea",
+      "id": "company_links",
+      "label": "Company links",
+      "info": "One item per line: Title|URL",
+      "default": "About Us|/pages/about-us\nContact Us|/pages/contact\nNews|/blogs/news\nBrands|/pages/brands\nDealer Application|/pages/dealer-application\nVacancies|/pages/vacancies"
+    },
+
+    {
+      "type": "header",
+      "content": "Information"
+    },
+    {
+      "type": "text",
+      "id": "information_heading",
+      "label": "Heading",
+      "default": "INFORMATION"
+    },
+    {
+      "type": "textarea",
+      "id": "information_links",
+      "label": "Information links",
+      "info": "One item per line: Title|URL",
+      "default": "FAQ|/pages/faq\nDiscounts|/pages/discounts\nBest Sellers|/collections/best-sellers\nNew Arrivals|/collections/new-arrivals\nLatest Releases|/blogs/news"
+    },
+
+    {
+      "type": "header",
+      "content": "Policies"
+    },
+    {
+      "type": "text",
+      "id": "policies_heading",
+      "label": "Heading",
+      "default": "POLICIES"
+    },
+    {
+      "type": "textarea",
+      "id": "policies_links",
+      "label": "Policy links",
+      "info": "One item per line: Title|URL",
+      "default": "Terms of Service|/policies/terms-of-service\nShipping Policy|/policies/shipping-policy\nRefund Policy|/policies/refund-policy\nPrivacy Policy|/policies/privacy-policy"
+    },
+
+    {
+      "type": "header",
+      "content": "Follow Us"
+    },
+    {
+      "type": "text",
+      "id": "follow_heading",
+      "label": "Heading",
+      "default": "FOLLOW US"
+    },
+    {
+      "type": "textarea",
+      "id": "follow_description",
+      "label": "Description",
+      "default": "Connect with our community of enthusiasts and\njoin the conversation. We love hearing from our\nfollowers and sharing exclusive content with our\nloyal fans. Follow us today and never miss a\nbeat!"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_social",
+      "label": "Show social links",
+      "default": true
+    },
+    {
+      "type": "url",
+      "id": "facebook_url",
+      "label": "Facebook URL"
+    },
+    {
+      "type": "url",
+      "id": "instagram_url",
+      "label": "Instagram URL"
+    },
+
+    {
+      "type": "header",
+      "content": "Bottom Row"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_bottom_row",
+      "label": "Show bottom row",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_currency_selector",
+      "label": "Show currency/country selector",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "currency_text",
+      "label": "Fallback currency text",
+      "default": "India (INR ₹)"
+    },
+    {
+      "type": "text",
+      "id": "copyright_text",
+      "label": "Copyright text",
+      "default": "ATOMIC-SHOP Performance Parts & Motorsport Equipment - UAE"
+    },
+    {
+      "type": "text",
+      "id": "payment_text",
+      "label": "Payment text",
+      "default": "We accept"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_payment_icons",
+      "label": "Show payment icons",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "t:settings.background_color",
-      "default": "{{ settings.color_palette.foreground }}"
+      "label": "Footer background",
+      "default": "#242424"
     },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "link_hover_color",
+      "label": "Link hover color",
+      "default": "#E3262E"
+    },
+    {
+      "type": "color",
+      "id": "bottom_border_color",
+      "label": "Bottom row border color",
+      "default": "#3A3A3A"
+    },
+
     {
       "type": "header",
-      "content": "t:content.padding"
+      "content": "Typography"
     },
     {
       "type": "range",
-      "id": "padding-block-start",
-      "label": "t:settings.top",
-      "min": 0,
-      "max": 100,
+      "id": "font_size",
+      "label": "Text size",
+      "min": 10,
+      "max": 16,
       "step": 1,
       "unit": "px",
-      "default": 20
+      "default": 12
+    },
+
+    {
+      "type": "header",
+      "content": "Spacing"
     },
     {
       "type": "range",
-      "id": "padding-block-end",
-      "label": "t:settings.bottom",
-      "min": 0,
+      "id": "top_padding",
+      "label": "Top padding",
+      "min": 20,
       "max": 100,
-      "step": 1,
+      "step": 5,
       "unit": "px",
-      "default": 20
-    }
-  ],
-  "presets": [
+      "default": 50
+    },
     {
-      "name": "t:names.footer",
-      "category": "t:categories.footer",
-      "settings": {
-        "gap": 20,
-        "padding-block-start": 36,
-        "padding-block-end": 36
-      },
-      "blocks": {
-        "newsletter-group": {
-          "type": "group",
-          "settings": {
-            "content_direction": "column",
-            "vertical_on_mobile": true,
-            "horizontal_alignment": "flex-start",
-            "vertical_alignment": "center",
-            "gap": 6,
-            "width": "fill"
-          },
-          "blocks": {
-            "newsletter-heading": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.join_our_email_list",
-                "width": "100%",
-                "alignment": "left",
-                "type_preset": "h3"
-              }
-            },
-            "newsletter-text": {
-              "type": "text",
-              "settings": {
-                "text": "t:html_defaults.get_exclusive_deals_and_early_access_to_new_products",
-                "width": "100%",
-                "alignment": "left",
-                "type_preset": "rte"
-              }
-            }
-          },
-          "block_order": ["newsletter-heading", "newsletter-text"]
-        },
-        "newsletter-form": {
-          "type": "email-signup",
-          "settings": {
-            "width": "fill"
-          }
-        }
-      },
-      "block_order": ["newsletter-group", "newsletter-form"]
+      "type": "range",
+      "id": "bottom_padding",
+      "label": "Bottom padding",
+      "min": 20,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 40
     }
   ]
 }
