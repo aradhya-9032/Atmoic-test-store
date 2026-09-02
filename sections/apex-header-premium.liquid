@@ -30,23 +30,6 @@
               aria-controls="ApexCategoriesMenu-{{ section.id }}"
             >
               <span>{{ section.settings.categories_label }}</span>
-              {% if section.settings.show_categories_icon %}
-                <svg
-                  width="14"
-                  height="14"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M6 9l6 6 6-6"
-                    stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                  />
-                </svg>
-              {% endif %}
             </button>
 
             <div
@@ -482,7 +465,7 @@
 }
 
 .apex-header__categories-btn {
-  padding: 14px 20px;
+  padding: 10px 20px;
 
   display: inline-flex;
   align-items: center;
@@ -628,9 +611,9 @@
 
 /* ACCOUNT — native Shopify account action */
 .apex-header__native-actions .account-button {
-  width: 45px;
-  height: 45px;
-  min-width: 45px;
+  width: 52px;
+  height: 52px;
+  min-width: 52px;
   margin: 0;
   padding: 0;
   display: inline-flex;
@@ -667,6 +650,7 @@
   position: relative;
   width: 82px;
   min-width: 82px;
+  height: 45px;
   margin: 0;
   padding: 0 12px 0 10px;
   display: inline-flex;
@@ -721,7 +705,7 @@
   transform: none;
 }
 
-/* CART — native Shopify drawer/page trigger and count stay untouched */
+/* CART — Cart text + count only */
 .apex-header__native-actions .header-actions__action.button-unstyled,
 .apex-header__native-actions .action__cart {
   position: relative;
@@ -731,8 +715,7 @@
   padding: 0 12px 0 20px;
   display: inline-flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
+  justify-content: center;
   border: 0;
   border-radius: 999px;
   background: #1B2A5B;
@@ -746,61 +729,110 @@
   background: var(--apex-navy-hover);
 }
 
+/* Keep Shopify cart component for live count updates */
 .apex-header__native-actions cart-icon,
 .apex-header__native-actions .header-actions__cart-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  position: static;
-  min-width: 30px;
-  
-}
-
-/* Add Cart text using UI only */
-.apex-header__native-actions .header-actions__cart-icon::before {
-  content: "Cart";
-  display: inline-block;
-  margin-right: 12px;
-
+  position: static !important;
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  background: transparent !important;
   color: #ffffff !important;
-  font-size: 18px;
-  font-weight: 600;
-  line-height: 1;
+  overflow: visible !important;
 }
 
-/* Count bubble */
-.apex-header__native-actions .header-actions__cart-icon .cart-bubble {
-  flex-shrink: 0 !important;
+/* Never show the cart SVG/icon */
+.apex-header__native-actions .header-actions__cart-icon .svg-wrapper,
+.apex-header__native-actions .header-actions__cart-icon > svg,
+.apex-header__native-actions cart-icon .svg-wrapper,
+.apex-header__native-actions cart-icon > svg {
+  display: none !important;
 }
 
+/* Cart text */
+.apex-header__native-actions .header-actions__cart-icon .cart-label {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  clip: auto !important;
+  clip-path: none !important;
+  overflow: visible !important;
+  white-space: nowrap !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  color: #ffffff !important;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+  line-height: 1 !important;
+}
+
+/* Cart count bubble */
 .apex-header__native-actions .header-actions__cart-icon .cart-bubble,
-.apex-header__native-actions cart-icon .cart-bubble {
-  position: static;
-  width: 30px;
-  height: 30px;
-  min-width: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  overflow: hidden;
-  background: #ffffff;
-  color: #1B2A5B;
+.apex-header__native-actions cart-icon .cart-bubble,
+.apex-header__native-actions .header-actions__cart-icon .cart-bubble.visually-hidden,
+.apex-header__native-actions cart-icon .cart-bubble.visually-hidden {
+  position: static !important;
+  top: auto !important;
+  right: auto !important;
+  width: 30px !important;
+  min-width: 30px !important;
+  height: 30px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  clip: auto !important;
+  clip-path: none !important;
+  overflow: visible !important;
+  white-space: normal !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  flex: 0 0 30px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  color: #1B2A5B !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
+.apex-header__native-actions .header-actions__cart-icon .cart-bubble__background,
+.apex-header__native-actions cart-icon .cart-bubble__background {
+  display: none !important;
+}
 
 .apex-header__native-actions .header-actions__cart-icon .cart-bubble__text,
-.apex-header__native-actions cart-icon .cart-bubble__text {
-  position: static;
-  color: #1B2A5B;
-  font-size: 14px;
-  line-height: 1;
-  font-weight: 800;
+.apex-header__native-actions cart-icon .cart-bubble__text,
+.apex-header__native-actions .header-actions__cart-icon .cart-bubble__text-count,
+.apex-header__native-actions cart-icon .cart-bubble__text-count {
+  position: static !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  clip: auto !important;
+  clip-path: none !important;
+  overflow: visible !important;
+  display: inline !important;
+  color: #1B2A5B !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  visibility: visible !important;
+  opacity: 1 !important;
+  transform: none !important;
 }
 
-/* Prevent the native donut mask from affecting the premium cart UI */
-.apex-header__native-actions .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
-  mask: none;
+/* Empty cart = 0; Shopify updates this count when products are added */
+.apex-header__native-actions .cart-bubble__text-count:empty::before {
+  content: "0";
 }
 
 /* Theme editor visibility settings */
@@ -1004,10 +1036,6 @@
     border-radius: 999px;
   }
 
-  .apex-header__native-actions .header-actions__action.button-unstyled::before,
-  .apex-header__native-actions .action__cart::before {
-    font-size: 14px;
-  }
 
   .apex-header__native-actions .automotive-wishlist {
     width: 68px;
