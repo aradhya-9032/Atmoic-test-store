@@ -70,7 +70,7 @@
     width: 100%;
     padding-top: var(--vf-padding-top);
     padding-bottom: var(--vf-padding-bottom);
-    background: var(--vf-bg);
+    background: #F1EFEB;
     color: var(--vf-text);
   }
 
@@ -88,7 +88,6 @@
   }
 
   .vehicle-finder__heading {
-    font-family:"Russo One", san serif;
     margin: 0 0 26px;
     text-align: center;
     font-size: 22px;
@@ -106,6 +105,7 @@
 
   .vehicle-finder__field label {
     display: block;
+    color:grey;
     margin: 0 0 9px;
     font-size: 16px;
     line-height: 1.2;
@@ -117,10 +117,20 @@
     display: block;
     width: 100%;
     height: 47px;
-    padding: 0 42px 0 18px;
+    padding: 0 48px 0 18px;
     border: 1px solid var(--vf-field-border);
-    border-radius: 0;
-    background: var(--vf-field-bg);
+    border-radius: 10px;
+
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+
+    background-color: var(--vf-field-bg);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%2307182b' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 16px center;
+    background-size: 12px 7px;
+
     color: var(--vf-text);
     font: inherit;
     font-size: 17px;
@@ -130,13 +140,24 @@
   .vf-select:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' fill='none' stroke='%23777777' stroke-width='1.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  }
+
+  .vf-select:hover:not(:disabled) {
+    border-color: var(--vf-search-bg);
+  }
+
+  .vf-select:focus {
+    outline: none;
+    border-color: var(--vf-search-bg);
+    box-shadow: 0 0 0 2px rgba(2, 101, 242, 0.08);
   }
 
   .vehicle-finder__search,
   .vehicle-finder__clear {
     width: 100%;
     height: 47px;
-    border-radius: 0;
+    border-radius: 10px;
     font: inherit;
     font-size: 16px;
     font-weight: 700;
@@ -145,8 +166,8 @@
   }
 
   .vehicle-finder__search {
-    border: 1px solid var(--vf-search-bg);
-    background: var(--vf-search-bg);
+    border: 1px solid #1B2A5B;
+    background: #1B2A5B;
     color: var(--vf-search-text);
   }
 
@@ -225,10 +246,12 @@
         'M3 LCI (E90)'
       ],
 
-      MITSUBISHI: [],
-      NISSAN: [],
-      PORSCHE: [],
-      SUBARU: []
+      /* Other make model lists were not supplied in this source.
+         Keep the model dropdown usable without inventing model names. */
+      MITSUBISHI: ['ALL MODELS'],
+      NISSAN: ['ALL MODELS'],
+      PORSCHE: ['ALL MODELS'],
+      SUBARU: ['ALL MODELS']
     };
 
     const setDisabled = (element, disabled) => {
@@ -263,7 +286,7 @@
       hideMessage();
     });
 
-    /* MAKE -> ENABLE MODEL */
+    /* MAKE -> ENABLE MODEL FOR EVERY MAKE */
     make.addEventListener('change', () => {
       const selectedMake = make.value;
 
@@ -276,26 +299,15 @@
 
       const models = vehicleData[selectedMake] || [];
 
-      if (models.length > 0) {
-        models.forEach((modelName) => {
-          const option = document.createElement('option');
-          option.value = modelName;
-          option.textContent = modelName;
-          model.appendChild(option);
-        });
-
-        setDisabled(model, false);
-      } else {
-        /*
-          Keep the third dropdown disabled until actual model data
-          is available. This prevents the client from selecting
-          invalid/fake vehicle models.
-        */
+      models.forEach((modelName) => {
         const option = document.createElement('option');
-        option.value = '';
-        option.textContent = 'No models available';
+        option.value = modelName;
+        option.textContent = modelName;
         model.appendChild(option);
-      }
+      });
+
+      /* Any selected make enables the model dropdown. */
+      setDisabled(model, false);
     });
 
     /* MODEL -> ENABLE SEARCH */

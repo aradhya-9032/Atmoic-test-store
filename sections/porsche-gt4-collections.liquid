@@ -5,117 +5,672 @@
     --gt4-card-bg: {{ section.settings.card_background }};
     --gt4-text: {{ section.settings.text_color }};
     --gt4-accent: {{ section.settings.accent_color }};
+    --gt4-max-width: {{ section.settings.content_width }}px;
+    --gt4-card-gap: {{ section.settings.card_gap }}px;
+    --gt4-card-height: {{ section.settings.card_height }}px;
+    --gt4-overlay: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
   "
 >
+  {% if section.settings.left_image != blank %}
+    <div class="gt4-collections__background gt4-collections__background--left">
+      {{
+        section.settings.left_image
+        | image_url: width: 1800
+        | image_tag:
+          loading: 'lazy',
+          widths: '700,1000,1400,1800',
+          class: 'gt4-collections__background-image'
+      }}
+    </div>
+  {% endif %}
+
+  {% if section.settings.right_image != blank %}
+    <div class="gt4-collections__background gt4-collections__background--right">
+      {{
+        section.settings.right_image
+        | image_url: width: 1800
+        | image_tag:
+          loading: 'lazy',
+          widths: '700,1000,1400,1800',
+          class: 'gt4-collections__background-image'
+      }}
+    </div>
+  {% endif %}
+
+  <div class="gt4-collections__base"></div>
+  <div class="gt4-collections__overlay"></div>
+  <div class="gt4-collections__grid-lines"></div>
+
   <div class="gt4-collections__container">
 
-    <!-- LEFT HEADING -->
-    <div class="gt4-collections__heading">
-      {% if section.settings.heading != blank %}
-        <h2>{{ section.settings.heading }}</h2>
+    <!-- =========================
+         HEADER
+    ========================== -->
+
+    <div class="gt4-collections__header gt4-reveal">
+
+      <div class="gt4-collections__heading-wrap">
+
+        {% if section.settings.kicker != blank %}
+          <p class="gt4-collections__kicker">
+            <span></span>
+            {{ section.settings.kicker }}
+          </p>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="gt4-collections__heading">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.accent_heading != blank %}
+          <h3 class="gt4-collections__accent-heading">
+            {{ section.settings.accent_heading }}
+          </h3>
+        {% endif %}
+
+      </div>
+
+      {% if section.settings.description != blank %}
+        <div class="gt4-collections__description">
+          {{ section.settings.description }}
+        </div>
       {% endif %}
+
     </div>
 
-    <!-- TOP RIGHT CARD -->
-    {% if section.blocks.size > 0 %}
-      {% assign block = section.blocks[0] %}
 
-      <a
-        href="{{ block.settings.link | default: '#' }}"
-        class="gt4-card gt4-card--top"
-        {{ block.shopify_attributes }}
-      >
-        <span class="gt4-card__dot"></span>
+    <!-- =========================
+         CONTENT GRID
+    ========================== -->
 
-        <h3>{{ block.settings.title }}</h3>
+    <div class="gt4-collections__layout">
 
-        <span class="gt4-card__link">
-          {{ block.settings.link_text }}
-          <span> &gt; </span>
-        </span>
-      </a>
-    {% endif %}
+      <!-- LEFT FEATURE IMAGE -->
 
-    <!-- RIGHT IMAGE -->
-    <div class="gt4-image gt4-image--right">
-      {% if section.settings.right_image != blank %}
-        {{
-          section.settings.right_image
-          | image_url: width: 1200
-          | image_tag:
-            loading: 'lazy',
-            class: 'gt4-image__img'
-        }}
+      <div class="gt4-collections__image-card gt4-reveal">
+
+        {% if section.settings.left_image != blank %}
+
+          <div class="gt4-collections__image-wrap">
+            {{
+              section.settings.left_image
+              | image_url: width: 1600
+              | image_tag:
+                loading: 'lazy',
+                widths: '600,900,1200,1600',
+                class: 'gt4-collections__image'
+            }}
+
+            <div class="gt4-collections__image-overlay"></div>
+
+            <div class="gt4-collections__image-content">
+
+              <span class="gt4-collections__image-index">
+                01
+              </span>
+
+              {% if section.settings.left_image_label != blank %}
+                <span class="gt4-collections__image-label">
+                  {{ section.settings.left_image_label }}
+                </span>
+              {% endif %}
+
+            </div>
+          </div>
+
+        {% endif %}
+
+      </div>
+
+
+      <!-- TOP RIGHT COLLECTION -->
+
+      {% if section.blocks.size > 0 %}
+        {% assign block = section.blocks[0] %}
+        {% assign card_collection = block.settings.collection %}
+        {% assign card_image = block.settings.image %}
+        {% assign card_link = block.settings.link %}
+        {% assign card_title = block.settings.title %}
+
+        {% if card_collection != blank %}
+          {% assign card_image = card_collection.featured_image %}
+          {% assign card_link = card_collection.url %}
+          {% assign card_title = card_collection.title %}
+        {% endif %}
+
+        <a
+          href="{{ card_link | default: '#' }}"
+          class="gt4-card gt4-card--top gt4-reveal"
+          {{ block.shopify_attributes }}
+        >
+          {% if card_image != blank %}
+            <div class="gt4-card__media">
+              {{
+                card_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '500,800,1100,1400',
+                  class: 'gt4-card__image'
+              }}
+            </div>
+          {% endif %}
+
+          <div class="gt4-card__image-overlay"></div>
+
+          <div class="gt4-card__content">
+
+            <div class="gt4-card__top">
+              <span class="gt4-card__number">02</span>
+
+              {% if block.settings.label != blank %}
+                <span class="gt4-card__label">{{ block.settings.label }}</span>
+              {% endif %}
+            </div>
+
+            <div class="gt4-card__bottom">
+              <div>
+                <h3>{{ card_title }}</h3>
+
+                {% if block.settings.subtitle != blank %}
+                  <p>{{ block.settings.subtitle }}</p>
+                {% endif %}
+
+                <span class="gt4-card__link">{{ block.settings.link_text }}</span>
+              </div>
+
+              <span class="gt4-card__arrow">↗</span>
+            </div>
+
+          </div>
+        </a>
       {% endif %}
-    </div>
 
-    <!-- BOTTOM LEFT IMAGE -->
-    <div class="gt4-image gt4-image--left">
-      {% if section.settings.left_image != blank %}
-        {{
-          section.settings.left_image
-          | image_url: width: 1000
-          | image_tag:
-            loading: 'lazy',
-            class: 'gt4-image__img'
-        }}
+
+      <!-- RIGHT FEATURE IMAGE -->
+
+      <div class="gt4-collections__image-card gt4-collections__image-card--right gt4-reveal">
+
+        {% if section.settings.right_image != blank %}
+
+          <div class="gt4-collections__image-wrap">
+
+            {{
+              section.settings.right_image
+              | image_url: width: 1600
+              | image_tag:
+                loading: 'lazy',
+                widths: '600,900,1200,1600',
+                class: 'gt4-collections__image'
+            }}
+
+            <div class="gt4-collections__image-overlay"></div>
+
+            <div class="gt4-collections__image-content">
+
+              <span class="gt4-collections__image-index">
+                03
+              </span>
+
+              {% if section.settings.right_image_label != blank %}
+                <span class="gt4-collections__image-label">
+                  {{ section.settings.right_image_label }}
+                </span>
+              {% endif %}
+
+            </div>
+
+          </div>
+
+        {% endif %}
+
+      </div>
+
+
+      <!-- BOTTOM LEFT COLLECTION -->
+
+      {% if section.blocks.size > 1 %}
+        {% assign block = section.blocks[1] %}
+        {% assign card_collection = block.settings.collection %}
+        {% assign card_image = block.settings.image %}
+        {% assign card_link = block.settings.link %}
+        {% assign card_title = block.settings.title %}
+
+        {% if card_collection != blank %}
+          {% assign card_image = card_collection.featured_image %}
+          {% assign card_link = card_collection.url %}
+          {% assign card_title = card_collection.title %}
+        {% endif %}
+
+        <a
+          href="{{ card_link | default: '#' }}"
+          class="gt4-card gt4-card--bottom-left gt4-reveal"
+          {{ block.shopify_attributes }}
+        >
+          {% if card_image != blank %}
+            <div class="gt4-card__media">
+              {{
+                card_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '500,800,1100,1400',
+                  class: 'gt4-card__image'
+              }}
+            </div>
+          {% endif %}
+
+          <div class="gt4-card__image-overlay"></div>
+
+          <div class="gt4-card__content">
+
+            <div class="gt4-card__top">
+              <span class="gt4-card__number">04</span>
+
+              {% if block.settings.label != blank %}
+                <span class="gt4-card__label">{{ block.settings.label }}</span>
+              {% endif %}
+            </div>
+
+            <div class="gt4-card__bottom">
+              <div>
+                <h3>{{ card_title }}</h3>
+
+                {% if block.settings.subtitle != blank %}
+                  <p>{{ block.settings.subtitle }}</p>
+                {% endif %}
+
+                <span class="gt4-card__link">{{ block.settings.link_text }}</span>
+              </div>
+
+              <span class="gt4-card__arrow">↗</span>
+            </div>
+
+          </div>
+        </a>
       {% endif %}
+
+
+      <!-- BOTTOM RIGHT COLLECTION -->
+
+      {% if section.blocks.size > 2 %}
+        {% assign block = section.blocks[2] %}
+        {% assign card_collection = block.settings.collection %}
+        {% assign card_image = block.settings.image %}
+        {% assign card_link = block.settings.link %}
+        {% assign card_title = block.settings.title %}
+
+        {% if card_collection != blank %}
+          {% assign card_image = card_collection.featured_image %}
+          {% assign card_link = card_collection.url %}
+          {% assign card_title = card_collection.title %}
+        {% endif %}
+
+        <a
+          href="{{ card_link | default: '#' }}"
+          class="gt4-card gt4-card--bottom-right gt4-reveal"
+          {{ block.shopify_attributes }}
+        >
+          {% if card_image != blank %}
+            <div class="gt4-card__media">
+              {{
+                card_image
+                | image_url: width: 1400
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '500,800,1100,1400',
+                  class: 'gt4-card__image'
+              }}
+            </div>
+          {% endif %}
+
+          <div class="gt4-card__image-overlay"></div>
+
+          <div class="gt4-card__content">
+
+            <div class="gt4-card__top">
+              <span class="gt4-card__number">05</span>
+
+              {% if block.settings.label != blank %}
+                <span class="gt4-card__label">{{ block.settings.label }}</span>
+              {% endif %}
+            </div>
+
+            <div class="gt4-card__bottom">
+              <div>
+                <h3>{{ card_title }}</h3>
+
+                {% if block.settings.subtitle != blank %}
+                  <p>{{ block.settings.subtitle }}</p>
+                {% endif %}
+
+                <span class="gt4-card__link">{{ block.settings.link_text }}</span>
+              </div>
+
+              <span class="gt4-card__arrow">↗</span>
+            </div>
+
+          </div>
+        </a>
+      {% endif %}
+
     </div>
-
-    <!-- BOTTOM MIDDLE CARD -->
-    {% if section.blocks.size > 1 %}
-      {% assign block = section.blocks[1] %}
-
-      <a
-        href="{{ block.settings.link | default: '#' }}"
-        class="gt4-card gt4-card--bottom-left"
-        {{ block.shopify_attributes }}
-      >
-        <span class="gt4-card__dot"></span>
-
-        <h3>{{ block.settings.title }}</h3>
-
-        <span class="gt4-card__link">
-          {{ block.settings.link_text }}
-          <span> &gt; </span>
-        </span>
-      </a>
-    {% endif %}
-
-    <!-- BOTTOM RIGHT CARD -->
-    {% if section.blocks.size > 2 %}
-      {% assign block = section.blocks[2] %}
-
-      <a
-        href="{{ block.settings.link | default: '#' }}"
-        class="gt4-card gt4-card--bottom-right"
-        {{ block.shopify_attributes }}
-      >
-        <span class="gt4-card__dot"></span>
-
-        <h3>{{ block.settings.title }}</h3>
-
-        <span class="gt4-card__link">
-          {{ block.settings.link_text }}
-          <span> &gt; </span>
-        </span>
-      </a>
-    {% endif %}
 
   </div>
 </section>
 
 
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+
+    if (!section) return;
+
+    const elements = section.querySelectorAll('.gt4-reveal');
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+
+          if (!entry.isIntersecting) return;
+
+          elements.forEach((element, index) => {
+            setTimeout(() => {
+              element.classList.add('is-visible');
+            }, index * 90);
+          });
+
+          observer.disconnect();
+        });
+      },
+      {
+        threshold: 0.08
+      }
+    );
+
+    observer.observe(section);
+  })();
+</script>
+
+
 {% stylesheet %}
 
+/* ==========================================================
+   GT4 COLLECTIONS — APEX PREMIUM
+========================================================== */
+
 .gt4-collections {
+  position: relative;
   width: 100%;
+  overflow: hidden;
+
   background: var(--gt4-bg);
-  padding: 38px;
-  box-sizing: border-box;
+  color: var(--gt4-text);
+
+  padding:
+    {{ section.settings.padding_top }}px
+    0
+    {{ section.settings.padding_bottom }}px;
 }
 
+
+/* ==========================================================
+   BACKGROUND IMAGES
+========================================================== */
+
+.gt4-collections__background {
+  position: absolute;
+  z-index: 0;
+
+  top: 0;
+  bottom: 0;
+
+  overflow: hidden;
+}
+
+.gt4-collections__background--left {
+  left: 0;
+  width: 52%;
+}
+
+.gt4-collections__background--right {
+  right: 0;
+  width: 48%;
+}
+
+.gt4-collections__background-image {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  filter:
+    saturate(.72)
+    contrast(1.08);
+
+  transform: scale(1.015);
+
+  transition:
+    transform 1s cubic-bezier(.22,.61,.36,1);
+}
+
+
+/* ==========================================================
+   BASE + OVERLAY
+========================================================== */
+
+.gt4-collections__base {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      135deg,
+      #000 0%,
+      #071329 60%,
+      #000 100%
+    );
+
+  opacity: .52;
+}
+
+
+.gt4-collections__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.91) 0%,
+      rgba(0,0,0,.75) 42%,
+      rgba(0,0,0,.34) 76%,
+      rgba(0,0,0,.73) 100%
+    );
+
+  opacity: var(--gt4-overlay);
+}
+
+
+.gt4-collections__grid-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.035) 1px,
+      transparent 1px
+    );
+
+  background-size: 52px 52px;
+
+  mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent 92%
+    );
+}
+
+
+/* ==========================================================
+   CONTAINER
+========================================================== */
+
 .gt4-collections__container {
+  position: relative;
+  z-index: 4;
+
+  width:
+    min(
+      var(--gt4-max-width),
+      calc(100% - 48px)
+    );
+
+  margin: 0 auto;
+}
+
+
+/* ==========================================================
+   HEADER
+========================================================== */
+
+.gt4-collections__header {
+  display: grid;
+
+  grid-template-columns:
+    1.15fr
+    .55fr;
+
+  align-items: end;
+
+  gap: 60px;
+
+  margin-bottom: 38px;
+}
+
+
+.gt4-collections__heading-wrap {
+  max-width: 760px;
+  padding-top:90px;
+}
+
+
+.gt4-collections__kicker {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin: 0 0 16px;
+
+  color:
+    rgba(255,255,255,.58);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: .17em;
+
+  text-transform: uppercase;
+}
+
+
+.gt4-collections__kicker span {
+  width: 28px;
+  height: 1px;
+
+  background:
+    var(--gt4-accent);
+}
+
+
+.gt4-collections__heading {
+  margin: 0;
+
+  font-family:
+    "Russo One",
+    sans-serif !important;
+
+  font-size:
+    clamp(
+      42px,
+      5vw,
+      76px
+    );
+
+  line-height: .92;
+
+  font-weight: 400;
+
+  letter-spacing:
+    -.025em;
+
+  text-transform: uppercase;
+}
+
+
+.gt4-collections__accent-heading {
+  margin: 7px 0 0;
+
+  font-family:
+    "Russo One",
+    sans-serif !important;
+
+  font-size:
+    clamp(
+      30px,
+      3.8vw,
+      56px
+    );
+
+  line-height: 1;
+
+  font-weight: 400;
+
+  letter-spacing:
+    -.02em;
+
+  text-transform: uppercase;
+
+  color:
+    var(--gt4-accent);
+}
+
+
+.gt4-collections__description {
+  max-width: 420px;
+
+  justify-self: end;
+
+  font-size: 14px;
+
+  line-height: 1.75;
+
+  color:
+    rgba(255,255,255,.65);
+}
+
+
+/* ==========================================================
+   LAYOUT
+========================================================== */
+
+.gt4-collections__layout {
   display: grid;
 
   grid-template-columns:
@@ -125,155 +680,54 @@
     1fr;
 
   grid-template-rows:
-    145px
-    145px;
+    var(--gt4-card-height)
+    var(--gt4-card-height);
 
-  gap: 15px;
-
-  max-width: 1400px;
-  margin: 0 auto;
+  gap:
+    var(--gt4-card-gap);
 }
 
 
-/* =========================
-   HEADING
-   ========================= */
+/* ==========================================================
+   IMAGE CARDS
+========================================================== */
 
-.gt4-collections__heading {
-  grid-column: 1 / 3;
-  grid-row: 1;
-
-  display: flex;
-  align-items: center;
-  font-family:"Russo One", san serif;
-  padding: 20px 0;
-}
-
-.gt4-collections__heading h2 {
-  margin: 0;
-  font-family:"Russo One", san serif;
-  max-width: 520px;
-
-  color: var(--gt4-text);
-
-  font-size: 34px;
-  line-height: 1.05;
-
-  font-weight: 800;
-
-  text-transform: uppercase;
-
-  letter-spacing: .5px;
-}
-
-
-/* =========================
-   CARDS
-   ========================= */
-
-.gt4-card {
+.gt4-collections__image-card {
   position: relative;
 
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-
-  padding: 25px 34px;
-
-  background: var(--gt4-card-bg);
-
-  color: var(--gt4-text);
-
-  text-decoration: none;
-
-  box-sizing: border-box;
-
-  transition:
-    transform .2s ease,
-    background .2s ease;
-}
-
-.gt4-card:hover {
-  transform: translateY(-2px);
-}
-
-.gt4-card__dot {
-  position: absolute;
-
-  top: 38px;
-  left: 34px;
-
-  width: 11px;
-  height: 11px;
-
-  background: var(--gt4-accent);
-}
-
-.gt4-card h3 {
-  margin: 25px 0 12px;
-
-  font-size: 17px;
-  line-height: 1.2;
-
-  font-weight: 700;
-
-  text-transform: uppercase;
-}
-
-.gt4-card__link {
-  font-size: 10px;
-
-  font-weight: 600;
-
-  text-transform: uppercase;
-
-  text-decoration: underline;
-}
-
-.gt4-card__link span {
-  text-decoration: none;
-  margin-left: 4px;
-}
-
-.gt4-card:hover .gt4-card__link {
-  color: var(--gt4-accent);
-}
-
-
-/* TOP RIGHT CARD */
-
-.gt4-card--top {
-  grid-column: 3;
-  grid-row: 1;
-}
-
-
-/* BOTTOM LEFT CARD */
-
-.gt4-card--bottom-left {
-  grid-column: 2;
-  grid-row: 2;
-}
-
-
-/* BOTTOM RIGHT CARD */
-
-.gt4-card--bottom-right {
-  grid-column: 3;
-  grid-row: 2;
-}
-
-
-/* =========================
-   IMAGES
-   ========================= */
-
-.gt4-image {
   overflow: hidden;
-  background: #ddd;
+
+  border:
+    1px solid
+    rgba(255,255,255,.11);
+
+  background: #050505;
 }
 
-.gt4-image__img {
+
+.gt4-collections__image-card--right {
+  grid-column: 4;
+  grid-row: 1 / 3;
+}
+
+
+.gt4-collections__image-card:not(
+  .gt4-collections__image-card--right
+) {
+  grid-column: 1;
+  grid-row: 1 / 3;
+}
+
+
+.gt4-collections__image-wrap {
+  position: absolute;
+  inset: 0;
+
+  overflow: hidden;
+}
+
+
+.gt4-collections__image {
   width: 100%;
   height: 100%;
 
@@ -281,82 +735,657 @@
 
   object-fit: cover;
 
-  transition: transform .4s ease;
+  filter:
+    saturate(.75)
+    contrast(1.05)
+    brightness(.76);
+
+  transform: scale(1.02);
+
+  transition:
+    transform .7s
+      cubic-bezier(.22,.61,.36,1),
+
+    filter .5s ease;
 }
 
-.gt4-image:hover .gt4-image__img {
-  transform: scale(1.03);
+
+.gt4-collections__image-card:hover
+.gt4-collections__image {
+  transform:
+    scale(1.07);
+
+  filter:
+    saturate(.96)
+    contrast(1.05)
+    brightness(.88);
 }
 
 
-/* RIGHT IMAGE */
+.gt4-collections__image-overlay {
+  position: absolute;
+  inset: 0;
 
-.gt4-image--right {
-  grid-column: 4;
-  grid-row: 1 / 3;
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.84),
+      rgba(0,0,0,.10) 68%
+    );
 }
 
 
-/* LEFT IMAGE */
+.gt4-collections__image-content {
+  position: absolute;
 
-.gt4-image--left {
-  grid-column: 1;
+  inset: 0;
+
+  padding: 18px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+}
+
+
+.gt4-collections__image-index {
+  color:
+    var(--gt4-accent);
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: .14em;
+}
+
+
+.gt4-collections__image-label {
+  align-self: flex-start;
+
+  padding: 7px 9px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  background:
+    rgba(0,0,0,.28);
+
+  color:
+    rgba(255,255,255,.72);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+}
+
+
+
+/* ==========================================================
+   COLLECTION CARD IMAGES
+========================================================== */
+
+.gt4-card__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.gt4-card__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+  filter:
+    saturate(.72)
+    brightness(.62)
+    contrast(1.05);
+  transform: scale(1.02);
+  transition:
+    transform .65s cubic-bezier(.22,.61,.36,1),
+    filter .45s ease;
+}
+
+.gt4-card__image-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.95) 0%,
+      rgba(0,0,0,.64) 48%,
+      rgba(0,0,0,.12) 100%
+    );
+  pointer-events: none;
+}
+
+.gt4-card__content {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.gt4-card:hover .gt4-card__image {
+  transform: scale(1.08);
+  filter:
+    saturate(.95)
+    brightness(.78)
+    contrast(1.05);
+}
+
+/* ==========================================================
+   COLLECTION CARDS
+========================================================== */
+
+.gt4-card {
+  position: relative;
+  overflow: hidden;
+
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: space-between;
+
+  min-width: 0;
+  min-height:
+    var(--gt4-card-height);
+
+  padding: 20px;
+
+  box-sizing: border-box;
+
+  color: #fff;
+
+  text-decoration: none;
+
+  border:
+    1px solid
+    rgba(255,255,255,.12);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(10,15,28,.92),
+      rgba(3,7,14,.82)
+    );
+
+  backdrop-filter:
+    blur(8px);
+
+  transition:
+    transform .45s
+      cubic-bezier(.22,.61,.36,1),
+
+    border-color .3s ease,
+
+    background .3s ease,
+
+    box-shadow .4s ease;
+}
+
+
+.gt4-card--top {
+  grid-column: 2 / 4;
+  grid-row: 1;
+}
+
+
+.gt4-card--bottom-left {
+  grid-column: 2;
   grid-row: 2;
 }
 
 
-/* =========================
-   MOBILE
-   ========================= */
+.gt4-card--bottom-right {
+  grid-column: 3;
+  grid-row: 2;
+}
 
-@media screen and (max-width: 749px) {
 
-  .gt4-collections {
-    padding: 20px;
-  }
+.gt4-card:hover {
+
+  transform:
+    translateY(-6px);
+
+  border-color:
+    var(--gt4-accent);
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(8,26,64,.94),
+      rgba(3,8,17,.92)
+    );
+
+  box-shadow:
+    0 22px 55px
+    rgba(0,0,0,.35);
+}
+
+
+/* ==========================================================
+   CARD TOP
+========================================================== */
+
+.gt4-card__top {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 14px;
+}
+
+
+.gt4-card__number {
+  color:
+    var(--gt4-accent);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: .15em;
+}
+
+
+.gt4-card__label {
+  padding:
+    7px 9px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.14);
+
+  color:
+    rgba(255,255,255,.58);
+
+  background:
+    rgba(255,255,255,.025);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+}
+
+
+/* ==========================================================
+   CARD BOTTOM
+========================================================== */
+
+.gt4-card__bottom {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: flex-end;
+
+  gap: 18px;
+}
+
+
+.gt4-card h3 {
+  margin: 0;
+
+  font-size:
+    clamp(
+      16px,
+      1.6vw,
+      22px
+    );
+
+  line-height: 1.05;
+
+  font-weight: 700;
+
+  letter-spacing:
+    -.015em;
+
+  text-transform: uppercase;
+}
+
+
+.gt4-card p {
+  margin:
+    8px 0 12px;
+
+  color:
+    rgba(255,255,255,.48);
+
+  font-size: 9px;
+
+  line-height: 1;
+
+  letter-spacing: .13em;
+
+  text-transform: uppercase;
+}
+
+
+.gt4-card__link {
+  display: inline-flex;
+
+  align-items: center;
+
+  color: #fff;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: .13em;
+
+  text-transform: uppercase;
+
+  transition:
+    color .25s ease;
+}
+
+
+.gt4-card:hover
+.gt4-card__link {
+  color:
+    var(--gt4-accent);
+}
+
+
+/* ==========================================================
+   CARD ARROW
+========================================================== */
+
+.gt4-card__arrow {
+  flex: 0 0 auto;
+
+  width: 42px;
+  height: 42px;
+
+  display: grid;
+
+  place-items: center;
+
+  background:
+    var(--gt4-accent);
+
+  color: #fff;
+
+  font-size: 19px;
+
+  transition:
+    transform .3s ease,
+
+    background .3s ease;
+}
+
+
+.gt4-card:hover
+.gt4-card__arrow {
+
+  transform:
+    translate(
+      3px,
+      -3px
+    );
+
+  background:
+    #0343C0;
+}
+
+
+/* ==========================================================
+   REVEAL ANIMATION
+========================================================== */
+
+.gt4-reveal {
+  opacity: 0;
+
+  transform:
+    translateY(24px);
+
+  transition:
+    opacity .75s ease,
+
+    transform .75s
+      cubic-bezier(.22,.61,.36,1);
+}
+
+
+.gt4-reveal.is-visible {
+  opacity: 1;
+  padding_top:90px;
+  transform: none;
+}
+
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media screen
+and (max-width: 989px) {
 
   .gt4-collections__container {
-    display: grid;
-
-    grid-template-columns: 1fr;
-
-    grid-template-rows: auto;
-
-    gap: 12px;
+    width:
+      calc(100% - 56px);
   }
 
-  .gt4-collections__heading {
-    grid-column: auto;
-    grid-row: auto;
 
-    min-height: 120px;
+  .gt4-collections__header {
+    grid-template-columns:
+      1fr;
+
+    gap: 20px;
   }
 
-  .gt4-collections__heading h2 {
-    font-size: 28px;
+
+  .gt4-collections__description {
+    justify-self:
+      start;
+
+    max-width:
+      560px;
   }
 
-  .gt4-card--top,
-  .gt4-card--bottom-left,
-  .gt4-card--bottom-right,
-  .gt4-image--left,
-  .gt4-image--right {
-    grid-column: auto;
-    grid-row: auto;
+
+  .gt4-collections__layout {
+
+    grid-template-columns:
+      repeat(2, 1fr);
+
+    grid-template-rows:
+      300px
+      250px
+      250px;
   }
+
+
+  .gt4-collections__image-card:not(
+    .gt4-collections__image-card--right
+  ) {
+    grid-column: 1;
+    grid-row: 1 / 2;
+  }
+
+
+  .gt4-card--top {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+
+  .gt4-collections__image-card--right {
+    grid-column: 1 / 3;
+    grid-row: 2;
+  }
+
+
+  .gt4-card--bottom-left {
+    grid-column: 1;
+    grid-row: 3;
+  }
+
+
+  .gt4-card--bottom-right {
+    grid-column: 2;
+    grid-row: 3;
+  }
+
 
   .gt4-card {
-    min-height: 140px;
+    min-height: 250px;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media screen
+and (max-width: 749px) {
+
+  .gt4-collections {
+
+    padding:
+      {{ section.settings.mobile_padding_top }}px
+      0
+      {{ section.settings.mobile_padding_bottom }}px;
   }
 
-  .gt4-image {
-    min-height: 220px;
+
+  .gt4-collections__container {
+
+    width:
+      calc(100% - 28px);
   }
 
-  .gt4-image--right {
-    min-height: 300px;
+
+  .gt4-collections__heading {
+
+    font-size:
+      39px;
   }
 
+
+  .gt4-collections__accent-heading {
+
+    font-size:
+      30px;
+  }
+
+
+  .gt4-collections__layout {
+
+    grid-template-columns:
+      1fr;
+
+    grid-template-rows:
+      300px
+      auto
+      300px
+      auto
+      auto;
+
+    gap:
+      11px;
+  }
+
+
+  .gt4-collections__image-card:not(
+    .gt4-collections__image-card--right
+  ) {
+
+    grid-column:
+      1;
+
+    grid-row:
+      1;
+  }
+
+
+  .gt4-card--top {
+
+    grid-column:
+      1;
+
+    grid-row:
+      2;
+
+    min-height:
+      220px;
+  }
+
+
+  .gt4-collections__image-card--right {
+
+    grid-column:
+      1;
+
+    grid-row:
+      3;
+  }
+
+
+  .gt4-card--bottom-left {
+
+    grid-column:
+      1;
+
+    grid-row:
+      4;
+
+    min-height:
+      220px;
+  }
+
+
+  .gt4-card--bottom-right {
+
+    grid-column:
+      1;
+
+    grid-row:
+      5;
+
+    min-height:
+      220px;
+  }
+
+
+  .gt4-card__bottom {
+
+    align-items:
+      flex-end;
+  }
+
+
+  .gt4-card h3 {
+
+    font-size:
+      19px;
+  }
 }
 
 {% endstylesheet %}
@@ -387,39 +1416,161 @@
 
     {
       "type": "text",
+      "id": "kicker",
+      "label": "Eyebrow",
+      "default": "04 / VEHICLE COLLECTIONS"
+    },
+
+    {
+      "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Collections for Porsche GT4 / GT4RS"
+      "default": "BUILT AROUND"
+    },
+
+    {
+      "type": "text",
+      "id": "accent_heading",
+      "label": "Accent heading",
+      "default": "THE GT4."
+    },
+
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Explore performance collections built around the Porsche GT4 and Spyder platforms.</p>"
+    },
+
+    {
+      "type": "text",
+      "id": "left_image_label",
+      "label": "Left image label",
+      "default": "GT4 PERFORMANCE"
+    },
+
+    {
+      "type": "text",
+      "id": "right_image_label",
+      "label": "Right image label",
+      "default": "GT4 RS / SPYDER"
     },
 
     {
       "type": "color",
       "id": "background_color",
       "label": "Section background",
-      "default": "#f5f5f5"
+      "default": "#000000"
     },
 
     {
       "type": "color",
       "id": "card_background",
       "label": "Card background",
-      "default": "#ffffff"
+      "default": "#071329"
     },
 
     {
       "type": "color",
       "id": "text_color",
       "label": "Text color",
-      "default": "#111111"
+      "default": "#FFFFFF"
     },
 
     {
       "type": "color",
       "id": "accent_color",
       "label": "Accent color",
-      "default": "#ff2525"
-    }
+      "default": "#0265F2"
+    },
 
+    {
+      "type": "range",
+      "id": "overlay_opacity",
+      "label": "Image overlay",
+      "min": 20,
+      "max": 90,
+      "step": 5,
+      "unit": "%",
+      "default": 60
+    },
+
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 1000,
+      "max": 1500,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    },
+
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card height",
+      "min": 220,
+      "max": 500,
+      "step": 10,
+      "unit": "px",
+      "default": 330
+    },
+
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 12
+    },
+
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Desktop top padding",
+      "min": 40,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Desktop bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_padding_top",
+      "label": "Mobile top padding",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    },
+
+    {
+      "type": "range",
+      "id": "mobile_padding_bottom",
+      "label": "Mobile bottom padding",
+      "min": 30,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 55
+    }
   ],
 
   "blocks": [
@@ -429,13 +1580,41 @@
 
       "name": "Collection",
 
+      "limit": 3,
+
       "settings": [
+
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Shopify collection"
+        },
+
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Collection image fallback"
+        },
+
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Small label",
+          "default": "PORSCHE GT4"
+        },
 
         {
           "type": "text",
           "id": "title",
           "label": "Collection title",
           "default": "GT4 / SPYDER 981"
+        },
+
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "981 PLATFORM"
         },
 
         {
@@ -448,7 +1627,7 @@
           "type": "text",
           "id": "link_text",
           "label": "Link text",
-          "default": "Explore collection"
+          "default": "EXPLORE COLLECTION"
         }
 
       ]
@@ -461,26 +1640,37 @@
     {
       "name": "GT4 Collections",
 
+      "category": "APEX LAB",
+
       "blocks": [
 
         {
           "type": "collection",
+
           "settings": {
-            "title": "GT4 / SPYDER 981"
+            "label": "PORSCHE GT4",
+            "title": "GT4 / SPYDER 981",
+            "subtitle": "981 PLATFORM"
           }
         },
 
         {
           "type": "collection",
+
           "settings": {
-            "title": "GT4 RS / SPYDER RS 982/718"
+            "label": "PORSCHE GT4",
+            "title": "GT4 RS / SPYDER RS 982 / 718",
+            "subtitle": "982 / 718 PLATFORM"
           }
         },
 
         {
           "type": "collection",
+
           "settings": {
-            "title": "GT4 / SPYDER 982/718"
+            "label": "PORSCHE GT4",
+            "title": "GT4 / SPYDER 982 / 718",
+            "subtitle": "982 / 718 PLATFORM"
           }
         }
 
@@ -488,7 +1678,6 @@
     }
 
   ]
-
 }
 
 {% endschema %}

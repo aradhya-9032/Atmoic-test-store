@@ -22,17 +22,30 @@
       {% endif %}
     {% endif %}
 
-    {% if section.settings.show_wishlist %}
-      <button
-        type="button"
-        class="apc-card__wish"
-        aria-label="Add {{ product.title | escape }} to wishlist"
-      >
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"/>
-        </svg>
-      </button>
-    {% endif %}
+   {% if section.settings.show_wishlist %}
+  <button
+    type="button"
+    class="apc-card__wish automotive-wishlist-product"
+    aria-label="Add {{ product.title | escape }} to wishlist"
+    data-product-id="{{ product.id }}"
+    data-product-handle="{{ product.handle }}"
+    data-product-title="{{ product.title | escape }}"
+    data-product-url="{{ product.url }}"
+    data-product-image="{% if product.featured_image %}{{ product.featured_image | image_url: width: 400 }}{% endif %}"
+    data-product-price="{{ product.price | money | escape }}"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.8"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  </button>
+{% endif %}
 
     <a
       href="{{ product.url }}"

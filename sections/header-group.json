@@ -46,86 +46,10 @@
     },
     "header_section": {
       "type": "header",
-      "blocks": {
-        "header-logo": {
-          "type": "_header-logo",
-          "static": true,
-          "settings": {
-            "hide_logo_on_home_page": false,
-            "padding-block-start": 0,
-            "padding-block-end": 0
-          },
-          "blocks": {}
-        },
-        "header-menu": {
-          "type": "_header-menu",
-          "static": true,
-          "settings": {
-            "menu": "main-menu",
-            "background_color": "{{ settings.color_palette.background }}",
-            "text_color": "",
-            "type_font_primary_size": "0.875rem",
-            "menu_font_style": "inverse",
-            "type_font_primary_link": "body",
-            "type_case_primary_link": "none",
-            "menu_style": "featured_products",
-            "featured_products_aspect_ratio": "4 / 5",
-            "featured_collections_aspect_ratio": "16 / 9",
-            "image_border_radius": 0,
-            "navigation_bar": false,
-            "background_color_navigation_bar": "{{ settings.color_palette.background }}",
-            "text_color_navigation_bar": "",
-            "drawer_accordion": false,
-            "drawer_accordion_expand_first": false,
-            "drawer_dividers": false
-          },
-          "blocks": {}
-        }
-      },
       "disabled": true,
       "settings": {
-        "logo_position": "left",
-        "menu_position": "left",
-        "menu_row": "top",
-        "customer_account_menu": "customer-account-main-menu",
-        "show_search": true,
-        "search_position": "right",
-        "search_row": "top",
-        "show_country": true,
-        "country_selector_style": false,
-        "show_language": true,
-        "localization_font": "heading",
-        "localization_font_size": "0.875rem",
-        "localization_position": "right",
-        "localization_row": "top",
-        "section_width": "page-width",
-        "section_height": "standard",
-        "enable_sticky_header": "always",
-        "divider_width": 0,
-        "divider_size": "page-width",
-        "divider_color": "",
-        "border_width": 0,
-        "bottom_border_color": "",
-        "actions_display_style": "icon",
-        "actions_font_size": "0.875rem",
-        "actions_font": "body",
-        "actions_text_case": "none",
-        "background_color_top": "{{ settings.color_palette.background }}",
-        "text_color_top": "",
-        "background_color_bottom": "",
-        "text_color_bottom": "",
-        "bubble_style": "default",
-        "bubble_background_color": "",
-        "bubble_text_color": "",
-        "enable_transparent_header_home": false,
-        "home_inverse_logo": false,
-        "text_color_transparent_home": "",
-        "enable_transparent_header_product": false,
-        "product_inverse_logo": false,
-        "text_color_transparent_product": "",
-        "enable_transparent_header_collection": false,
-        "collection_inverse_logo": false,
-        "text_color_transparent_collection": ""
+        "menu": "main-menu",
+        "sticky": "true"
       }
     },
     "header_automotive_modified_hgcm9q": {
@@ -143,6 +67,7 @@
         },
         "header-menu": {
           "type": "_header-menu",
+          "disabled": true,
           "static": true,
           "settings": {
             "menu": "mega-menu",
@@ -166,6 +91,7 @@
           "blocks": {}
         }
       },
+      "disabled": true,
       "name": "Automotive Header",
       "settings": {
         "logo_position": "center",
@@ -218,11 +144,65 @@
         "collection_inverse_logo": false,
         "text_color_transparent_collection": ""
       }
+    },
+    "apex_announcement_premium_jfjHDi": {
+      "type": "apex-announcement-premium",
+      "disabled": true,
+      "name": "APEX Announcement",
+      "settings": {
+        "text": "FREE SHIPPING ON ORDERS OVER $100 • WORLDWIDE DELIVERY • 30-DAY RETURNS",
+        "background": "#000000",
+        "text_color": "#ffffff",
+        "accent": "#0265f2"
+      }
+    },
+    "apex_header_premium_3YnhCj": {
+      "type": "apex-header-premium",
+      "name": "APEX Header Premium",
+      "settings": {
+        "logo": "shopify://shop_images/Black_Horizontal.svg",
+        "logo_text": "APEX LAB",
+        "logo_width": 300,
+        "mobile_logo_width": 145,
+        "menu": "",
+        "show_categories": true,
+        "categories_label": "Categories",
+        "categories_behavior": "link",
+        "categories_link": "shopify://pages/whislist",
+        "show_categories_icon": true,
+        "show_new_arrivals": true,
+        "new_arrivals_label": "New arrivals",
+        "new_arrivals_link": "",
+        "show_search": true,
+        "search_placeholder": "Search parts...",
+        "mobile_search_placeholder": "Search performance parts...",
+        "mobile_search_button": "SEARCH",
+        "show_account": true,
+        "account_label": "Account",
+        "show_wishlist": true,
+        "wishlist_label": "Wishlist",
+        "show_wishlist_label": true,
+        "show_wishlist_count": true,
+        "show_cart": true,
+        "cart_label": "Cart",
+        "show_cart_label": true,
+        "show_cart_count": true,
+        "header_height": 108,
+        "container_width": 1600,
+        "sticky": "true",
+        "background_color": "#faf9f7",
+        "text_color": "#303946",
+        "primary_color": "#2d405f",
+        "primary_hover_color": "#243653",
+        "border_color": "#d6d9de"
+      }
     }
   },
   "order": [
     "header_announcements_9jGBFp",
     "header_section",
-    "header_automotive_modified_hgcm9q"
+    "header_automotive_modified_hgcm9q",
+    "apex_announcement_premium_jfjHDi",
+    "apex_header_premium_3YnhCj"
   ]
 }

@@ -9,7 +9,7 @@
  */
 {
   "current": {
-    "logo": "shopify://shop_images/atomic-logo-red.png",
+    "logo": "shopify://shop_images/White_Horizontal.png",
     "logo_height": 36,
     "logo_height_mobile": 28,
     "page_text_color": "{{ settings.color_palette.foreground }}",
@@ -67,6 +67,7 @@
     "button_border_radius_secondary": 14,
     "cart_type": "drawer",
     "cart_price_font": "subheading",
+    "auto_open_cart_drawer": true,
     "show_cart_note": false,
     "show_add_discount_code": true,
     "drawer_background_color": "{{ settings.color_palette.background }}",

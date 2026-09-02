@@ -113,31 +113,39 @@
     </div>
   {% endif %}
 
-  <a
-  href="{{ section.settings.wishlist_url | default: routes.root_url }}"
-  class="header-actions__action automotive-wishlist"
-  aria-label="Wishlist"
->
-  <span class="automotive-wishlist__icon" aria-hidden="true">
-    <svg
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <path
-        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
-        stroke="currentColor"
-        stroke-width="1.8"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-      />
-    </svg>
-  </span>
+  <button
+    type="button"
+    class="header-actions__action automotive-wishlist automotive-wishlist__trigger"
+    aria-label="Wishlist"
+    aria-haspopup="dialog"
+    aria-expanded="false"
+    aria-controls="AutomotiveWishlistDrawer"
+    data-wishlist-trigger
+  >
+    <span class="automotive-wishlist__icon" aria-hidden="true">
+      <svg
+        width="22"
+        height="22"
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+          stroke="currentColor"
+          stroke-width="1.8"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </svg>
+    </span>
 
-  <span class="automotive-wishlist__bubble">0</span>
-</a>
+    <span
+      class="automotive-wishlist__bubble"
+      data-wishlist-count
+      aria-hidden="true"
+    >0</span>
+  </button>
 
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
     <button
@@ -169,7 +177,698 @@
     role="status"
     data-testid="cart-count-live-region"
   ></span>
+  <div
+    id="AutomotiveWishlistDrawer"
+    class="automotive-wishlist-drawer"
+    data-wishlist-drawer
+    hidden
+  >
+    <div
+      class="automotive-wishlist-drawer__overlay"
+      data-wishlist-close
+    ></div>
+
+    <aside
+      class="automotive-wishlist-drawer__panel"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="AutomotiveWishlistTitle"
+    >
+      <div class="automotive-wishlist-drawer__head">
+        <div>
+          <span class="automotive-wishlist-drawer__eyebrow">
+            SAVED PERFORMANCE
+          </span>
+          <h2 id="AutomotiveWishlistTitle">WISHLIST</h2>
+        </div>
+
+        <button
+          type="button"
+          class="automotive-wishlist-drawer__close"
+          aria-label="Close wishlist"
+          data-wishlist-close
+        >
+          ×
+        </button>
+      </div>
+
+      <div
+        class="automotive-wishlist-drawer__body"
+        data-wishlist-items
+      ></div>
+
+      <div
+        class="automotive-wishlist-drawer__empty"
+        data-wishlist-empty
+        hidden
+      >
+        <div class="automotive-wishlist-drawer__empty-icon">♡</div>
+        <h3>Your wishlist is empty</h3>
+        <p>Save products you love and they will appear here.</p>
+        <button
+          type="button"
+          class="automotive-wishlist-drawer__continue"
+          data-wishlist-close
+        >
+          CONTINUE SHOPPING
+        </button>
+      </div>
+    </aside>
+  </div>
+
 </header-actions>
+
+
+<script>
+  (() => {
+    const STORAGE_KEY = 'apex_lab_wishlist_v1';
+
+    /* =========================================
+       STORAGE
+    ========================================= */
+
+    const read = () => {
+      try {
+        const value = localStorage.getItem(STORAGE_KEY);
+        const items = value ? JSON.parse(value) : [];
+
+        return Array.isArray(items) ? items : [];
+      } catch (error) {
+        return [];
+      }
+    };
+
+    const write = (items) => {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+      } catch (error) {
+        console.error('Wishlist storage error:', error);
+      }
+    };
+
+
+    /* =========================================
+       ESCAPE HTML
+    ========================================= */
+
+    const escapeHtml = (value) => {
+      const div = document.createElement('div');
+      div.textContent = String(value ?? '');
+      return div.innerHTML;
+    };
+
+
+    /* =========================================
+       GET PRODUCT DATA
+    ========================================= */
+
+    const getProduct = (button) => {
+      if (!button) return null;
+
+      /*
+       * First use data attributes
+       * This is the most reliable method
+       */
+
+      const productId = button.dataset.productId;
+
+      if (productId) {
+        return {
+          id: String(productId),
+          handle: button.dataset.productHandle || '',
+          title: button.dataset.productTitle || '',
+          url: button.dataset.productUrl || '',
+          image: button.dataset.productImage || '',
+          price: button.dataset.productPrice || ''
+        };
+      }
+
+
+      /*
+       * Fallback for older product cards
+       */
+
+      const card = button.closest('.apc-card');
+
+      if (!card) return null;
+
+      const title = card.querySelector('.apc-card__title');
+      const image = card.querySelector('.apc-card__img');
+      const price = card.querySelector('.apc-card__price');
+
+      if (!title || !title.href) return null;
+
+      const url = title.href;
+
+      const pathname = new URL(
+        url,
+        window.location.origin
+      ).pathname;
+
+      return {
+        id: pathname,
+        url: url,
+        title: title.textContent
+          .replace(/\s+/g, ' ')
+          .trim(),
+        image: image?.currentSrc || image?.src || '',
+        price: price?.textContent
+          .replace(/\s+/g, ' ')
+          .trim() || ''
+      };
+    };
+
+
+    /* =========================================
+       UPDATE ALL HEART BUTTONS
+    ========================================= */
+
+    const updateProductButtons = () => {
+      const items = read();
+
+      document
+        .querySelectorAll('.apc-card__wish')
+        .forEach((button) => {
+
+          const product = getProduct(button);
+
+          if (!product) return;
+
+          const saved = items.some(
+            (item) => String(item.id) === String(product.id)
+          );
+
+          button.classList.toggle(
+            'is-added',
+            saved
+          );
+
+          button.setAttribute(
+            'aria-pressed',
+            saved ? 'true' : 'false'
+          );
+
+          button.setAttribute(
+            'aria-label',
+            saved
+              ? `Remove ${product.title} from wishlist`
+              : `Add ${product.title} to wishlist`
+          );
+        });
+    };
+
+
+    /* =========================================
+       UPDATE HEADER COUNT
+    ========================================= */
+
+    const updateCount = () => {
+      const items = read();
+
+      document
+        .querySelectorAll('[data-wishlist-count]')
+        .forEach((bubble) => {
+
+          bubble.textContent = items.length;
+
+          bubble.classList.toggle(
+            'is-visible',
+            items.length > 0
+          );
+        });
+    };
+
+
+    /* =========================================
+       SYNC EVERYTHING
+    ========================================= */
+
+    const sync = () => {
+      updateCount();
+      updateProductButtons();
+    };
+
+
+    /* =========================================
+       RENDER WISHLIST DRAWER
+    ========================================= */
+
+    const render = () => {
+      const drawer = document.querySelector(
+        '[data-wishlist-drawer]'
+      );
+
+      const list = drawer?.querySelector(
+        '[data-wishlist-items]'
+      );
+
+      const empty = drawer?.querySelector(
+        '[data-wishlist-empty]'
+      );
+
+      if (!drawer || !list || !empty) return;
+
+      const items = read();
+
+      list.innerHTML = '';
+
+      if (!items.length) {
+        list.hidden = true;
+        empty.hidden = false;
+        return;
+      }
+
+      list.hidden = false;
+      empty.hidden = true;
+
+
+      items.forEach((item) => {
+
+        const row = document.createElement('article');
+
+        row.className =
+          'automotive-wishlist-item';
+
+
+        row.innerHTML = `
+          <a
+            href="${escapeHtml(item.url)}"
+            class="automotive-wishlist-item__image-link"
+            aria-label="${escapeHtml(item.title)}"
+          >
+            ${
+              item.image
+                ? `
+                  <img
+                    class="automotive-wishlist-item__image"
+                    src="${escapeHtml(item.image)}"
+                    alt="${escapeHtml(item.title)}"
+                    loading="lazy"
+                  >
+                `
+                : `
+                  <span
+                    class="automotive-wishlist-item__image"
+                    aria-hidden="true"
+                  ></span>
+                `
+            }
+          </a>
+
+          <div class="automotive-wishlist-item__content">
+
+            <a
+              class="automotive-wishlist-item__title"
+              href="${escapeHtml(item.url)}"
+            >
+              ${escapeHtml(item.title)}
+            </a>
+
+            ${
+              item.price
+                ? `
+                  <div class="automotive-wishlist-item__price">
+                    ${escapeHtml(item.price)}
+                  </div>
+                `
+                : ''
+            }
+
+          </div>
+
+          <button
+            type="button"
+            class="automotive-wishlist-item__remove"
+            data-wishlist-remove="${escapeHtml(item.id)}"
+            aria-label="Remove ${escapeHtml(item.title)} from wishlist"
+          >
+            ×
+          </button>
+        `;
+
+        list.appendChild(row);
+      });
+    };
+
+
+    /* =========================================
+       OPEN DRAWER
+    ========================================= */
+
+    const open = () => {
+      const drawer = document.querySelector(
+        '[data-wishlist-drawer]'
+      );
+
+      const triggers = document.querySelectorAll(
+        '[data-wishlist-trigger]'
+      );
+
+      if (!drawer) return;
+
+      render();
+
+      drawer.hidden = false;
+
+      requestAnimationFrame(() => {
+        drawer.classList.add('is-open');
+      });
+
+      triggers.forEach((trigger) => {
+        trigger.setAttribute(
+          'aria-expanded',
+          'true'
+        );
+      });
+
+      document.documentElement.classList.add(
+        'apex-wishlist-open'
+      );
+    };
+
+
+    /* =========================================
+       CLOSE DRAWER
+    ========================================= */
+
+    const close = () => {
+      const drawer = document.querySelector(
+        '[data-wishlist-drawer]'
+      );
+
+      const triggers = document.querySelectorAll(
+        '[data-wishlist-trigger]'
+      );
+
+      if (!drawer) return;
+
+      drawer.classList.remove('is-open');
+
+      triggers.forEach((trigger) => {
+        trigger.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+      });
+
+      document.documentElement.classList.remove(
+        'apex-wishlist-open'
+      );
+
+      setTimeout(() => {
+
+        if (!drawer.classList.contains('is-open')) {
+          drawer.hidden = true;
+        }
+
+      }, 380);
+    };
+
+
+    /* =========================================
+       ADD / REMOVE PRODUCT
+    ========================================= */
+
+    const toggleProduct = (button) => {
+      const product = getProduct(button);
+
+      if (!product) return;
+
+      const items = read();
+
+      const exists = items.some(
+        (item) =>
+          String(item.id) === String(product.id)
+      );
+
+      let updated;
+
+      if (exists) {
+
+        updated = items.filter(
+          (item) =>
+            String(item.id) !== String(product.id)
+        );
+
+      } else {
+
+        updated = [
+          product,
+          ...items
+        ].slice(0, 50);
+
+      }
+
+
+      write(updated);
+
+      /*
+       * Immediately update UI
+       */
+
+      sync();
+      render();
+
+
+      /*
+       * Dispatch event
+       */
+
+      window.dispatchEvent(
+        new CustomEvent('apex:wishlist:change', {
+          detail: {
+            items: updated,
+            product: product,
+            added: !exists
+          }
+        })
+      );
+    };
+
+
+    /* =========================================
+       REMOVE FROM DRAWER
+    ========================================= */
+
+    const removeProduct = (id) => {
+
+      if (!id) return;
+
+      const updated = read().filter(
+        (item) =>
+          String(item.id) !== String(id)
+      );
+
+      write(updated);
+
+      sync();
+      render();
+
+      window.dispatchEvent(
+        new CustomEvent('apex:wishlist:change', {
+          detail: {
+            items: updated
+          }
+        })
+      );
+    };
+
+
+    /* =========================================
+       CLICK EVENTS
+    ========================================= */
+
+    document.addEventListener('click', (event) => {
+
+      /*
+       * PRODUCT CARD HEART
+       */
+
+      const productButton = event.target.closest(
+        '.apc-card__wish'
+      );
+
+      if (productButton) {
+
+        event.preventDefault();
+        event.stopPropagation();
+
+        toggleProduct(productButton);
+
+        return;
+      }
+
+
+      /*
+       * HEADER WISHLIST BUTTON
+       */
+
+      const trigger = event.target.closest(
+        '[data-wishlist-trigger]'
+      );
+
+      if (trigger) {
+
+        event.preventDefault();
+
+        const drawer = document.querySelector(
+          '[data-wishlist-drawer]'
+        );
+
+        if (
+          drawer &&
+          !drawer.hidden &&
+          drawer.classList.contains('is-open')
+        ) {
+          close();
+        } else {
+          open();
+        }
+
+        return;
+      }
+
+
+      /*
+       * CLOSE BUTTON
+       */
+
+      const closeButton = event.target.closest(
+        '[data-wishlist-close]'
+      );
+
+      if (closeButton) {
+
+        event.preventDefault();
+
+        close();
+
+        return;
+      }
+
+
+      /*
+       * REMOVE BUTTON
+       */
+
+      const removeButton = event.target.closest(
+        '[data-wishlist-remove]'
+      );
+
+      if (removeButton) {
+
+        event.preventDefault();
+
+        removeProduct(
+          removeButton.dataset.wishlistRemove
+        );
+
+        return;
+      }
+
+
+      /*
+       * CLICK OVERLAY TO CLOSE
+       */
+
+      const overlay = event.target.closest(
+        '[data-wishlist-overlay]'
+      );
+
+      if (overlay) {
+        close();
+      }
+
+    });
+
+
+    /* =========================================
+       ESC KEY
+    ========================================= */
+
+    document.addEventListener(
+      'keydown',
+      (event) => {
+
+        if (event.key === 'Escape') {
+          close();
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       CUSTOM EVENT
+    ========================================= */
+
+    window.addEventListener(
+      'apex:wishlist:change',
+      () => {
+        sync();
+        render();
+      }
+    );
+
+
+    /* =========================================
+       STORAGE CHANGE
+       Multiple tabs support
+    ========================================= */
+
+    window.addEventListener(
+      'storage',
+      (event) => {
+
+        if (event.key === STORAGE_KEY) {
+          sync();
+          render();
+        }
+
+      }
+    );
+
+
+    /* =========================================
+       SHOPIFY THEME EDITOR
+    ========================================= */
+
+    document.addEventListener(
+      'shopify:section:load',
+      () => {
+        setTimeout(sync, 50);
+      }
+    );
+
+
+    /* =========================================
+       INITIAL LOAD
+    ========================================= */
+
+    const init = () => {
+      sync();
+      render();
+    };
+
+
+    if (
+      document.readyState === 'loading'
+    ) {
+
+      document.addEventListener(
+        'DOMContentLoaded',
+        init,
+        { once: true }
+      );
+
+    } else {
+
+      init();
+
+    }
+
+  })();
+</script>
 
 <script
   type="module"
@@ -178,6 +877,279 @@
 ></script>
 
 {% stylesheet %}
+
+  /* =========================================
+     WISHLIST — HEADER ICON ONLY
+  ========================================= */
+
+  .automotive-wishlist {
+    position: relative;
+    flex: 0 0 auto;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: inherit;
+    cursor: pointer;
+  }
+
+  .automotive-wishlist__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .automotive-wishlist__bubble {
+    position: absolute;
+    top: -7px;
+    right: -8px;
+    min-width: 15px;
+    height: 15px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    border-radius: 999px;
+    background: #0265F2;
+    color: #fff;
+    font-size: 8px;
+    line-height: 1;
+    font-weight: 800;
+    opacity: 0;
+    transform: scale(.7);
+    transition: opacity .2s ease, transform .2s ease;
+    pointer-events: none;
+  }
+
+  .automotive-wishlist__bubble.is-visible {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  .automotive-wishlist.is-added .automotive-wishlist__icon path {
+    fill: currentColor;
+  }
+
+  .automotive-wishlist-drawer {
+    position: fixed;
+    inset: 0;
+    z-index: 100000;
+    display: block;
+    pointer-events: none;
+  }
+
+  .automotive-wishlist-drawer[hidden] {
+    display: none;
+  }
+
+  .automotive-wishlist-drawer.is-open {
+    pointer-events: auto;
+  }
+
+  .automotive-wishlist-drawer__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(3, 8, 18, .48);
+    backdrop-filter: blur(4px);
+    opacity: 0;
+    transition: opacity .28s ease;
+  }
+
+  .automotive-wishlist-drawer.is-open .automotive-wishlist-drawer__overlay {
+    opacity: 1;
+  }
+
+  .automotive-wishlist-drawer__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(430px, 92vw);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    background: #f7f9fc;
+    color: #07182b;
+    box-shadow: -24px 0 70px rgba(0, 0, 0, .18);
+    transform: translateX(100%);
+    transition: transform .38s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .automotive-wishlist-drawer.is-open .automotive-wishlist-drawer__panel {
+    transform: translateX(0);
+  }
+
+  .automotive-wishlist-drawer__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 28px 28px 24px;
+    border-bottom: 1px solid rgba(7,24,43,.10);
+    background: #fff;
+  }
+
+  .automotive-wishlist-drawer__eyebrow {
+    display: block;
+    margin-bottom: 8px;
+    color: #0265F2;
+    font-size: 9px;
+    line-height: 1;
+    font-weight: 800;
+    letter-spacing: .16em;
+    text-transform: uppercase;
+  }
+
+  .automotive-wishlist-drawer__head h2 {
+    margin: 0;
+    font-size: 28px;
+    line-height: 1;
+    font-weight: 800;
+  }
+
+  .automotive-wishlist-drawer__close {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    border: 1px solid rgba(7,24,43,.12);
+    border-radius: 50%;
+    background: #fff;
+    color: #07182b;
+    font-size: 24px;
+    cursor: pointer;
+  }
+
+  .automotive-wishlist-drawer__body {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 20px 20px;
+  }
+
+  .automotive-wishlist-item {
+    display: grid;
+    grid-template-columns: 82px minmax(0,1fr) 30px;
+    gap: 14px;
+    align-items: center;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: 1px solid rgba(7,24,43,.09);
+    background: #fff;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+
+  .automotive-wishlist-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 32px rgba(7,24,43,.08);
+  }
+
+  .automotive-wishlist-item__image {
+    width: 82px;
+    height: 82px;
+    display: block;
+    object-fit: cover;
+    background: #eef1f5;
+  }
+
+  .automotive-wishlist-item__title {
+    display: block;
+    margin: 0 0 7px;
+    color: #07182b;
+    font-size: 14px;
+    line-height: 1.3;
+    font-weight: 750;
+    text-decoration: none;
+  }
+
+  .automotive-wishlist-item__title:hover {
+    color: #0265F2;
+  }
+
+  .automotive-wishlist-item__price {
+    color: #111;
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  .automotive-wishlist-item__remove {
+    width: 30px;
+    height: 30px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    font-size: 18px;
+    cursor: pointer;
+  }
+
+  .automotive-wishlist-drawer__empty {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    text-align: center;
+    background:white;
+  }
+
+  .automotive-wishlist-drawer__empty-icon {
+    margin-bottom: 14px;
+    color: #0265F2;
+    font-size: 52px;
+  }
+
+  .automotive-wishlist-drawer__empty h3 {
+    margin: 0 0 8px;
+    font-size: 20px;
+  }
+
+  .automotive-wishlist-drawer__empty p {
+    max-width: 280px;
+    margin: 0;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .automotive-wishlist-drawer__continue {
+    margin-top: 20px;
+    min-height: 44px;
+    padding: 0 20px;
+    border: 0;
+    background: #0265F2;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    letter-spacing: .10em;
+    cursor: pointer;
+  }
+
+  @media (max-width: 749px) {
+    .automotive-wishlist-drawer__panel {
+      width: 100%;
+    }
+
+    .automotive-wishlist-drawer__head {
+      padding: 22px 20px 18px;
+    }
+
+    .automotive-wishlist-item__image {
+      width: 72px;
+      height: 72px;
+    }
+
+    .automotive-wishlist-item {
+      grid-template-columns: 72px minmax(0,1fr) 28px;
+      gap: 10px;
+    }
+  }
+
+  html.apex-wishlist-open,
+  html.apex-wishlist-open body {
+    overflow: hidden;
+  }
+
+
   .header {
     --account-offset-top: calc(
       var(--header-group-height) + (var(--header-height) * var(--transparent-header-offset-boolean))
@@ -356,4 +1328,60 @@
       margin-inline-start: 0;
     }
   }
+  /* =========================================
+   WISHLIST FIXES
+========================================= */
+
+/* IMPORTANT: hidden attribute must always work */
+.automotive-wishlist-drawer [hidden] {
+  display: none !important;
+}
+
+/* Product card wishlist button */
+.apc-card__wish {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+/* Heart SVG */
+.apc-card__wish svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  transition:
+    fill .2s ease,
+    color .2s ease,
+    transform .2s ease;
+}
+
+/* Heart path default */
+.apc-card__wish svg path {
+  fill: transparent;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  transition:
+    fill .2s ease,
+    stroke .2s ease;
+}
+
+/* Saved wishlist product */
+.apc-card__wish.is-added svg path {
+  fill: currentColor;
+}
+
+/* Small click animation */
+.apc-card__wish.is-added {
+  transform: scale(1.05);
+}
+
+/* Header wishlist count */
+.automotive-wishlist__bubble {
+  display: none;
+}
+
+.automotive-wishlist__bubble.is-visible {
+  display: inline-flex;
+}
 {% endstylesheet %}

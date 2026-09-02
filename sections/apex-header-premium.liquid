@@ -1,0 +1,1422 @@
+<header-component
+  class="apex-header"
+  data-sticky="{{ section.settings.sticky }}"
+  style="
+    --apex-navy: {{ section.settings.primary_color }};
+    --apex-navy-hover: {{ section.settings.primary_hover_color }};
+    --apex-text: {{ section.settings.text_color }};
+    --apex-border: {{ section.settings.border_color }};
+    --apex-bg: {{ section.settings.background_color }};
+    --apex-header-height: {{ section.settings.header_height }}px;
+    --apex-container-width: {{ section.settings.container_width }}px;
+    --apex-logo-width: {{ section.settings.logo_width }}px;
+    --apex-mobile-logo-width: {{ section.settings.mobile_logo_width }}px;
+  "
+>
+  <div class="apex-header__inner">
+
+    <!-- LEFT SIDE -->
+    <div class="apex-header__left">
+
+      <!-- CATEGORIES -->
+      {% if section.settings.show_categories %}
+        <div class="apex-header__categories">
+
+          {% if section.settings.categories_behavior == 'dropdown' %}
+            <button
+              class="apex-header__categories-btn"
+              type="button"
+              aria-expanded="false"
+              aria-controls="ApexCategoriesMenu-{{ section.id }}"
+            >
+              <span>{{ section.settings.categories_label }}</span>
+              {% if section.settings.show_categories_icon %}
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M6 9l6 6 6-6"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              {% endif %}
+            </button>
+
+            <div
+              id="ApexCategoriesMenu-{{ section.id }}"
+              class="apex-header__categories-menu"
+            >
+              {% if section.settings.menu != blank %}
+                {% for link in section.settings.menu.links %}
+                  <div class="apex-header__category-item">
+
+                    <a href="{{ link.url }}">
+                      {{ link.title }}
+
+                      {% if link.links != blank %}
+                        <svg
+                          width="14"
+                          height="14"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          aria-hidden="true"
+                        >
+                          <path
+                            d="M9 18l6-6-6-6"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      {% endif %}
+                    </a>
+
+                    {% if link.links != blank %}
+                      <div class="apex-header__subcategory-menu">
+                        {% for child in link.links %}
+                          <a href="{{ child.url }}">
+                            {{ child.title }}
+                          </a>
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                  </div>
+                {% endfor %}
+              {% else %}
+                <div class="apex-header__empty-menu">
+                  Select a navigation menu
+                </div>
+              {% endif %}
+            </div>
+
+          {% else %}
+
+            <a
+              class="apex-header__categories-btn"
+              href="{{ section.settings.categories_link }}"
+            >
+              <span>{{ section.settings.categories_label }}</span>
+            </a>
+
+          {% endif %}
+
+        </div>
+      {% endif %}
+
+
+      <!-- NEW ARRIVALS -->
+      {% if section.settings.show_new_arrivals %}
+        <a
+          class="apex-header__new-arrivals"
+          href="{{ section.settings.new_arrivals_link }}"
+        >
+          {{ section.settings.new_arrivals_label }}
+        </a>
+      {% endif %}
+
+
+      <!-- DESKTOP SEARCH -->
+      {% if section.settings.show_search %}
+        <form
+          class="apex-header__search"
+          action="{{ routes.search_url }}"
+          method="get"
+          role="search"
+        >
+          <svg
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
+            <circle
+              cx="11"
+              cy="11"
+              r="6.5"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
+
+            <path
+              d="M16 16l4 4"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+            />
+          </svg>
+
+          <input
+            type="search"
+            name="q"
+            placeholder="{{ section.settings.search_placeholder }}"
+            aria-label="{{ section.settings.search_placeholder }}"
+          >
+
+          <input
+            type="hidden"
+            name="type"
+            value="product"
+          >
+        </form>
+      {% endif %}
+
+    </div>
+
+
+    <!-- CENTER LOGO -->
+    <a
+      class="apex-header__logo"
+      href="{{ routes.root_url }}"
+      aria-label="{{ shop.name }}"
+    >
+
+      {% if section.settings.logo != blank %}
+
+        {{
+          section.settings.logo
+          | image_url: width: 600
+          | image_tag:
+            loading: 'eager',
+            widths: '120, 180, 240, 360, 600',
+            class: 'apex-header__logo-image',
+            alt: section.settings.logo.alt | default: shop.name
+        }}
+
+      {% elsif section.settings.logo_text != blank %}
+
+        <span class="apex-header__logo-text">
+          {{ section.settings.logo_text }}
+        </span>
+
+      {% else %}
+
+        <span class="apex-header__logo-text">
+          {{ shop.name }}
+        </span>
+
+      {% endif %}
+
+    </a>
+
+
+    <!-- RIGHT SIDE -->
+    <div class="apex-header__actions">
+      <div class="apex-header__native-actions
+        {% unless section.settings.show_account %} apex-header__hide-account{% endunless %}
+        {% unless section.settings.show_wishlist %} apex-header__hide-wishlist{% endunless %}
+        {% unless section.settings.show_cart %} apex-header__hide-cart{% endunless %}">
+        {% render 'header-actions', section: section, display_style: 'icon' %}
+      </div>
+
+      <button class="apex-header__menu" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="ApexMobileNav-{{ section.id }}">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+  </div>
+
+
+  <!-- MOBILE NAVIGATION -->
+  <nav
+    id="ApexMobileNav-{{ section.id }}"
+    class="apex-header__mobile-nav"
+    aria-label="Mobile navigation"
+  >
+
+    {% if section.settings.menu != blank %}
+      {% for link in section.settings.menu.links %}
+
+        <div class="apex-header__mobile-item">
+
+          <a href="{{ link.url }}">
+            {{ link.title }}
+          </a>
+
+          {% if link.links != blank %}
+            <div class="apex-header__mobile-children">
+
+              {% for child in link.links %}
+                <a href="{{ child.url }}">
+                  {{ child.title }}
+                </a>
+              {% endfor %}
+
+            </div>
+          {% endif %}
+
+        </div>
+
+      {% endfor %}
+    {% endif %}
+
+    {% if section.settings.show_new_arrivals %}
+      <div class="apex-header__mobile-item">
+        <a href="{{ section.settings.new_arrivals_link }}">
+          {{ section.settings.new_arrivals_label }}
+        </a>
+      </div>
+    {% endif %}
+
+  </nav>
+
+
+  <!-- MOBILE SEARCH PANEL -->
+  {% if section.settings.show_search %}
+    <div
+      class="apex-search-panel"
+      hidden
+    >
+      <div class="apex-search-panel__inner">
+
+        <form
+          action="{{ routes.search_url }}"
+          method="get"
+          role="search"
+        >
+
+          <input
+            type="search"
+            name="q"
+            placeholder="{{ section.settings.mobile_search_placeholder }}"
+            aria-label="{{ section.settings.mobile_search_placeholder }}"
+          >
+
+          <input
+            type="hidden"
+            name="type"
+            value="product"
+          >
+
+          <button type="submit">
+            {{ section.settings.mobile_search_button }}
+          </button>
+
+        </form>
+
+        <button
+          type="button"
+          class="apex-search-close"
+          aria-label="Close search"
+        >
+          ×
+        </button>
+
+      </div>
+    </div>
+  {% endif %}
+
+</header-component>
+
+
+<script>
+  (() => {
+    const root = document.currentScript.previousElementSibling;
+
+    if (!root) return;
+
+    const categoriesButton = root.querySelector(
+      '.apex-header__categories-btn'
+    );
+
+    const categoriesMenu = root.querySelector(
+      '.apex-header__categories-menu'
+    );
+
+    const menuButton = root.querySelector(
+      '.apex-header__menu'
+    );
+
+    const mobileNav = root.querySelector(
+      '.apex-header__mobile-nav'
+    );
+
+
+    if (categoriesButton && categoriesMenu) {
+
+      categoriesButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+
+        const isOpen =
+          categoriesButton.getAttribute('aria-expanded') === 'true';
+
+        categoriesButton.setAttribute(
+          'aria-expanded',
+          String(!isOpen)
+        );
+
+        categoriesMenu.classList.toggle(
+          'is-open',
+          !isOpen
+        );
+      });
+
+    }
+
+
+    document.addEventListener('click', (event) => {
+
+      if (!root.contains(event.target)) {
+
+        categoriesButton?.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+
+        categoriesMenu?.classList.remove('is-open');
+
+      }
+
+    });
+
+
+    menuButton?.addEventListener('click', () => {
+
+      const isOpen =
+        menuButton.getAttribute('aria-expanded') === 'true';
+
+      menuButton.setAttribute(
+        'aria-expanded',
+        String(!isOpen)
+      );
+
+      mobileNav?.classList.toggle(
+        'is-open',
+        !isOpen
+      );
+
+    });
+
+
+    document.addEventListener('keydown', (event) => {
+
+      if (event.key === 'Escape') {
+
+        categoriesButton?.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+
+        categoriesMenu?.classList.remove('is-open');
+
+        mobileNav?.classList.remove('is-open');
+
+        menuButton?.setAttribute(
+          'aria-expanded',
+          'false'
+        );
+
+      }
+
+    });
+
+  })();
+</script>
+
+
+{% stylesheet %}
+
+.apex-header {
+  --apex-navy: #2d405f;
+  --apex-navy-hover: #243653;
+  --apex-text: #303946;
+  --apex-border: #d6d9de;
+  --apex-bg: #f7f7f6;
+
+  width: 100%;
+  position: relative;
+  z-index: 100;
+
+  background: var(--apex-bg);
+  border-bottom: 1px solid var(--apex-border);
+}
+
+.apex-header[data-sticky="true"] {
+  position: sticky;
+  top: 0;
+}
+
+
+/* MAIN */
+
+.apex-header__inner {
+  width: 100%;
+  max-width: var(--apex-container-width);
+  min-height: var(--apex-header-height);
+
+  margin: 0 auto;
+  padding: 0 32px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+
+  align-items: center;
+  column-gap: 32px;
+}
+
+
+/* LEFT */
+
+.apex-header__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+}
+
+
+/* CATEGORIES */
+
+.apex-header__categories {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.apex-header__categories-btn {
+  padding: 14px 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  border: none;
+  border-radius: 999px;
+
+  background: #1B2A5B;
+  color: #ffffff;
+
+  font-size: 16px;
+  font-weight: 700;
+
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+
+  transition: .2s ease;
+}
+
+
+.apex-header__categories-btn svg {
+  transition: transform .2s ease;
+}
+
+.apex-header__categories-btn[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+
+/* NEW ARRIVALS */
+
+.apex-header__new-arrivals {
+  padding: 10px 20px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 1px solid var(--apex-border);
+  border-radius: 999px;
+
+  color: var(--apex-text);
+  text-decoration: none;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  white-space: nowrap;
+}
+
+.apex-header__new-arrivals:hover {
+  background: #ffffff;
+}
+
+
+/* SEARCH */
+
+.apex-header__search {
+  width: 235px;
+
+  padding: 10px 20px;
+
+  display: flex;
+  align-items: center;
+  gap: 11px;
+
+  border: 1px solid var(--apex-border);
+  border-radius: 999px;
+}
+
+.apex-header__search input {
+  width: 100%;
+  min-width: 0;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+  color: var(--apex-text);
+
+  font-size: 16px;
+}
+
+.apex-header__search input::placeholder {
+  color: #707985;
+}
+
+
+/* LOGO */
+
+.apex-header__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  justify-self: center;
+
+  width: var(--apex-logo-width);
+  max-width: var(--apex-logo-width);
+
+  text-decoration: none;
+}
+
+.apex-header__logo-image {
+  width: 100%;
+  height: auto;
+
+  max-height: 60px;
+  object-fit: contain;
+}
+
+.apex-header__logo-text {
+  color: var(--apex-text);
+  font-size: 28px;
+  font-weight: 800;
+  text-align: center;
+}
+
+
+/* ACTIONS
+   Native Shopify account / wishlist / cart markup is untouched.
+   Only the Premium Header UI is changed below.
+*/
+
+.apex-header__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.apex-header__native-actions,
+.apex-header__native-actions header-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+/* ACCOUNT — native Shopify account action */
+.apex-header__native-actions .account-button {
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
+  margin: 0;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--apex-border);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--apex-text);
+  overflow: visible;
+}
+
+.apex-header__native-actions .account-button shopify-account {
+  width: 100%;
+  height: 100%;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.apex-header__native-actions .account-button:hover {
+  background: rgba(0,0,0,.03);
+}
+
+.apex-header__native-actions .account-button__icon {
+  width: 21px;
+  height: 21px;
+  margin: 0;
+}
+
+/* WISHLIST — same native trigger and JS, premium pill UI only */
+.apex-header__native-actions .automotive-wishlist {
+  position: relative;
+  width: 82px;
+  min-width: 82px;
+  margin: 0;
+  padding: 0 12px 0 10px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 1px solid var(--apex-border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--apex-text);
+}
+
+.apex-header__native-actions .automotive-wishlist:hover {
+  background: rgba(0,0,0,.03);
+}
+
+.apex-header__native-actions .automotive-wishlist__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+}
+
+.apex-header__native-actions .automotive-wishlist__icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* Keep the real wishlist count element — only change its appearance */
+.apex-header__native-actions .automotive-wishlist__bubble {
+  position: static;
+  min-width: 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: #eef1f5;
+  color: #1B2A5B;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 800;
+  opacity: 1;
+  transform: none;
+  pointer-events: none;
+}
+
+.apex-header__native-actions .automotive-wishlist__bubble.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* CART — native Shopify drawer/page trigger and count stay untouched */
+.apex-header__native-actions .header-actions__action.button-unstyled,
+.apex-header__native-actions .action__cart {
+  position: relative;
+  min-width: 120px;
+  height: 45px;
+  margin: 0;
+  padding: 0 12px 0 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  border: 0;
+  border-radius: 999px;
+  background: #1B2A5B;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.apex-header__native-actions .header-actions__action.button-unstyled:hover,
+.apex-header__native-actions .action__cart:hover {
+  background: var(--apex-navy-hover);
+}
+
+.apex-header__native-actions cart-icon,
+.apex-header__native-actions .header-actions__cart-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: static;
+  min-width: 30px;
+  
+}
+
+/* Add Cart text using UI only */
+.apex-header__native-actions .header-actions__cart-icon::before {
+  content: "Cart";
+  display: inline-block;
+  margin-right: 12px;
+
+  color: #ffffff !important;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+/* Count bubble */
+.apex-header__native-actions .header-actions__cart-icon .cart-bubble {
+  flex-shrink: 0 !important;
+}
+
+.apex-header__native-actions .header-actions__cart-icon .cart-bubble,
+.apex-header__native-actions cart-icon .cart-bubble {
+  position: static;
+  width: 30px;
+  height: 30px;
+  min-width: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #ffffff;
+  color: #1B2A5B;
+}
+
+
+.apex-header__native-actions .header-actions__cart-icon .cart-bubble__text,
+.apex-header__native-actions cart-icon .cart-bubble__text {
+  position: static;
+  color: #1B2A5B;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 800;
+}
+
+/* Prevent the native donut mask from affecting the premium cart UI */
+.apex-header__native-actions .header-actions__cart-icon.header-actions__cart-icon--has-cart svg {
+  mask: none;
+}
+
+/* Theme editor visibility settings */
+.apex-header__hide-account .account-button {
+  display: none !important;
+}
+
+.apex-header__hide-wishlist .automotive-wishlist {
+  display: none !important;
+}
+
+.apex-header__hide-cart .action__cart,
+.apex-header__hide-cart .header-actions__action.button-unstyled {
+  display: none !important;
+}
+
+/* DROPDOWN */
+
+.apex-header__categories-menu {
+  position: absolute;
+
+  top: calc(100% + 12px);
+  left: 0;
+
+  width: 270px;
+  padding: 10px;
+
+  background: #ffffff;
+
+  border: 1px solid var(--apex-border);
+  border-radius: 16px;
+
+  box-shadow: 0 20px 50px rgba(0,0,0,.12);
+
+  opacity: 0;
+  visibility: hidden;
+
+  transform: translateY(-8px);
+  transition: .2s ease;
+
+  z-index: 200;
+}
+
+.apex-header__categories-menu.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.apex-header__category-item {
+  position: relative;
+}
+
+.apex-header__category-item > a {
+  min-height: 48px;
+  padding: 0 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 10px;
+
+  color: var(--apex-text);
+  text-decoration: none;
+
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.apex-header__category-item > a:hover {
+  background: #f3f5f7;
+}
+
+.apex-header__subcategory-menu {
+  display: none;
+  padding: 5px 0 10px 18px;
+}
+
+.apex-header__category-item:hover .apex-header__subcategory-menu {
+  display: grid;
+}
+
+.apex-header__subcategory-menu a {
+  padding: 8px 10px;
+
+  color: #697383;
+  text-decoration: none;
+
+  font-size: 14px;
+}
+
+.apex-header__empty-menu {
+  padding: 20px;
+  color: #697383;
+  font-size: 14px;
+}
+
+
+/* MOBILE */
+
+.apex-header__menu {
+  display: none;
+
+  width: 48px;
+  height: 48px;
+
+  padding: 0;
+
+  border: 1px solid var(--apex-border);
+  border-radius: 12px;
+
+  background: #ffffff;
+  cursor: pointer;
+}
+
+.apex-header__menu span {
+  display: block;
+
+  width: 21px;
+  height: 2px;
+
+  margin: 5px auto;
+
+  background: var(--apex-text);
+}
+
+.apex-header__mobile-nav {
+  display: none;
+}
+
+
+@media screen and (max-width: 1450px) {
+
+  .apex-header__inner {
+    padding: 14px 24px;
+    column-gap: 20px;
+  }
+
+  .apex-header__search {
+    width: 205px;
+  }
+
+}
+
+
+@media screen and (max-width: 1200px) {
+
+  .apex-header__inner {
+    padding: 10px 18px;
+    column-gap: 15px;
+  }
+
+  .apex-header__search {
+    width: 170px;
+  }
+
+  .apex-header__wishlist-text {
+    display: none;
+  }
+
+}
+
+
+@media screen and (max-width: 900px) {
+
+  .apex-header__inner {
+    min-height: 78px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 16px;
+  }
+
+  .apex-header__left {
+    display: none;
+  }
+
+  .apex-header__logo {
+    width: var(--apex-mobile-logo-width);
+    max-width: var(--apex-mobile-logo-width);
+    justify-content: flex-start;
+  }
+
+  .apex-header__actions {
+    gap: 8px;
+  }
+
+  .apex-header__native-actions .account-button,
+  .apex-header__native-actions .automotive-wishlist {
+    display: none;
+  }
+
+  .apex-header__native-actions .header-actions__action.button-unstyled,
+  .apex-header__native-actions .action__cart {
+    min-width: 108px;
+    height: 44px;
+    padding: 0 10px 0 16px;
+    border-radius: 999px;
+  }
+
+  .apex-header__native-actions .header-actions__action.button-unstyled::before,
+  .apex-header__native-actions .action__cart::before {
+    font-size: 14px;
+  }
+
+  .apex-header__native-actions .automotive-wishlist {
+    width: 68px;
+    min-width: 68px;
+    height: 44px;
+    padding: 0 8px 0 12px;
+  }
+
+  .apex-header__native-actions .automotive-wishlist__bubble,
+  .apex-header__native-actions .header-actions__cart-icon .cart-bubble,
+  .apex-header__native-actions cart-icon .cart-bubble {
+    width: 26px;
+    min-width: 26px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .apex-header__menu {
+    display: block;
+  }
+
+
+  .apex-header__mobile-nav {
+    position: absolute;
+
+    top: 100%;
+    left: 0;
+    right: 0;
+
+    display: block;
+
+    padding: 15px 20px;
+
+    background: #ffffff;
+    border-top: 1px solid var(--apex-border);
+
+    box-shadow: 0 15px 35px rgba(0,0,0,.10);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-10px);
+    transition: .2s ease;
+
+    z-index: 150;
+  }
+
+  .apex-header__mobile-nav.is-open {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+  }
+
+  .apex-header__mobile-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #eceef0;
+  }
+
+  .apex-header__mobile-item:last-child {
+    border-bottom: none;
+  }
+
+  .apex-header__mobile-item > a {
+    display: block;
+
+    padding: 10px 5px;
+
+    color: var(--apex-text);
+    text-decoration: none;
+
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  .apex-header__mobile-children {
+    display: grid;
+
+    padding: 5px 0 8px 18px;
+    gap: 4px;
+  }
+
+  .apex-header__mobile-children a {
+    padding: 7px 0;
+
+    color: #697383;
+    text-decoration: none;
+  }
+
+}
+
+
+@media screen and (max-width: 480px) {
+
+  .apex-header__inner {
+    padding: 0 12px;
+  }
+
+  .apex-header__native-actions .header-actions__action.button-unstyled,
+  .apex-header__native-actions .action__cart {
+    width: 44px; min-width: 44px; height: 44px;
+  }
+
+  .apex-header__menu {
+    width: 44px;
+    height: 44px;
+  }
+
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "APEX LAB Premium Header",
+  "tag": "header",
+  "class": "apex-header-section",
+
+  "enabled_on": {
+    "groups": ["header"]
+  },
+
+  "settings": [
+
+    {
+      "type": "header",
+      "content": "Logo"
+    },
+    {
+      "type": "image_picker",
+      "id": "logo",
+      "label": "Logo image"
+    },
+    {
+      "type": "text",
+      "id": "logo_text",
+      "label": "Fallback logo text",
+      "default": "APEX LAB"
+    },
+    {
+      "type": "range",
+      "id": "logo_width",
+      "label": "Desktop logo width",
+      "min": 80,
+      "max": 300,
+      "step": 5,
+      "unit": "px",
+      "default": 170
+    },
+    {
+      "type": "range",
+      "id": "mobile_logo_width",
+      "label": "Mobile logo width",
+      "min": 80,
+      "max": 220,
+      "step": 5,
+      "unit": "px",
+      "default": 145
+    },
+
+    {
+      "type": "header",
+      "content": "Navigation"
+    },
+    {
+      "type": "link_list",
+      "id": "menu",
+      "label": "Categories navigation menu",
+      "default": "main-menu"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_categories",
+      "label": "Show categories button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "categories_label",
+      "label": "Categories button text",
+      "default": "Categories"
+    },
+    {
+      "type": "select",
+      "id": "categories_behavior",
+      "label": "Categories button behavior",
+      "options": [
+        {
+          "value": "dropdown",
+          "label": "Open dropdown menu"
+        },
+        {
+          "value": "link",
+          "label": "Open a page"
+        }
+      ],
+      "default": "dropdown"
+    },
+    {
+      "type": "url",
+      "id": "categories_link",
+      "label": "Categories page link"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_categories_icon",
+      "label": "Show categories arrow",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "New arrivals"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_new_arrivals",
+      "label": "Show new arrivals button",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "new_arrivals_label",
+      "label": "Button text",
+      "default": "New arrivals"
+    },
+    {
+      "type": "url",
+      "id": "new_arrivals_link",
+      "label": "Button link"
+    },
+
+    {
+      "type": "header",
+      "content": "Search"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_search",
+      "label": "Show search",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "search_placeholder",
+      "label": "Desktop search placeholder",
+      "default": "Search parts..."
+    },
+    {
+      "type": "text",
+      "id": "mobile_search_placeholder",
+      "label": "Mobile search placeholder",
+      "default": "Search performance parts..."
+    },
+    {
+      "type": "text",
+      "id": "mobile_search_button",
+      "label": "Mobile search button text",
+      "default": "SEARCH"
+    },
+
+    {
+      "type": "header",
+      "content": "Header actions"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_account",
+      "label": "Show account icon",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "account_label",
+      "label": "Account accessibility label",
+      "default": "Account"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "wishlist_label",
+      "label": "Wishlist text",
+      "default": "Wishlist"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist_label",
+      "label": "Show wishlist text",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist_count",
+      "label": "Show wishlist count",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart",
+      "label": "Show cart",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "cart_label",
+      "label": "Cart text",
+      "default": "Cart"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_label",
+      "label": "Show cart text",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_cart_count",
+      "label": "Show cart count",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "header_height",
+      "label": "Desktop header height",
+      "min": 70,
+      "max": 140,
+      "step": 2,
+      "unit": "px",
+      "default": 108
+    },
+    {
+      "type": "range",
+      "id": "container_width",
+      "label": "Header container width",
+      "min": 1000,
+      "max": 2000,
+      "step": 100,
+      "unit": "px",
+      "default": 1600
+    },
+    {
+      "type": "select",
+      "id": "sticky",
+      "label": "Sticky header",
+      "options": [
+        {
+          "value": "true",
+          "label": "Always"
+        },
+        {
+          "value": "false",
+          "label": "Never"
+        }
+      ],
+      "default": "true"
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Header background",
+      "default": "#F7F7F6"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#303946"
+    },
+    {
+      "type": "color",
+      "id": "primary_color",
+      "label": "Primary button color",
+      "default": "#2D405F"
+    },
+    {
+      "type": "color",
+      "id": "primary_hover_color",
+      "label": "Primary hover color",
+      "default": "#243653"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#D6D9DE"
+    }
+
+  ],
+
+  "presets": [
+    {
+      "name": "APEX LAB Premium Header"
+    }
+  ]
+}
+{% endschema %}

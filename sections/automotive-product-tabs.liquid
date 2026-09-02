@@ -18,6 +18,12 @@
     --apt-top: {{ section.settings.padding_top }}px;
     --apt-bottom: {{ section.settings.padding_bottom }}px;
     --apt-columns: {{ section.settings.products_per_row }};
+    --apt-card-radius: {{ section.settings.card_radius }}px;
+    --apt-image-bg: {{ section.settings.image_background }};
+    --apt-sale-bg: {{ section.settings.sale_badge_background }};
+    --apt-sale-text: {{ section.settings.sale_badge_text_color }};
+    --apt-meta-bg: {{ section.settings.meta_badge_background }};
+    --apt-meta-text: {{ section.settings.meta_badge_text_color }};
     --apt-tab-size: {{ section.settings.tab_font_size }}px;
     --apt-tab-weight: {{ section.settings.tab_font_weight }};
     --apt-tab-padding: {{ section.settings.tab_spacing }}px;
@@ -71,10 +77,47 @@
 
             <div class="apt__grid">
               {% for product in collection.products limit: section.settings.products_to_show %}
-                {% render 'automotive-product-card',
-                  product: product,
-                  section: section
-                %}
+                <div
+                  class="apt__item"
+                  style="--apt-item-index: {{ forloop.index0 }};"
+                >
+                  {% assign product_badge = blank %}
+
+                  {% if section.settings.show_metafield_badge and section.settings.badge_namespace != blank and section.settings.badge_key != blank %}
+                    {% assign product_badge = product.metafields[section.settings.badge_namespace][section.settings.badge_key].value %}
+                  {% endif %}
+
+                  {% assign discount_percent = 0 %}
+                  {% if product.compare_at_price > product.price %}
+                    {% assign discount_difference = product.compare_at_price | minus: product.price %}
+                    {% assign discount_percent = discount_difference | times: 100 | divided_by: product.compare_at_price | round %}
+                  {% endif %}
+
+                  {% if product_badge != blank or section.settings.show_sale_badge and discount_percent > 0 %}
+                    <div class="apt__custom-badges" aria-label="Product offers">
+                      {% if product_badge != blank %}
+                        <span class="apt__custom-badge apt__custom-badge--meta">
+                          {{ product_badge | escape }}
+                        </span>
+                      {% endif %}
+
+                      {% if section.settings.show_sale_badge and discount_percent > 0 %}
+                        <span class="apt__custom-badge apt__custom-badge--sale">
+                          {% if section.settings.show_sale_percentage %}
+                            {{ discount_percent }}% {{ section.settings.sale_badge_text }}
+                          {% else %}
+                            {{ section.settings.sale_badge_text }}
+                          {% endif %}
+                        </span>
+                      {% endif %}
+                    </div>
+                  {% endif %}
+
+                  {% render 'automotive-product-card',
+                    product: product,
+                    section: section
+                  %}
+                </div>
               {% endfor %}
             </div>
 
@@ -219,199 +262,513 @@
   }
 
   /* -----------------------------
-     SHARED PRODUCT CARD
+     FEATURED PRODUCTS — SAME CARD UI
   ----------------------------- */
 
   #AutomotiveProductTabs-{{ section.id }} .apt__grid {
     display: grid;
     grid-template-columns: repeat(var(--apt-columns), minmax(0, 1fr));
     column-gap: var(--apt-gap);
-    row-gap: 55px;
+    row-gap: 34px;
     width: 100%;
   }
 
-  #AutomotiveProductTabs-{{ section.id }} .apc-card {
+  #AutomotiveProductTabs-{{ section.id }} .apt__item {
     position: relative;
     min-width: 0;
-    background: var(--apc-card-bg);
-    color: var(--apc-text);
+    opacity: 0;
+    transform: translateY(22px);
+    transition:
+      opacity .65s ease,
+      transform .65s cubic-bezier(.22,.61,.36,1);
+    transition-delay:
+      calc(var(--apt-item-index, 0) * 25ms);
   }
 
+  #AutomotiveProductTabs-{{ section.id }} .apt__item.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apt__item .apc-card {
+    position: relative !important;
+    overflow: hidden !important;
+    height: 100% !important;
+    min-width: 0;
+
+    border:
+      1px solid rgba(0,0,0,.10) !important;
+
+    border-radius:
+      var(--apt-card-radius) !important;
+
+    background:
+      var(--apc-card-bg) !important;
+
+    color:
+      var(--apc-text) !important;
+
+    box-shadow:
+      none;
+
+    transition:
+      transform .4s cubic-bezier(.22,.61,.36,1),
+      box-shadow .4s ease,
+      border-color .3s ease !important;
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apt__item:hover .apc-card {
+    transform:
+      translateY(-7px) !important;
+
+    border-color:
+      rgba(2,101,242,.40) !important;
+
+    box-shadow:
+      0 20px 55px rgba(8,23,52,.12) !important;
+  }
+
+  /* EXACT FEATURED-PRODUCTS IMAGE PRESENTATION */
+
   #AutomotiveProductTabs-{{ section.id }} .apc-card__image {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
+    position: relative !important;
+
+    width: 100% !important;
+
+    aspect-ratio:
+      1 / .92 !important;
+
+    overflow: hidden !important;
+
+    display: block !important;
+
+    background:
+      #eef1f5 !important;
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    background:
+      linear-gradient(
+        to top,
+        rgba(4,11,24,.10),
+        transparent 35%
+      );
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__image-link {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    align-items: center;
-    justify-content: center;
+    display: block !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
     text-decoration: none;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    padding: 5px;
-    object-fit: contain;
-    transition: transform .35s ease;
+    display: block !important;
+
+    width: 100% !important;
+    height: 100% !important;
+
+    max-width: none !important;
+
+    padding: 0 !important;
+
+    object-fit:
+      cover !important;
+
+    object-position:
+      center !important;
+
+    transform:
+      scale(1.01);
+
+    transition:
+      transform .65s cubic-bezier(.22,.61,.36,1),
+      filter .4s ease;
   }
 
-  #AutomotiveProductTabs-{{ section.id }} .apc-card:hover .apc-card__img {
-    transform: scale(1.04);
+  #AutomotiveProductTabs-{{ section.id }} .apt__item:hover .apc-card__img {
+    transform:
+      scale(1.065);
+
+    filter:
+      saturate(1.04)
+      contrast(1.02);
   }
 
-  #AutomotiveProductTabs-{{ section.id }} .apc-card__placeholder {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    place-items: center;
-  }
-
-  #AutomotiveProductTabs-{{ section.id }} .apc-card__placeholder svg {
-    width: 70%;
-    height: 70%;
-  }
+  /* BADGES — same featured placement */
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    z-index: 5;
-    padding: 5px 9px;
-    background: var(--apc-badge-bg);
-    color: var(--apc-badge-text);
-    font-size: 11px;
-    line-height: 1;
-    font-weight: 700;
+    position: absolute !important;
+
+    top: 12px !important;
+    left: 12px !important;
+
+    z-index: 15 !important;
+
+    padding:
+      7px 9px !important;
+
+    border: 0 !important;
+    border-radius: 0 !important;
+
+    background:
+      var(--apc-badge-bg) !important;
+
+    color:
+      var(--apc-badge-text) !important;
+
+    font-size: 8px !important;
+    line-height: 1 !important;
+
+    font-weight: 800 !important;
+
+    letter-spacing: .10em !important;
+
     text-transform: uppercase;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__badge--special {
-    background: #f2f2f2;
-    color: #111;
+    background:
+      #0B1D4F !important;
+
+    color:
+      #ffffff !important;
   }
 
-  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish {
+  /* CUSTOM METAFIELD / SALE BADGES */
+
+  #AutomotiveProductTabs-{{ section.id }} .apt__custom-badges {
     position: absolute;
-    top: 7px;
-    right: 7px;
-    z-index: 7;
-    width: 36px;
-    height: 36px;
-    display: grid;
-    place-items: center;
-    padding: 0;
-    border: 0;
-    background: rgba(255,255,255,.92);
-    color: #333;
-    border-radius: 50%;
-    cursor: pointer;
+
+    top: 12px;
+    left: 12px;
+
+    z-index: 18;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: flex-start;
+
+    gap: 6px;
+
+    max-width:
+      calc(100% - 70px);
+
+    pointer-events: none;
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apt__custom-badge {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 26px;
+
+    padding:
+      0 9px;
+
+    font-size: 8px;
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: .10em;
+
+    text-transform: uppercase;
+
+    box-shadow:
+      0 6px 16px rgba(0,0,0,.12);
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apt__custom-badge--meta {
+    background:
+      var(--apt-meta-bg);
+
+    color:
+      var(--apt-meta-text);
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apt__custom-badge--sale {
+    background:
+      var(--apt-sale-bg);
+
+    color:
+      var(--apt-sale-text);
+  }
+
+  /* WISHLIST — same featured placement */
+
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish {
+    position: absolute !important;
+
+    top: 7px !important;
+    right: 7px !important;
+    left: auto !important;
+    bottom: auto !important;
+
+    z-index: 7 !important;
+
+    width:
+      38px !important;
+
+    height:
+      38px !important;
+
+    display: grid !important;
+
+    place-items: center !important;
+
+    padding: 0 !important;
+    margin: 0 !important;
+
+    border:
+      1px solid rgba(0,0,0,.08) !important;
+
+    border-radius:
+      50% !important;
+
+    background:
+      rgba(255,255,255,.92) !important;
+
+    color:
+      #071329 !important;
+
+    box-shadow:
+      0 6px 18px rgba(0,0,0,.08) !important;
+
+    backdrop-filter:
+      blur(8px);
+
+    cursor:
+      pointer;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__wish svg {
-    width: 21px;
-    height: 21px;
-    fill: none;
-    stroke: currentColor;
-    stroke-width: 1.5;
-    transition: transform .2s ease, fill .2s ease;
+    width:
+      20px !important;
+
+    height:
+      20px !important;
+
+    fill:
+      none !important;
+
+    stroke:
+      currentColor !important;
+
+    stroke-width:
+      1.5;
   }
 
-  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish:hover svg {
-    transform: scale(1.1);
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish svg *,
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish svg path,
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish svg use {
+    fill:
+      none !important;
+
+    stroke:
+      currentColor !important;
+  }
+
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish:hover {
+    background:
+      #ffffff !important;
+
+    color:
+      var(--apt-active) !important;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__wish.is-added {
-    color: #e21d2d;
+    color:
+      var(--apt-active) !important;
   }
 
-  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish.is-added svg {
-    fill: currentColor;
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish.is-added svg,
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish.is-added svg *,
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish.is-added svg path,
+  #AutomotiveProductTabs-{{ section.id }} .apc-card__wish.is-added svg use {
+    fill:
+      currentColor !important;
+
+    stroke:
+      currentColor !important;
   }
+
+  /* HOVER ADD TO CART — same featured presentation */
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__form {
     position: absolute;
+
     left: 50%;
     bottom: 12px;
-    z-index: 6;
-    width: calc(100% - 24px);
+
+    z-index: 16;
+
+    width:
+      calc(100% - 24px);
+
     margin: 0;
+
     opacity: 0;
+
     visibility: hidden;
-    transform: translate(-50%, 14px);
-    transition: opacity .25s ease, transform .25s ease, visibility .25s ease;
+
+    transform:
+      translate(-50%, 14px);
+
+    transition:
+      opacity .25s ease,
+      transform .25s ease,
+      visibility .25s ease;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card:hover .apc-card__form {
     opacity: 1;
+
     visibility: visible;
-    transform: translate(-50%, 0);
+
+    transform:
+      translate(-50%, 0);
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__cart {
     width: 100%;
-    min-height: 54px;
-    border: 1px solid #ddd;
-    background: rgba(255,255,255,.97);
-    color: #111;
-    font-family: inherit;
-    font-size: 15px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background .2s ease, color .2s ease;
+
+    min-height:
+      46px;
+        border: 1px solid #ddd;
+
+    background:
+      rgba(255,255,255,.96);
+
+    color:
+      #111111;
+
+    font-size:
+      15px;
+
+    font-weight:
+      500;
+
+    letter-spacing:
+      .10em;
+
+    text-transform:
+      uppercase;
+
+    transition:
+      background .25s ease,
+      color .25s ease;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__cart:hover {
-    background: #111;
-    color: #fff;
+    background:
+      #111;
+
+    color:
+      #ffffff;
   }
 
+  /* CONTENT — same featured presentation */
+
   #AutomotiveProductTabs-{{ section.id }} .apc-card__content {
-    padding: 15px 0 0;
+    padding:
+      16px 15px 18px !important;
+
+    min-height:
+      0 !important;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__vendor {
-    margin-bottom: 7px;
-    font-size: 12px;
-    line-height: 1.2;
-    font-weight: 700;
-    text-transform: uppercase;
+    margin-bottom:
+      7px !important;
+
+    color:
+      rgba(0,0,0,.45) !important;
+
+    font-size:
+      8px !important;
+
+    line-height:
+      1.2 !important;
+
+    font-weight:
+      800 !important;
+
+    letter-spacing:
+      .15em !important;
+
+    text-transform:
+      uppercase;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__title {
-    display: block;
-    color: inherit;
-    font-size: 15px;
-    line-height: 1.45;
-    text-decoration: none;
+    display:
+      block !important;
+
+    color:
+      var(--apc-text) !important;
+
+    font-size:
+      14px !important;
+
+    line-height:
+      1.35 !important;
+
+    font-weight:
+      650 !important;
+
+    text-decoration:
+      none !important;
+
+    transition:
+      color .2s ease;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__title:hover {
-    text-decoration: underline;
+    color:
+      var(--apt-active) !important;
+
+    text-decoration:
+      none !important;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__price {
-    margin-top: 10px;
-    font-size: 16px;
-    line-height: 1.3;
-    font-weight: 700;
+    margin-top:
+      11px !important;
+
+    color:
+      #111111 !important;
+
+    font-size:
+      15px !important;
+
+    line-height:
+      1.2 !important;
+
+    font-weight:
+      800 !important;
   }
 
   #AutomotiveProductTabs-{{ section.id }} .apc-card__price del {
-    margin-left: 7px;
-    color: #777;
-    font-size: 13px;
-    font-weight: 400;
+    color:
+      #8c8c8c !important;
+
+    font-size:
+      11px !important;
   }
 
   /* -----------------------------
@@ -431,7 +788,7 @@
     min-width: 110px;
     min-height: 42px;
     padding: 0 24px;
-    background: #e52b20;
+    background: #0265F2;
     color: #fff;
     font-size: 12px;
     font-weight: 700;
@@ -460,7 +817,7 @@
     #AutomotiveProductTabs-{{ section.id }} .apt__grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
       column-gap: 20px;
-      row-gap: 42px;
+      row-gap: 34px;
     }
   }
 
@@ -471,61 +828,104 @@
 
     #AutomotiveProductTabs-{{ section.id }} .apt__tabs {
       justify-content: flex-start;
+
       width: 100%;
-      margin-bottom: 28px;
+
+      margin-bottom:
+        24px;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apt__tab {
-      padding-left: 17px;
-      padding-right: 17px;
-      padding-bottom: 13px;
-      font-size: 12px;
+      padding:
+        0 17px 13px;
+
+      font-size:
+        12px;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apt__grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      column-gap: 14px;
-      row-gap: 30px;
+      grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+      column-gap:
+        14px;
+
+      row-gap:
+        22px;
+    }
+
+    #AutomotiveProductTabs-{{ section.id }} .apc-card__image {
+      aspect-ratio:
+        1 / .92;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__content {
-      padding-top: 10px;
+      padding:
+        11px 10px 13px !important;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__vendor {
-      font-size: 10px;
+      font-size:
+        7px !important;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__title {
-      font-size: 12px;
+      font-size:
+        11px !important;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__price {
-      font-size: 13px;
+      font-size:
+        12px !important;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__badge {
-      top: 6px;
-      left: 6px;
-      padding: 4px 6px;
-      font-size: 9px;
+      top:
+        7px !important;
+
+      left:
+        7px !important;
+
+      padding:
+        5px 6px !important;
+
+      font-size:
+        7px !important;
+    }
+
+    #AutomotiveProductTabs-{{ section.id }} .apt__custom-badges {
+      top:
+        7px;
+
+      left:
+        7px;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__wish {
-      top: 4px;
-      right: 4px;
-      width: 30px;
-      height: 30px;
+      top:
+        6px !important;
+
+      right:
+        6px !important;
+
+      width:
+        30px !important;
+
+      height:
+        30px !important;
     }
 
     #AutomotiveProductTabs-{{ section.id }} .apc-card__wish svg {
-      width: 18px;
-      height: 18px;
+      width:
+        17px !important;
+
+      height:
+        17px !important;
     }
 
-    #AutomotiveProductTabs-{{ section.id }} .apc-card__cart {
-      min-height: 44px;
-      font-size: 13px;
+    #AutomotiveProductTabs-{{ section.id }} .apc-card__form {
+      display:
+        none;
     }
   }
 </style>
@@ -538,6 +938,15 @@
 
   const tabs = Array.from(section.querySelectorAll('[data-tab]'));
   const panels = Array.from(section.querySelectorAll('[data-panel]'));
+
+  const revealCards = (panel) => {
+    panel.querySelectorAll('.apt__item').forEach((item, index) => {
+      item.classList.remove('is-visible');
+      window.setTimeout(() => {
+        item.classList.add('is-visible');
+      }, index * 55);
+    });
+  };
 
   tabs.forEach((tab) => {
     tab.addEventListener('click', () => {
@@ -553,9 +962,14 @@
         const active = panel.dataset.panel === selectedId;
         panel.hidden = !active;
         panel.classList.toggle('is-active', active);
+
+        if (active) revealCards(panel);
       });
     });
   });
+
+  const initialPanel = panels.find((panel) => !panel.hidden);
+  if (initialPanel) revealCards(initialPanel);
 
   section.querySelectorAll('.apc-card__wish').forEach((button) => {
     button.addEventListener('click', (event) => {
@@ -610,11 +1024,26 @@
       "id": "products_per_row",
       "label": "Products per row",
       "options": [
-        {"value": "2", "label": "2"},
-        {"value": "3", "label": "3"},
-        {"value": "4", "label": "4"},
-        {"value": "5", "label": "5"},
-        {"value": "6", "label": "6"}
+        {
+          "value": "2",
+          "label": "2"
+        },
+        {
+          "value": "3",
+          "label": "3"
+        },
+        {
+          "value": "4",
+          "label": "4"
+        },
+        {
+          "value": "5",
+          "label": "5"
+        },
+        {
+          "value": "6",
+          "label": "6"
+        }
       ],
       "default": "6"
     },
@@ -627,6 +1056,22 @@
       "step": 2,
       "unit": "px",
       "default": 28
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card radius",
+      "min": 0,
+      "max": 24,
+      "step": 1,
+      "unit": "px",
+      "default": 0
+    },
+    {
+      "type": "color",
+      "id": "image_background",
+      "label": "Product image background",
+      "default": "#EEF2F7"
     },
     {
       "type": "range",
@@ -643,9 +1088,18 @@
       "id": "tab_font_weight",
       "label": "Tab text weight",
       "options": [
-        {"value": "500", "label": "Medium"},
-        {"value": "600", "label": "Semi bold"},
-        {"value": "700", "label": "Bold"}
+        {
+          "value": "500",
+          "label": "Medium"
+        },
+        {
+          "value": "600",
+          "label": "Semi bold"
+        },
+        {
+          "value": "700",
+          "label": "Bold"
+        }
       ],
       "default": "700"
     },
@@ -676,6 +1130,66 @@
       "id": "show_stock_badge",
       "label": "Show stock badge",
       "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_metafield_badge",
+      "label": "Show product metafield badge",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "badge_namespace",
+      "label": "Badge metafield namespace",
+      "default": "custom"
+    },
+    {
+      "type": "text",
+      "id": "badge_key",
+      "label": "Badge metafield key",
+      "default": "badge_label"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_badge",
+      "label": "Show automatic sale badge",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_percentage",
+      "label": "Show sale percentage",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "sale_badge_text",
+      "label": "Sale badge text",
+      "default": "OFF"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_background",
+      "label": "Sale badge background",
+      "default": "#0265F2"
+    },
+    {
+      "type": "color",
+      "id": "sale_badge_text_color",
+      "label": "Sale badge text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "meta_badge_background",
+      "label": "Metafield badge background",
+      "default": "#07182B"
+    },
+    {
+      "type": "color",
+      "id": "meta_badge_text_color",
+      "label": "Metafield badge text color",
+      "default": "#FFFFFF"
     },
     {
       "type": "text",
@@ -798,10 +1312,30 @@
     {
       "name": "Automotive Product Tabs",
       "blocks": [
-        {"type": "tab", "settings": {"title": "NEW ARRIVALS"}},
-        {"type": "tab", "settings": {"title": "BEST SELLERS"}},
-        {"type": "tab", "settings": {"title": "DISCOUNTS"}},
-        {"type": "tab", "settings": {"title": "LATEST RELEASES"}}
+        {
+          "type": "tab",
+          "settings": {
+            "title": "NEW ARRIVALS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "BEST SELLERS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "DISCOUNTS"
+          }
+        },
+        {
+          "type": "tab",
+          "settings": {
+            "title": "LATEST RELEASES"
+          }
+        }
       ]
     }
   ]

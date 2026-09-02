@@ -1,0 +1,123 @@
+{% liquid
+  assign announcement_text = section.settings.text
+%}
+
+<section
+  id="ApexAnnouncement-{{ section.id }}"
+  class="apex-announcement"
+  style="
+    --apex-announcement-bg: {{ section.settings.background }};
+    --apex-announcement-text: {{ section.settings.text_color }};
+    --apex-announcement-accent: {{ section.settings.accent }};
+  "
+>
+  <div class="apex-announcement__inner page-width">
+    <div class="apex-announcement__content">
+      {% if announcement_text != blank %}
+        <p class="apex-announcement__text">
+          {{ announcement_text }}
+        </p>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<style>
+  #ApexAnnouncement-{{ section.id }} {
+    width: 100%;
+    background: var(--apex-announcement-bg);
+    color: var(--apex-announcement-text);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  }
+
+  #ApexAnnouncement-{{ section.id }} .apex-announcement__inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 34px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
+
+  #ApexAnnouncement-{{ section.id }} .apex-announcement__content {
+    width: 100%;
+    text-align: center;
+  }
+
+  #ApexAnnouncement-{{ section.id }} .apex-announcement__text {
+    margin: 0;
+    color: var(--apex-announcement-text);
+    font-size: 11px;
+    font-weight: 700;
+    line-height: 1.4;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+  }
+
+  #ApexAnnouncement-{{ section.id }} .apex-announcement__text::after {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    margin-left: 16px;
+    margin-bottom: 2px;
+    border-radius: 50%;
+    background: var(--apex-announcement-accent);
+  }
+
+  @media screen and (max-width: 749px) {
+    #ApexAnnouncement-{{ section.id }} .apex-announcement__inner {
+      min-height: 32px;
+      padding: 7px 16px;
+    }
+
+    #ApexAnnouncement-{{ section.id }} .apex-announcement__text {
+      font-size: 9px;
+      letter-spacing: 0.8px;
+      line-height: 1.5;
+    }
+
+    #ApexAnnouncement-{{ section.id }} .apex-announcement__text::after {
+      display: none;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "APEX Announcement",
+  "tag": "section",
+  "class": "section-apex-announcement",
+  "settings": [
+    {
+      "type": "textarea",
+      "id": "text",
+      "label": "Announcement text",
+      "default": "FREE SHIPPING ON ORDERS OVER $100 • WORLDWIDE DELIVERY • 30-DAY RETURNS"
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background color",
+      "default": "#0B0F14"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent",
+      "label": "Accent color",
+      "default": "#1B2A5B"
+    }
+  ],
+  "presets": [
+    {
+      "name": "APEX Announcement"
+    }
+  ]
+}
+{% endschema %}

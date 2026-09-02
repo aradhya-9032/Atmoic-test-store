@@ -1,0 +1,315 @@
+{% comment %}
+  APEXLAB - SHOP BY CATEGORY
+  Home page: Main categories only
+{% endcomment %}
+
+<section
+  class="apex-shop-categories section-{{ section.id }}"
+  id="shop-by-category-{{ section.id }}"
+>
+  <div class="apex-shop-categories__container">
+
+    {% if section.settings.heading != blank %}
+      <div class="apex-shop-categories__heading">
+        <h2>{{ section.settings.heading }}</h2>
+      </div>
+    {% endif %}
+
+    <div class="apex-shop-categories__grid">
+      {% for block in section.blocks %}
+        {% assign category_link  = block.settings.link %}
+
+        {% if category_link  != blank %}
+         <a
+            href="{{ category_link }}"
+            class="apex-category-card"
+            {{ block.shopify_attributes }}
+            >
+            <div class="apex-category-card__content">
+                <h3>{{ block.settings.title }}</h3>
+
+                <span class="apex-category-card__count">
+                View category
+                </span>
+            </div>
+
+            <span class="apex-category-card__arrow" aria-hidden="true">
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M5 12H19M13 6L19 12L13 18"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+          </a>
+        {% else %}
+          <div
+            class="apex-category-card apex-category-card--empty"
+            {{ block.shopify_attributes }}
+          >
+            <div class="apex-category-card__content">
+              <h3>{{ block.settings.title | default: 'Category' }}</h3>
+              <span class="apex-category-card__count">
+                Select a Page
+              </span>
+            </div>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+  </div>
+</section>
+
+<style>
+  .section-{{ section.id }} {
+    width: 100%;
+    background: {{ section.settings.background }};
+    padding: {{ section.settings.padding_top }}px 20px {{ section.settings.padding_bottom }}px;
+  }
+
+  .section-{{ section.id }} .apex-shop-categories__container {
+    max-width: 1640px;
+    margin: 0 auto;
+  }
+
+  .section-{{ section.id }} .apex-shop-categories__heading {
+    margin-bottom: 28px;
+  }
+
+  .section-{{ section.id }} .apex-shop-categories__heading h2 {
+    margin: 0;
+    color: #18202c;
+    font-size: clamp(28px, 2.2vw, 42px);
+    line-height: 1.15;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+  }
+
+  .section-{{ section.id }} .apex-shop-categories__grid {
+    display: grid;
+    grid-template-columns: repeat({{ section.settings.columns_desktop }}, minmax(0, 1fr));
+    gap: 14px;
+  }
+
+  .section-{{ section.id }} .apex-category-card {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 112px;
+    padding: 24px 22px;
+    background: #ffffff;
+    border: 1px solid #e2e5e9;
+    border-radius: 18px;
+    text-decoration: none;
+    color: #18202c;
+    box-shadow: 0 4px 16px rgba(20, 30, 45, 0.03);
+    transition:
+      transform 0.22s ease,
+      border-color 0.22s ease,
+      box-shadow 0.22s ease,
+      background 0.22s ease;
+    overflow: hidden;
+  }
+
+  .section-{{ section.id }} .apex-category-card:hover {
+    transform: translateY(-4px);
+    border-color: #263b61;
+    box-shadow: 0 14px 32px rgba(20, 30, 45, 0.10);
+  }
+
+  .section-{{ section.id }} .apex-category-card__content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .section-{{ section.id }} .apex-category-card h3 {
+    margin: 0;
+    font-size: 18px;
+    line-height: 1.2;
+    font-weight: 700;
+    color: #1d2632;
+  }
+
+  .section-{{ section.id }} .apex-category-card__count {
+    font-size: 14px;
+    line-height: 1.3;
+    color: #8a929c;
+  }
+
+  .section-{{ section.id }} .apex-category-card__arrow {
+    width: 38px;
+    height: 38px;
+    flex: 0 0 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    color: #263b61;
+    background: #f3f5f8;
+    opacity: 0;
+    transform: translateX(-6px);
+    transition:
+      opacity 0.22s ease,
+      transform 0.22s ease;
+  }
+
+  .section-{{ section.id }} .apex-category-card:hover .apex-category-card__arrow {
+    opacity: 1;
+    transform: translateX(0);
+  }
+
+  .section-{{ section.id }} .apex-category-card--empty {
+    cursor: default;
+  }
+
+  @media screen and (max-width: 1199px) {
+    .section-{{ section.id }} .apex-shop-categories__grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    .section-{{ section.id }} {
+      padding-left: 16px;
+      padding-right: 16px;
+    }
+
+    .section-{{ section.id }} .apex-shop-categories__heading {
+      margin-bottom: 20px;
+    }
+
+    .section-{{ section.id }} .apex-shop-categories__grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .section-{{ section.id }} .apex-category-card {
+      min-height: 96px;
+      padding: 18px 16px;
+      border-radius: 14px;
+    }
+
+    .section-{{ section.id }} .apex-category-card h3 {
+      font-size: 16px;
+    }
+
+    .section-{{ section.id }} .apex-category-card__count {
+      font-size: 13px;
+    }
+
+    .section-{{ section.id }} .apex-category-card__arrow {
+      display: none;
+    }
+  }
+
+  @media screen and (max-width: 480px) {
+    .section-{{ section.id }} .apex-shop-categories__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+
+{% schema %}
+{
+  "name": "Shop by Category",
+  "tag": "section",
+  "class": "shop-by-category-section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Shop by Category"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "min": 3,
+      "max": 6,
+      "step": 1,
+      "default": 6
+    },
+    {
+      "type": "color",
+      "id": "background",
+      "label": "Background color",
+      "default": "#ffffff"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 32
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "default": 48
+    }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        {
+        "type": "url",
+        "id": "link",
+        "label": "Category link"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Fallback title",
+          "default": "Category"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Shop by Category",
+      "blocks": [
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        },
+        {
+          "type": "category"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

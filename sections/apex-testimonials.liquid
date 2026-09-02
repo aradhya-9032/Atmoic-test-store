@@ -1,0 +1,701 @@
+<section
+  class="apex-testimonials"
+  id="apex-testimonials-{{ section.id }}"
+  style="
+    --apex-testimonials-bg: {{ section.settings.background_color }};
+    --apex-testimonials-heading: {{ section.settings.heading_color }};
+    --apex-testimonials-text: {{ section.settings.text_color }};
+    --apex-testimonials-card-bg: {{ section.settings.card_background }};
+    --apex-testimonials-card-radius: {{ section.settings.card_radius }}px;
+    --apex-testimonials-rating: {{ section.settings.rating_color }};
+    --apex-testimonials-arrow-bg: {{ section.settings.arrow_background }};
+    --apex-testimonials-arrow-color: {{ section.settings.arrow_color }};
+  "
+>
+  <div class="apex-testimonials__container">
+
+    {% if section.settings.heading != blank or section.settings.eyebrow != blank %}
+      <div class="apex-testimonials__top">
+
+        <div class="apex-testimonials__heading">
+          {% if section.settings.eyebrow != blank %}
+            <span class="apex-testimonials__eyebrow">
+              {{ section.settings.eyebrow }}
+            </span>
+          {% endif %}
+
+          {% if section.settings.heading != blank %}
+            <h2>{{ section.settings.heading }}</h2>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_arrows %}
+          <div class="apex-testimonials__arrows">
+            <button
+              type="button"
+              class="apex-testimonials__arrow apex-testimonials__arrow--prev"
+              aria-label="Previous testimonials"
+            >
+              ←
+            </button>
+
+            <button
+              type="button"
+              class="apex-testimonials__arrow apex-testimonials__arrow--next"
+              aria-label="Next testimonials"
+            >
+              →
+            </button>
+          </div>
+        {% endif %}
+
+      </div>
+    {% endif %}
+
+    <div class="apex-testimonials__viewport">
+      <div class="apex-testimonials__track">
+
+        {% for block in section.blocks %}
+          <article
+            class="apex-testimonial-slide"
+            {{ block.shopify_attributes }}
+          >
+            <div class="apex-testimonial-card">
+
+              <div class="apex-testimonial-card__quote">“</div>
+
+              {% if block.settings.quote != blank %}
+                <div class="apex-testimonial-card__text">
+                  {{ block.settings.quote }}
+                </div>
+              {% endif %}
+
+              <div class="apex-testimonial-card__footer">
+
+                <div class="apex-testimonial-card__author">
+                  {% if block.settings.author != blank %}
+                    <strong>{{ block.settings.author }}</strong>
+                  {% endif %}
+
+                  {% if block.settings.role != blank %}
+                    <span>{{ block.settings.role }}</span>
+                  {% endif %}
+                </div>
+
+                {% if block.settings.rating > 0 %}
+                  <div
+                    class="apex-testimonial-card__rating"
+                    aria-label="{{ block.settings.rating }} out of 5 stars"
+                  >
+                    {% for i in (1..5) %}
+                      {% if i <= block.settings.rating %}
+                        ★
+                      {% else %}
+                        ☆
+                      {% endif %}
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+              </div>
+
+            </div>
+          </article>
+        {% endfor %}
+
+      </div>
+    </div>
+
+    {% if section.settings.show_dots %}
+      <div class="apex-testimonials__dots"></div>
+    {% endif %}
+
+  </div>
+</section>
+
+<style>
+  #apex-testimonials-{{ section.id }} {
+    padding-top: {{ section.settings.padding_top }}px;
+    padding-bottom: {{ section.settings.padding_bottom }}px;
+    background: var(--apex-testimonials-bg);
+    overflow: hidden;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__container {
+    max-width: 1440px;
+    margin: 0 auto;
+    padding: 0 20px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 42px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__heading {
+    max-width: 800px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__eyebrow {
+    display: block;
+    margin-bottom: 10px;
+    color: var(--apex-testimonials-text);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__heading h2 {
+    margin: 0;
+    color: var(--apex-testimonials-heading);
+    font-size: clamp(34px, 4vw, 58px);
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__arrows {
+    display: flex;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__arrow {
+    width: 52px;
+    height: 52px;
+    border: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 50%;
+    background: var(--apex-testimonials-arrow-bg);
+    color: var(--apex-testimonials-arrow-color);
+    font-size: 22px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__arrow:hover {
+    transform: translateY(-2px);
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__arrow:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__viewport {
+    overflow: hidden;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__track {
+    display: flex;
+    gap: {{ section.settings.gap }}px;
+    transition: transform 0.5s ease;
+    will-change: transform;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-slide {
+    flex: 0 0 calc(
+      (100% - {{ section.settings.gap | times: section.settings.desktop_cards | minus: section.settings.gap }}px)
+      / {{ section.settings.desktop_cards }}
+    );
+    min-width: 0;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 310px;
+    height: 100%;
+    padding: 34px;
+    background: var(--apex-testimonials-card-bg);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: var(--apex-testimonials-card-radius);
+    box-shadow: 0 10px 35px rgba(20, 28, 45, 0.04);
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__quote {
+    margin-bottom: 18px;
+    color: var(--apex-testimonials-heading);
+    font-family: Georgia, serif;
+    font-size: 52px;
+    line-height: 0.7;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__text {
+    color: var(--apex-testimonials-text);
+    font-size: 19px;
+    line-height: 1.65;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 15px;
+    margin-top: auto;
+    padding-top: 30px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__author {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__author strong {
+    color: var(--apex-testimonials-heading);
+    font-size: 15px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__author span {
+    color: var(--apex-testimonials-text);
+    font-size: 13px;
+    opacity: 0.7;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonial-card__rating {
+    color: var(--apex-testimonials-rating);
+    font-size: 18px;
+    letter-spacing: 2px;
+    white-space: nowrap;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__dots {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 30px;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__dot {
+    width: 8px;
+    height: 8px;
+    padding: 0;
+    border: none;
+    border-radius: 50%;
+    background: #b8b8b8;
+    cursor: pointer;
+    transition: all 0.25s ease;
+  }
+
+  #apex-testimonials-{{ section.id }} .apex-testimonials__dot.is-active {
+    width: 24px;
+    border-radius: 20px;
+    background: var(--apex-testimonials-heading);
+  }
+
+  @media screen and (max-width: 990px) {
+    #apex-testimonials-{{ section.id }} .apex-testimonial-slide {
+      flex-basis: calc((100% - {{ section.settings.gap }}px) / 2);
+    }
+  }
+
+  @media screen and (max-width: 749px) {
+    #apex-testimonials-{{ section.id }} {
+      padding-top: {{ section.settings.padding_top | times: 0.75 }}px;
+      padding-bottom: {{ section.settings.padding_bottom | times: 0.75 }}px;
+    }
+
+    #apex-testimonials-{{ section.id }} .apex-testimonials__container {
+      padding: 0 16px;
+    }
+
+    #apex-testimonials-{{ section.id }} .apex-testimonials__top {
+      align-items: flex-start;
+      flex-direction: column;
+      margin-bottom: 28px;
+    }
+
+    #apex-testimonials-{{ section.id }} .apex-testimonials__arrows {
+      width: 100%;
+      justify-content: flex-end;
+    }
+
+    #apex-testimonials-{{ section.id }} .apex-testimonial-slide {
+      flex-basis: 100%;
+    }
+
+    #apex-testimonials-{{ section.id }} .apex-testimonial-card {
+      min-height: auto;
+      padding: 26px;
+    }
+
+    #apex-testimonials-{{ section.id }} .apex-testimonial-card__text {
+      font-size: 17px;
+    }
+  }
+</style>
+
+<script>
+  (() => {
+    const section = document.querySelector('#apex-testimonials-{{ section.id }}');
+
+    if (!section || section.dataset.initialized === 'true') return;
+
+    section.dataset.initialized = 'true';
+
+    const track = section.querySelector('.apex-testimonials__track');
+    const slides = Array.from(section.querySelectorAll('.apex-testimonial-slide'));
+
+    if (!track || slides.length === 0) return;
+
+    const prevButton = section.querySelector('.apex-testimonials__arrow--prev');
+    const nextButton = section.querySelector('.apex-testimonials__arrow--next');
+    const dotsContainer = section.querySelector('.apex-testimonials__dots');
+
+    const autoplayEnabled = {{ section.settings.autoplay | json }};
+    const autoplaySpeed = {{ section.settings.autoplay_speed | times: 1000 }};
+    const loopEnabled = {{ section.settings.loop | json }};
+
+    let currentIndex = 0;
+    let autoplayTimer = null;
+
+    const getCardsPerView = () => {
+      if (window.innerWidth < 750) return 1;
+      if (window.innerWidth < 991) return 2;
+      return {{ section.settings.desktop_cards }};
+    };
+
+    const getMaxIndex = () => {
+      return Math.max(0, slides.length - getCardsPerView());
+    };
+
+    const getStepSize = () => {
+      const firstSlide = slides[0];
+
+      if (!firstSlide) return 0;
+
+      const styles = window.getComputedStyle(track);
+      const gap = parseFloat(styles.gap) || 0;
+
+      return firstSlide.getBoundingClientRect().width + gap;
+    };
+
+    const buildDots = () => {
+      if (!dotsContainer) return;
+
+      dotsContainer.innerHTML = '';
+
+      const total = getMaxIndex() + 1;
+
+      for (let i = 0; i < total; i++) {
+        const dot = document.createElement('button');
+
+        dot.type = 'button';
+        dot.className = 'apex-testimonials__dot';
+        dot.setAttribute('aria-label', `Go to testimonial ${i + 1}`);
+
+        dot.addEventListener('click', () => {
+          currentIndex = i;
+          updateSlider();
+          restartAutoplay();
+        });
+
+        dotsContainer.appendChild(dot);
+      }
+    };
+
+    const updateSlider = () => {
+      const maxIndex = getMaxIndex();
+
+      if (currentIndex > maxIndex) currentIndex = maxIndex;
+      if (currentIndex < 0) currentIndex = 0;
+
+      const translateValue = currentIndex * getStepSize();
+
+      track.style.transform = `translateX(-${translateValue}px)`;
+
+      if (prevButton) {
+        prevButton.disabled = !loopEnabled && currentIndex === 0;
+      }
+
+      if (nextButton) {
+        nextButton.disabled = !loopEnabled && currentIndex >= maxIndex;
+      }
+
+      if (dotsContainer) {
+        const dots = dotsContainer.querySelectorAll('.apex-testimonials__dot');
+
+        dots.forEach((dot, index) => {
+          dot.classList.toggle('is-active', index === currentIndex);
+        });
+      }
+    };
+
+    const nextSlide = () => {
+      const maxIndex = getMaxIndex();
+
+      if (currentIndex >= maxIndex) {
+        currentIndex = loopEnabled ? 0 : maxIndex;
+      } else {
+        currentIndex++;
+      }
+
+      updateSlider();
+    };
+
+    const prevSlide = () => {
+      const maxIndex = getMaxIndex();
+
+      if (currentIndex <= 0) {
+        currentIndex = loopEnabled ? maxIndex : 0;
+      } else {
+        currentIndex--;
+      }
+
+      updateSlider();
+    };
+
+    if (nextButton) {
+      nextButton.addEventListener('click', () => {
+        nextSlide();
+        restartAutoplay();
+      });
+    }
+
+    if (prevButton) {
+      prevButton.addEventListener('click', () => {
+        prevSlide();
+        restartAutoplay();
+      });
+    }
+
+    const startAutoplay = () => {
+      if (!autoplayEnabled || slides.length <= getCardsPerView()) return;
+
+      autoplayTimer = setInterval(nextSlide, autoplaySpeed);
+    };
+
+    const stopAutoplay = () => {
+      if (autoplayTimer) {
+        clearInterval(autoplayTimer);
+        autoplayTimer = null;
+      }
+    };
+
+    const restartAutoplay = () => {
+      stopAutoplay();
+      startAutoplay();
+    };
+
+    section.addEventListener('mouseenter', stopAutoplay);
+    section.addEventListener('mouseleave', startAutoplay);
+
+    window.addEventListener('resize', () => {
+      buildDots();
+      updateSlider();
+    });
+
+    buildDots();
+    updateSlider();
+    startAutoplay();
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "APEX Testimonials",
+  "tag": "section",
+  "class": "section-apex-testimonials",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "WHAT OUR CUSTOMERS SAY"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Built for people who love performance"
+    },
+    {
+      "type": "header",
+      "content": "Slider settings"
+    },
+    {
+      "type": "range",
+      "id": "desktop_cards",
+      "label": "Testimonials per row on desktop",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 3
+    },
+    {
+      "type": "range",
+      "id": "gap",
+      "label": "Gap between cards",
+      "min": 10,
+      "max": 50,
+      "step": 2,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "checkbox",
+      "id": "show_arrows",
+      "label": "Show navigation arrows",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_dots",
+      "label": "Show pagination dots",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "loop",
+      "label": "Enable infinite loop",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "autoplay",
+      "label": "Enable autoplay",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "autoplay_speed",
+      "label": "Autoplay speed",
+      "min": 2,
+      "max": 10,
+      "step": 1,
+      "unit": "s",
+      "default": 5
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#f7f6f3"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#172033"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#273142"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "rating_color",
+      "label": "Rating color",
+      "default": "#d19a35"
+    },
+    {
+      "type": "color",
+      "id": "arrow_background",
+      "label": "Arrow background",
+      "default": "#ffffff"
+    },
+    {
+      "type": "color",
+      "id": "arrow_color",
+      "label": "Arrow color",
+      "default": "#172033"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 24
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 20,
+      "max": 150,
+      "step": 5,
+      "unit": "px",
+      "default": 90
+    }
+  ],
+  "blocks": [
+    {
+      "type": "testimonial",
+      "name": "Testimonial",
+      "settings": [
+        {
+          "type": "textarea",
+          "id": "quote",
+          "label": "Testimonial",
+          "default": "Great products, excellent quality and a very smooth shopping experience."
+        },
+        {
+          "type": "text",
+          "id": "author",
+          "label": "Customer name",
+          "default": "John Smith"
+        },
+        {
+          "type": "text",
+          "id": "role",
+          "label": "Customer details",
+          "default": "Verified customer"
+        },
+        {
+          "type": "range",
+          "id": "rating",
+          "label": "Rating",
+          "min": 1,
+          "max": 5,
+          "step": 1,
+          "default": 5
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "APEX Testimonials",
+      "blocks": [
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" },
+        { "type": "testimonial" }
+      ]
+    }
+  ]
+}
+{% endschema %}

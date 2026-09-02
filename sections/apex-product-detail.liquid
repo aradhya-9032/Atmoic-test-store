@@ -1,0 +1,56 @@
+<section class="apex-pdp-shell">
+  <div class="apex-pdp-container">
+
+    <div class="apex-pdp-breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span>/</span>
+      <a href="{{ routes.all_products_collection_url }}">Catalog</a>
+      <span>/</span>
+      <span>{{ product.title }}</span>
+    </div>
+
+    <div class="apex-pdp-product">
+
+      <div class="apex-pdp-product__media">
+        {{ media_gallery }}
+      </div>
+
+      <div class="apex-pdp-product__details">
+
+        <div class="apex-pdp-product__meta">
+          {% if product.vendor != blank %}
+            <span>{{ product.vendor }}</span>
+          {% endif %}
+
+          {% if product.selected_or_first_available_variant.sku != blank %}
+            <span>
+              SKU:
+              {{ product.selected_or_first_available_variant.sku }}
+            </span>
+          {% endif %}
+        </div>
+
+        {{ product_details }}
+
+        {% if product.description != blank %}
+          <details class="apex-pdp-description" open>
+            <summary>Description</summary>
+
+            <div class="apex-pdp-description__content">
+              {{ product.description }}
+            </div>
+          </details>
+        {% endif %}
+
+      </div>
+
+    </div>
+
+    {% if additional_blocks != blank %}
+      <div class="apex-pdp-additional">
+        {{ additional_blocks }}
+      </div>
+    {% endif %}
+
+  </div>
+</section>

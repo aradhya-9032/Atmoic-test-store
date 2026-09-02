@@ -1,189 +1,158 @@
-<div
-  class="atomic-main-footer"
+<footer
+  class="apex-footer"
   style="
-    --atomic-footer-bg: {{ section.settings.background_color }};
-    --atomic-footer-text: {{ section.settings.text_color }};
-    --atomic-footer-heading: {{ section.settings.heading_color }};
-    --atomic-footer-link-hover: {{ section.settings.link_hover_color }};
-    --atomic-footer-size: {{ section.settings.font_size }}px;
-    --atomic-footer-top-padding: {{ section.settings.top_padding }}px;
-    --atomic-footer-bottom-padding: {{ section.settings.bottom_padding }}px;
-    --atomic-footer-bottom-border: {{ section.settings.bottom_border_color }};
+    --apex-footer-bg: {{ section.settings.background_color }};
+    --apex-footer-text: {{ section.settings.text_color }};
+    --apex-footer-heading: {{ section.settings.heading_color }};
+    --apex-footer-accent: {{ section.settings.accent_color }};
+    --apex-footer-border: {{ section.settings.border_color }};
+    --apex-footer-max-width: {{ section.settings.max_width }}px;
+    --apex-footer-top: {{ section.settings.top_padding }}px;
+    --apex-footer-bottom: {{ section.settings.bottom_padding }}px;
+    --apex-footer-gap: {{ section.settings.column_gap }}px;
+    --apex-footer-font-size: {{ section.settings.font_size }}px;
   "
 >
-  <div class="atomic-footer-inner">
+  <div class="apex-footer__main">
+    <div class="apex-footer__inner">
 
-    <!-- CUSTOMER SUPPORT -->
-    {% if section.settings.show_support %}
-      <div class="atomic-footer-column atomic-footer-support">
-        {% if section.settings.support_heading != blank %}
-          <h3 class="atomic-footer-heading">
-            {{ section.settings.support_heading }}
-          </h3>
-        {% endif %}
+      {% if section.settings.show_support %}
+        <div class="apex-footer__column apex-footer__support">
+          {% if section.settings.support_heading != blank %}
+            <h2 class="apex-footer__heading">{{ section.settings.support_heading }}</h2>
+          {% endif %}
 
-        {% if section.settings.support_content != blank %}
-          <div class="atomic-footer-text">
-            {{ section.settings.support_content | newline_to_br }}
-          </div>
-        {% endif %}
-      </div>
-    {% endif %}
+          {% if section.settings.support_content != blank %}
+            <div class="apex-footer__support-content">
+              {{ section.settings.support_content | newline_to_br }}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
 
-    <!-- COMPANY -->
-    {% if section.settings.show_company %}
-      <div class="atomic-footer-column">
-        {% if section.settings.company_heading != blank %}
-          <h3 class="atomic-footer-heading">
-            {{ section.settings.company_heading }}
-          </h3>
-        {% endif %}
+      {% if section.settings.show_company %}
+        <div class="apex-footer__column">
+          {% if section.settings.company_heading != blank %}
+            <h2 class="apex-footer__heading">{{ section.settings.company_heading }}</h2>
+          {% endif %}
 
-        {% if section.settings.company_links != blank %}
-          <ul class="atomic-footer-menu">
-            {% assign company_items = section.settings.company_links | newline_to_br | split: '<br />' %}
-            {% for item in company_items %}
-              {% assign parts = item | split: '|' %}
-              {% assign item_title = parts[0] | strip %}
-              {% assign item_url = parts[1] | strip %}
-              {% if item_title != blank %}
+          {% if section.settings.company_menu != blank %}
+            <ul class="apex-footer__menu">
+              {% for link in section.settings.company_menu.links %}
                 <li>
-                  {% if item_url != blank %}
-                    <a href="{{ item_url }}">{{ item_title }}</a>
-                  {% else %}
-                    <span>{{ item_title }}</span>
-                  {% endif %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
                 </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </div>
-    {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
 
-    <!-- INFORMATION -->
-    {% if section.settings.show_information %}
-      <div class="atomic-footer-column">
-        {% if section.settings.information_heading != blank %}
-          <h3 class="atomic-footer-heading">
-            {{ section.settings.information_heading }}
-          </h3>
-        {% endif %}
+      {% if section.settings.show_information %}
+        <div class="apex-footer__column">
+          {% if section.settings.information_heading != blank %}
+            <h2 class="apex-footer__heading">{{ section.settings.information_heading }}</h2>
+          {% endif %}
 
-        {% if section.settings.information_links != blank %}
-          <ul class="atomic-footer-menu">
-            {% assign information_items = section.settings.information_links | newline_to_br | split: '<br />' %}
-            {% for item in information_items %}
-              {% assign parts = item | split: '|' %}
-              {% assign item_title = parts[0] | strip %}
-              {% assign item_url = parts[1] | strip %}
-              {% if item_title != blank %}
+          {% if section.settings.information_menu != blank %}
+            <ul class="apex-footer__menu">
+              {% for link in section.settings.information_menu.links %}
                 <li>
-                  {% if item_url != blank %}
-                    <a href="{{ item_url }}">{{ item_title }}</a>
-                  {% else %}
-                    <span>{{ item_title }}</span>
-                  {% endif %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
                 </li>
-              {% endif %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </div>
-    {% endif %}
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
 
-    <!-- POLICIES -->
-    {% if section.settings.show_policies %}
-      <div class="atomic-footer-column">
-        {% if section.settings.policies_heading != blank %}
-          <h3 class="atomic-footer-heading">
-            {{ section.settings.policies_heading }}
-          </h3>
-        {% endif %}
+      {% if section.settings.show_policies %}
+        <div class="apex-footer__column">
+          {% if section.settings.policies_heading != blank %}
+            <h2 class="apex-footer__heading">{{ section.settings.policies_heading }}</h2>
+          {% endif %}
 
-        {% if section.settings.policies_links != blank %}
-          <ul class="atomic-footer-menu">
-            {% assign policies_items = section.settings.policies_links | newline_to_br | split: '<br />' %}
-            {% for item in policies_items %}
-              {% assign parts = item | split: '|' %}
-              {% assign item_title = parts[0] | strip %}
-              {% assign item_url = parts[1] | strip %}
-              {% if item_title != blank %}
+          {% if section.settings.policies_menu != blank %}
+            <ul class="apex-footer__menu">
+              {% for link in section.settings.policies_menu.links %}
                 <li>
-                  {% if item_url != blank %}
-                    <a href="{{ item_url }}">{{ item_title }}</a>
-                  {% else %}
-                    <span>{{ item_title }}</span>
-                  {% endif %}
+                  <a href="{{ link.url }}">{{ link.title }}</a>
                 </li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endif %}
+
+      {% if section.settings.show_follow %}
+        <div class="apex-footer__column apex-footer__follow">
+          {% if section.settings.follow_heading != blank %}
+            <h2 class="apex-footer__heading">{{ section.settings.follow_heading }}</h2>
+          {% endif %}
+
+          {% if section.settings.follow_description != blank %}
+            <div class="apex-footer__follow-description">
+              {{ section.settings.follow_description | newline_to_br }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.show_social %}
+            <div class="apex-footer__socials">
+              {% if section.settings.facebook_url != blank %}
+                <a
+                  href="{{ section.settings.facebook_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Facebook"
+                >
+                  <span>f</span>
+                </a>
               {% endif %}
-            {% endfor %}
-          </ul>
-        {% endif %}
-      </div>
-    {% endif %}
 
-    <!-- FOLLOW US -->
-    {% if section.settings.show_follow %}
-      <div class="atomic-footer-column atomic-footer-follow">
-        {% if section.settings.follow_heading != blank %}
-          <h3 class="atomic-footer-heading">
-            {{ section.settings.follow_heading }}
-          </h3>
-        {% endif %}
+              {% if section.settings.instagram_url != blank %}
+                <a
+                  href="{{ section.settings.instagram_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Instagram"
+                >
+                  <span>IG</span>
+                </a>
+              {% endif %}
 
-        {% if section.settings.follow_description != blank %}
-          <div class="atomic-footer-follow-text">
-            {{ section.settings.follow_description | newline_to_br }}
-          </div>
-        {% endif %}
+              {% if section.settings.youtube_url != blank %}
+                <a
+                  href="{{ section.settings.youtube_url }}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="YouTube"
+                >
+                  <span>YT</span>
+                </a>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
 
-        {% if section.settings.show_social %}
-          <div class="atomic-footer-social">
-            {% if section.settings.facebook_url != blank %}
-              <a
-                href="{{ section.settings.facebook_url }}"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Facebook"
-              >
-                <span aria-hidden="true">f</span>
-              </a>
-            {% endif %}
-
-            {% if section.settings.instagram_url != blank %}
-              <a
-                href="{{ section.settings.instagram_url }}"
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Instagram"
-              >
-                <span aria-hidden="true">◎</span>
-              </a>
-            {% endif %}
-          </div>
-        {% endif %}
-      </div>
-    {% endif %}
-
+    </div>
   </div>
 
-  <!-- BOTTOM UTILITY ROW -->
   {% if section.settings.show_bottom_row %}
-    <div class="atomic-footer-bottom">
-      <div class="atomic-footer-bottom-inner">
+    <div class="apex-footer__bottom">
+      <div class="apex-footer__bottom-inner">
 
-        <div class="atomic-footer-currency">
-          {% if section.settings.show_currency_selector and localization.available_countries.size > 1 %}
-            {% form 'localization', id: 'AtomicFooterCountryForm', class: 'atomic-footer-localization' %}
-              <label class="visually-hidden" for="AtomicFooterCountry">
+        <div class="apex-footer__bottom-left">
+          {% if section.settings.show_country_selector and localization.available_countries.size > 1 %}
+            {% form 'localization', id: 'ApexFooterCountryForm' %}
+              <label class="visually-hidden" for="ApexFooterCountry">
                 Country or region
               </label>
 
               <select
-                id="AtomicFooterCountry"
+                id="ApexFooterCountry"
                 name="country_code"
-                class="atomic-footer-country"
+                class="apex-footer__country-select"
                 onchange="this.form.submit()"
               >
                 {% for country in localization.available_countries %}
@@ -196,30 +165,25 @@
                 {% endfor %}
               </select>
             {% endform %}
-          {% else %}
+          {% elsif section.settings.currency_text != blank %}
             <span>{{ section.settings.currency_text }}</span>
           {% endif %}
         </div>
 
-        <div class="atomic-footer-copyright">
-          {% if section.settings.copyright_text != blank %}
-            {{ section.settings.copyright_text }}
-          {% else %}
-            © {{ 'now' | date: '%Y' }} {{ shop.name }}
-          {% endif %}
+        <div class="apex-footer__copyright">
+          <span>© {{ 'now' | date: '%Y' }}</span>
+          <span>{{ section.settings.copyright_text | default: shop.name }}</span>
         </div>
 
-        <div class="atomic-footer-payments">
+        <div class="apex-footer__payments">
           {% if section.settings.payment_text != blank %}
-            <span class="atomic-footer-payment-text">
-              {{ section.settings.payment_text }}
-            </span>
+            <span class="apex-footer__payment-label">{{ section.settings.payment_text }}</span>
           {% endif %}
 
           {% if section.settings.show_payment_icons %}
-            <div class="atomic-footer-payment-icons">
+            <div class="apex-footer__payment-icons">
               {% for type in shop.enabled_payment_types %}
-                {{ type | payment_type_svg_tag: class: 'atomic-footer-payment-icon' }}
+                {{ type | payment_type_svg_tag: class: 'apex-footer__payment-icon' }}
               {% endfor %}
             </div>
           {% endif %}
@@ -228,371 +192,264 @@
       </div>
     </div>
   {% endif %}
-</div>
+</footer>
 
 {% stylesheet %}
-  .atomic-main-footer {
-    width: 100%;
-    background: var(--atomic-footer-bg);
-    color: var(--atomic-footer-text);
-    box-sizing: border-box;
+/* =========================================================
+   APEX FOOTER — REFERENCE UI
+   Shopify menus + localization + payment functionality kept
+========================================================= */
+
+.apex-footer,
+.apex-footer * {
+  box-sizing: border-box;
+}
+
+.apex-footer {
+  width: 100%;
+  background: var(--apex-footer-bg);
+  color: var(--apex-footer-text);
+  border-top: 1px solid var(--apex-footer-border);
+  font-size: var(--apex-footer-font-size);
+}
+
+.apex-footer__main {
+  width: 100%;
+}
+
+.apex-footer__inner {
+  width: min(var(--apex-footer-max-width), calc(100% - 48px));
+  margin: 0 auto;
+  padding: var(--apex-footer-top) 0 var(--apex-footer-bottom);
+  display: grid;
+  grid-template-columns: 1.35fr repeat(3, 1fr) 1.45fr;
+  gap: var(--apex-footer-gap);
+  align-items: start;
+}
+
+.apex-footer__column {
+  min-width: 0;
+}
+
+.apex-footer__heading {
+  margin: 0 0 16px;
+  color: var(--apex-footer-heading);
+  font-size: 10px;
+  line-height: 1.3;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+}
+
+.apex-footer__menu {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.apex-footer__menu li + li {
+  margin-top: 12px;
+}
+
+.apex-footer__menu a {
+  color: var(--apex-footer-text);
+  text-decoration: none;
+  line-height: 1.45;
+  opacity: .82;
+  transition: color .2s ease, opacity .2s ease;
+}
+
+.apex-footer__menu a:hover {
+  color: var(--apex-footer-accent);
+  opacity: 1;
+}
+
+.apex-footer__support-content,
+.apex-footer__follow-description {
+  color: var(--apex-footer-text);
+  line-height: 1.75;
+  opacity: .82;
+}
+
+.apex-footer__follow-description {
+  max-width: 270px;
+}
+
+.apex-footer__socials {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.apex-footer__socials a {
+  width: 46px;
+  height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--apex-footer-border);
+  border-radius: 12px;
+  color: var(--apex-footer-heading);
+  text-decoration: none;
+  font-size: 11px;
+  font-weight: 700;
+  transition: border-color .2s ease, color .2s ease, background .2s ease;
+}
+
+.apex-footer__socials a:hover {
+  border-color: var(--apex-footer-accent);
+  color: #ffffff;
+  background: var(--apex-footer-accent);
+}
+
+.apex-footer__bottom {
+  border-top: 1px solid var(--apex-footer-border);
+}
+
+.apex-footer__bottom-inner {
+  width: min(var(--apex-footer-max-width), calc(100% - 48px));
+  min-height: 66px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 24px;
+}
+
+.apex-footer__bottom-left,
+.apex-footer__copyright,
+.apex-footer__payments {
+  color: var(--apex-footer-text);
+  font-size: 10px;
+  opacity: .8;
+}
+
+.apex-footer__copyright {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.apex-footer__payments {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.apex-footer__payment-label {
+  white-space: nowrap;
+}
+
+.apex-footer__payment-icons {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.apex-footer__payment-icon {
+  width: 38px;
+  height: auto;
+  max-height: 24px;
+}
+
+.apex-footer__country-select {
+  max-width: 190px;
+  padding: 9px 32px 9px 12px;
+  border: 1px solid var(--apex-footer-border);
+  border-radius: 8px;
+  background: transparent;
+  color: var(--apex-footer-text);
+  font-size: 10px;
+  cursor: pointer;
+}
+
+.apex-footer__country-select option {
+  color: #111111;
+  background: #ffffff;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+@media screen and (max-width: 1100px) {
+  .apex-footer__inner {
+    grid-template-columns: repeat(3, 1fr);
+    row-gap: 40px;
   }
 
-  .atomic-main-footer,
-  .atomic-main-footer * {
-    box-sizing: border-box;
+  .apex-footer__support,
+  .apex-footer__follow {
+    grid-column: span 3;
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .apex-footer__inner {
+    width: calc(100% - 32px);
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding: 42px 0;
   }
 
-  .atomic-footer-inner {
-    width: 100%;
-    max-width: 1400px;
-    margin: 0 auto;
-    padding: var(--atomic-footer-top-padding) 38px var(--atomic-footer-bottom-padding);
-    display: grid;
-    grid-template-columns:
-      minmax(230px, 1.5fr)
-      minmax(130px, 1fr)
-      minmax(130px, 1fr)
-      minmax(130px, 1fr)
-      minmax(230px, 1.5fr);
-    column-gap: 35px;
-    align-items: start;
+  .apex-footer__support,
+  .apex-footer__follow {
+    grid-column: auto;
   }
 
-  .atomic-footer-column {
-    min-width: 0;
+  .apex-footer__bottom-inner {
+    width: calc(100% - 32px);
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 14px;
+    padding: 18px 0;
   }
 
-  .atomic-footer-heading {
-    margin: 0 0 18px;
-    color: var(--atomic-footer-heading) !important;
-    font-size: 11px;
-    font-weight: 700;
-    line-height: 1.4;
-    text-transform: uppercase;
-    letter-spacing: 0;
-  }
-
-  .atomic-footer-text {
-    color: var(--atomic-footer-text);
-    font-size: var(--atomic-footer-size);
-    font-weight: 500;
-    line-height: 1.75;
-  }
-
-  .atomic-footer-menu {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .atomic-footer-menu li {
-    margin: 0;
-    padding: 0;
-  }
-
-  .atomic-footer-menu a {
-    color: var(--atomic-footer-text);
-    font-size: var(--atomic-footer-size);
-    font-weight: 500;
-    line-height: 1.6;
-    text-decoration: none;
-    transition: color 0.2s ease;
-  }
-
-  .atomic-footer-menu a:hover {
-    color: var(--atomic-footer-link-hover);
-  }
-
-  .atomic-footer-follow-text {
-    max-width: 270px;
-    color: var(--atomic-footer-text);
-    font-size: var(--atomic-footer-size);
-    font-weight: 500;
-    line-height: 1.7;
-  }
-
-  .atomic-footer-social {
-    display: flex;
-    margin-top: 18px;
-  }
-
-  .atomic-footer-social a {
-    width: 43px;
-    height: 43px;
-    display: flex;
-    align-items: center;
+  .apex-footer__copyright,
+  .apex-footer__payments {
     justify-content: center;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    color: var(--atomic-footer-text);
-    text-decoration: none;
-    font-size: 18px;
-    transition:
-      background 0.2s ease,
-      border-color 0.2s ease,
-      color 0.2s ease;
-  }
-
-  .atomic-footer-social a + a {
-    border-left: none;
-  }
-
-  .atomic-footer-social a:hover {
-    background: var(--atomic-footer-link-hover);
-    border-color: var(--atomic-footer-link-hover);
-    color: #ffffff;
-  }
-
-  /* BOTTOM ROW */
-  .atomic-footer-bottom {
-    width: 100%;
-    border-top: 1px solid var(--atomic-footer-bottom-border);
-  }
-
-  .atomic-footer-bottom-inner {
-    width: 100%;
-    max-width: 1400px;
-    min-height: 58px;
-    margin: 0 auto;
-    padding: 12px 38px;
-    display: grid;
-    grid-template-columns: 1fr auto 1fr;
-    align-items: center;
-    column-gap: 24px;
-  }
-
-  .atomic-footer-currency,
-  .atomic-footer-copyright,
-  .atomic-footer-payments {
-    color: var(--atomic-footer-text);
-    font-size: 11px;
-    line-height: 1.4;
-  }
-
-  .atomic-footer-copyright {
     text-align: center;
-    white-space: nowrap;
-  }
-
-  .atomic-footer-payments {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    gap: 10px;
-    min-width: 0;
-  }
-
-  .atomic-footer-payment-text {
-    white-space: nowrap;
-  }
-
-  .atomic-footer-payment-icons {
-    display: flex;
-    align-items: center;
-    justify-content: flex-end;
-    gap: 5px;
     flex-wrap: wrap;
+    white-space: normal;
   }
 
-  .atomic-footer-payment-icon {
-    width: 34px;
-    height: auto;
-    max-height: 24px;
+  .apex-footer__payment-icons {
+    justify-content: center;
   }
-
-  .atomic-footer-localization {
-    margin: 0;
-  }
-
-  .atomic-footer-country {
-    min-width: 105px;
-    max-width: 145px;
-    padding: 6px 24px 6px 8px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    border-radius: 0;
-    background: transparent;
-    color: var(--atomic-footer-text);
-    font-size: 11px;
-    cursor: pointer;
-  }
-
-  .atomic-footer-country option {
-    color: #222222;
-    background: #ffffff;
-  }
-
-  .visually-hidden {
-    position: absolute !important;
-    width: 1px !important;
-    height: 1px !important;
-    padding: 0 !important;
-    margin: -1px !important;
-    overflow: hidden !important;
-    clip: rect(0, 0, 0, 0) !important;
-    white-space: nowrap !important;
-    border: 0 !important;
-  }
-
-  @media screen and (min-width: 750px) and (max-width: 989px) {
-    .atomic-footer-inner {
-      grid-template-columns: repeat(2, 1fr);
-      row-gap: 40px;
-      column-gap: 30px;
-      padding-left: 30px;
-      padding-right: 30px;
-    }
-
-    .atomic-footer-bottom-inner {
-      padding-left: 30px;
-      padding-right: 30px;
-    }
-
-    .atomic-footer-follow-text {
-      max-width: 350px;
-    }
-  }
-
-  @media screen and (max-width: 749px) {
-    .atomic-footer-inner {
-      grid-template-columns: 1fr;
-      row-gap: 35px;
-      padding: 40px 22px 30px;
-    }
-
-    .atomic-footer-column {
-      width: 100%;
-    }
-
-    .atomic-footer-heading {
-      margin-bottom: 12px;
-    }
-
-    .atomic-footer-follow-text {
-      max-width: 100%;
-    }
-
-    .atomic-footer-social {
-      margin-top: 15px;
-    }
-
-    .atomic-footer-bottom-inner {
-      grid-template-columns: 1fr;
-      row-gap: 12px;
-      justify-items: center;
-      padding: 16px 22px;
-    }
-
-    .atomic-footer-currency,
-    .atomic-footer-copyright,
-    .atomic-footer-payments {
-      text-align: center;
-      justify-content: center;
-    }
-
-    .atomic-footer-payments {
-      flex-wrap: wrap;
-    }
-
-    .atomic-footer-payment-icons {
-      justify-content: center;
-    }
-  }
+}
 {% endstylesheet %}
 
 {% schema %}
 {
-  "name": "t:names.footer",
+  "name": "APEX Footer",
   "tag": "section",
   "class": "section-wrapper",
   "enabled_on": {
     "groups": ["footer"]
   },
-  "blocks": [
-    {
-      "type": "_divider"
-    },
-    {
-      "type": "@app"
-    },
-    {
-      "type": "button"
-    },
-    {
-      "type": "follow-on-shop"
-    },
-    {
-      "type": "group"
-    },
-    {
-      "type": "icon"
-    },
-    {
-      "type": "image"
-    },
-    {
-      "type": "menu"
-    },
-    {
-      "type": "payment-icons"
-    },
-    {
-      "type": "text"
-    },
-    {
-      "type": "logo"
-    },
-    {
-      "type": "jumbo-text"
-    },
-    {
-      "type": "social-links"
-    },
-    {
-      "type": "email-signup"
-    }
-  ],
   "settings": [
     {
       "type": "header",
-      "content": "Visibility"
+      "content": "Customer support"
     },
     {
       "type": "checkbox",
       "id": "show_support",
       "label": "Show customer support",
       "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_company",
-      "label": "Show company",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_information",
-      "label": "Show information",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_policies",
-      "label": "Show policies",
-      "default": true
-    },
-    {
-      "type": "checkbox",
-      "id": "show_follow",
-      "label": "Show follow us",
-      "default": true
-    },
-
-    {
-      "type": "header",
-      "content": "Customer Support"
     },
     {
       "type": "text",
@@ -604,12 +461,18 @@
       "type": "textarea",
       "id": "support_content",
       "label": "Support content",
-      "default": "Monday - Friday 09:00 - 19:00\nSaturday 9:00 - 18:00\nSunday Closed\n\ninfo@atomic-shop.ae\n\nATOMIC-SHOP UAE (REDLINE and RECARO\noffice only)\n+971 4 358 0 877\n+971 50 256 0 448\n26th Street\nAl Quoz Industrial Area 2\nDubai, United Arab Emirates\n\nATOMIC-SHOP UAE (RABDAN Motorsport)\n+971 50 467 02 51\n14 10b Street\nAl Quoz Industrial Area 3\nDubai, United Arab Emirates"
+      "default": "Monday - Friday 09:00 - 19:00\nSaturday 9:00 - 18:00\nSunday Closed\n\ninfo@apexlab.parts\n\n+1 415 892 30 17\n+1 415 892 30 18 (WhatsApp)"
     },
 
     {
       "type": "header",
       "content": "Company"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_company",
+      "label": "Show company",
+      "default": true
     },
     {
       "type": "text",
@@ -618,16 +481,20 @@
       "default": "COMPANY"
     },
     {
-      "type": "textarea",
-      "id": "company_links",
-      "label": "Company links",
-      "info": "One item per line: Title|URL",
-      "default": "About Us|/pages/about-us\nContact Us|/pages/contact\nNews|/blogs/news\nBrands|/pages/brands\nDealer Application|/pages/dealer-application\nVacancies|/pages/vacancies"
+      "type": "link_list",
+      "id": "company_menu",
+      "label": "Select company menu"
     },
 
     {
       "type": "header",
       "content": "Information"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_information",
+      "label": "Show information",
+      "default": true
     },
     {
       "type": "text",
@@ -636,16 +503,20 @@
       "default": "INFORMATION"
     },
     {
-      "type": "textarea",
-      "id": "information_links",
-      "label": "Information links",
-      "info": "One item per line: Title|URL",
-      "default": "FAQ|/pages/faq\nDiscounts|/pages/discounts\nBest Sellers|/collections/best-sellers\nNew Arrivals|/collections/new-arrivals\nLatest Releases|/blogs/news"
+      "type": "link_list",
+      "id": "information_menu",
+      "label": "Select information menu"
     },
 
     {
       "type": "header",
       "content": "Policies"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_policies",
+      "label": "Show policies",
+      "default": true
     },
     {
       "type": "text",
@@ -654,16 +525,20 @@
       "default": "POLICIES"
     },
     {
-      "type": "textarea",
-      "id": "policies_links",
-      "label": "Policy links",
-      "info": "One item per line: Title|URL",
-      "default": "Terms of Service|/policies/terms-of-service\nShipping Policy|/policies/shipping-policy\nRefund Policy|/policies/refund-policy\nPrivacy Policy|/policies/privacy-policy"
+      "type": "link_list",
+      "id": "policies_menu",
+      "label": "Select policies menu"
     },
 
     {
       "type": "header",
-      "content": "Follow Us"
+      "content": "Follow us"
+    },
+    {
+      "type": "checkbox",
+      "id": "show_follow",
+      "label": "Show follow us",
+      "default": true
     },
     {
       "type": "text",
@@ -675,7 +550,7 @@
       "type": "textarea",
       "id": "follow_description",
       "label": "Description",
-      "default": "Connect with our community of enthusiasts and\njoin the conversation. We love hearing from our\nfollowers and sharing exclusive content with our\nloyal fans. Follow us today and never miss a\nbeat!"
+      "default": "Connect with our community of enthusiasts and join the conversation. Follow us today and never miss a beat!"
     },
     {
       "type": "checkbox",
@@ -693,10 +568,15 @@
       "id": "instagram_url",
       "label": "Instagram URL"
     },
+    {
+      "type": "url",
+      "id": "youtube_url",
+      "label": "YouTube URL"
+    },
 
     {
       "type": "header",
-      "content": "Bottom Row"
+      "content": "Bottom row"
     },
     {
       "type": "checkbox",
@@ -706,44 +586,44 @@
     },
     {
       "type": "checkbox",
-      "id": "show_currency_selector",
-      "label": "Show currency/country selector",
+      "id": "show_country_selector",
+      "label": "Show country/currency selector",
       "default": true
     },
     {
       "type": "text",
       "id": "currency_text",
       "label": "Fallback currency text",
-      "default": "India (INR ₹)"
+      "default": "United States (USD $)"
     },
     {
       "type": "text",
       "id": "copyright_text",
       "label": "Copyright text",
-      "default": "ATOMIC-SHOP Performance Parts & Motorsport Equipment - UAE"
+      "default": "APEXLAB Performance Parts & Racing Gear"
     },
     {
       "type": "text",
       "id": "payment_text",
-      "label": "Payment text",
+      "label": "Payment label",
       "default": "We accept"
     },
     {
       "type": "checkbox",
       "id": "show_payment_icons",
-      "label": "Show payment icons",
+      "label": "Show Shopify payment icons",
       "default": true
     },
 
     {
       "type": "header",
-      "content": "Colors"
+      "content": "Design"
     },
     {
       "type": "color",
       "id": "background_color",
-      "label": "Footer background",
-      "default": "#242424"
+      "label": "Background",
+      "default": "#1C1D21"
     },
     {
       "type": "color",
@@ -755,24 +635,19 @@
       "type": "color",
       "id": "text_color",
       "label": "Text color",
-      "default": "#FFFFFF"
+      "default": "#D7D9DE"
     },
     {
       "type": "color",
-      "id": "link_hover_color",
-      "label": "Link hover color",
-      "default": "#E3262E"
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#0265F2"
     },
     {
       "type": "color",
-      "id": "bottom_border_color",
-      "label": "Bottom row border color",
-      "default": "#3A3A3A"
-    },
-
-    {
-      "type": "header",
-      "content": "Typography"
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#33353D"
     },
     {
       "type": "range",
@@ -782,32 +657,52 @@
       "max": 16,
       "step": 1,
       "unit": "px",
-      "default": 12
+      "default": 13
     },
-
     {
-      "type": "header",
-      "content": "Spacing"
+      "type": "range",
+      "id": "max_width",
+      "label": "Content width",
+      "min": 1000,
+      "max": 1800,
+      "step": 50,
+      "unit": "px",
+      "default": 1400
     },
     {
       "type": "range",
       "id": "top_padding",
       "label": "Top padding",
-      "min": 20,
-      "max": 100,
+      "min": 30,
+      "max": 120,
       "step": 5,
       "unit": "px",
-      "default": 50
+      "default": 55
     },
     {
       "type": "range",
       "id": "bottom_padding",
       "label": "Bottom padding",
+      "min": 25,
+      "max": 100,
+      "step": 5,
+      "unit": "px",
+      "default": 45
+    },
+    {
+      "type": "range",
+      "id": "column_gap",
+      "label": "Column gap",
       "min": 20,
       "max": 100,
       "step": 5,
       "unit": "px",
-      "default": 40
+      "default": 55
+    }
+  ],
+  "presets": [
+    {
+      "name": "APEX Footer"
     }
   ]
 }

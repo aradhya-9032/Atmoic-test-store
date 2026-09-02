@@ -1,0 +1,742 @@
+<section
+  class="apex-featured-parts"
+  style="
+    --afp-section-bg: {{ section.settings.section_background }};
+    --afp-card-bg: {{ section.settings.card_background }};
+    --afp-heading-color: {{ section.settings.heading_color }};
+    --afp-text-color: {{ section.settings.text_color }};
+    --afp-accent-color: {{ section.settings.accent_color }};
+    --afp-top-padding: {{ section.settings.top_padding }}px;
+    --afp-bottom-padding: {{ section.settings.bottom_padding }}px;
+    --afp-columns: {{ section.settings.columns_desktop }};
+    --afp-gap: {{ section.settings.grid_gap }}px;
+    --afp-card-radius: {{ section.settings.card_radius }}px;
+    --afp-image-radius: {{ section.settings.image_radius }}px;
+  "
+>
+  <div class="apex-featured-parts__container">
+
+    <div class="apex-featured-parts__header">
+      <div>
+        {% if section.settings.eyebrow != blank %}
+          <span class="apex-featured-parts__eyebrow">
+            {{ section.settings.eyebrow }}
+          </span>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="apex-featured-parts__title">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+      </div>
+
+      {% if section.settings.button_label != blank and section.settings.button_link != blank %}
+        <a
+          href="{{ section.settings.button_link }}"
+          class="apex-featured-parts__view-all"
+        >
+          {{ section.settings.button_label }}
+          <span aria-hidden="true">→</span>
+        </a>
+      {% endif %}
+    </div>
+
+    {% if section.settings.collection != blank %}
+      <div class="apex-featured-parts__grid">
+
+        {% for product in section.settings.collection.products limit: section.settings.max_products %}
+          <article class="apex-product-card apc-card">
+
+            <div class="apex-product-card__media">
+              <a
+                href="{{ product.url }}"
+                class="apex-product-card__image"
+                aria-label="{{ product.title | escape }}"
+              >
+                {% if product.featured_image != blank %}
+                  {{
+                    product.featured_image
+                    | image_url: width: 900
+                    | image_tag:
+                      class: 'apc-card__img',
+                      loading: 'lazy',
+                      widths: '300, 400, 600, 800, 900',
+                      alt: product.featured_image.alt
+                  }}
+                {% else %}
+                  {{ 'product-1' | placeholder_svg_tag: 'apex-product-card__placeholder apc-card__img' }}
+                {% endif %}
+              </a>
+
+              {% if section.settings.show_wishlist %}
+                <button
+                  type="button"
+                  class="apex-product-card__wishlist apc-card__wish"
+                  aria-label="Add {{ product.title | escape }} to wishlist"
+                  data-wishlist-product-handle="{{ product.handle }}"
+                >
+                  <svg
+                    width="18"
+                    height="18"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    aria-hidden="true"
+                  >
+                    <path
+                      d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+                      stroke="currentColor"
+                      stroke-width="1.8"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
+                </button>
+              {% endif %}
+            </div>
+
+            <div class="apex-product-card__content">
+
+              {% if section.settings.show_vendor and product.vendor != blank %}
+                <div class="apex-product-card__brand">
+                  {{ product.vendor }}
+                </div>
+              {% endif %}
+
+              <a
+                href="{{ product.url }}"
+                class="apex-product-card__title apc-card__title"
+              >
+                {{ product.title }}
+              </a>
+
+              {% if section.settings.show_stock %}
+                <div class="apex-product-card__availability">
+                  {% if product.available %}
+                    <span class="apex-product-card__in-stock">
+                      {{ section.settings.in_stock_label }}
+                    </span>
+                  {% else %}
+                    <span class="apex-product-card__sold-out">
+                      {{ section.settings.sold_out_label }}
+                    </span>
+                  {% endif %}
+                </div>
+              {% endif %}
+
+              <div class="apex-product-card__bottom">
+                <div class="apex-product-card__price apc-card__price">
+                  {% if product.compare_at_price > product.price and section.settings.show_sale_price %}
+                    <span class="apex-product-card__sale-price">
+                      {{ product.price | money }}
+                    </span>
+                    <s class="apex-product-card__compare-price">
+                      {{ product.compare_at_price | money }}
+                    </s>
+                  {% else %}
+                    {{ product.price | money }}
+                  {% endif %}
+                </div>
+
+                {% if section.settings.show_add_button %}
+                  {% if product.available %}
+                    {% form 'product', product, class: 'apex-product-card__form' %}
+                      <input
+                        type="hidden"
+                        name="id"
+                        value="{{ product.selected_or_first_available_variant.id }}"
+                      >
+
+                      <button
+                        type="submit"
+                        name="add"
+                        class="apex-product-card__add"
+                        aria-label="Add {{ product.title | escape }} to cart"
+                      >
+                        {{ section.settings.add_label }}
+                      </button>
+                    {% endform %}
+                  {% else %}
+                    <button
+                      type="button"
+                      class="apex-product-card__add apex-product-card__add--disabled"
+                      disabled
+                    >
+                      {{ section.settings.sold_out_label }}
+                    </button>
+                  {% endif %}
+                {% endif %}
+              </div>
+
+            </div>
+          </article>
+        {% endfor %}
+
+      </div>
+    {% else %}
+      <div class="apex-featured-parts__empty">
+        Select a collection in the Theme Editor.
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+
+{% stylesheet %}
+
+.apex-featured-parts {
+  width: 100%;
+  padding: var(--afp-top-padding) 0 var(--afp-bottom-padding);
+  background: var(--afp-section-bg);
+}
+
+.apex-featured-parts__container {
+  width: min(calc(100% - 48px), 1520px);
+  margin: 0 auto;
+}
+
+.apex-featured-parts__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: 34px;
+}
+
+.apex-featured-parts__eyebrow {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--afp-accent-color);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+
+.apex-featured-parts__title {
+  margin: 0;
+  color: var(--afp-heading-color);
+  font-size: clamp(30px, 3vw, 42px);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -1.4px;
+}
+
+.apex-featured-parts__view-all {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--afp-text-color);
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 650;
+  white-space: nowrap;
+  transition: opacity .2s ease;
+}
+
+.apex-featured-parts__view-all:hover {
+  opacity: .65;
+}
+
+.apex-featured-parts__view-all span {
+  font-size: 19px;
+  line-height: 1;
+}
+
+.apex-featured-parts__grid {
+  display: grid;
+  grid-template-columns: repeat(var(--afp-columns), minmax(0, 1fr));
+  gap: var(--afp-gap);
+}
+
+.apex-product-card {
+  min-width: 0;
+  overflow: hidden;
+  background: var(--afp-card-bg);
+  border: 1px solid rgba(24, 34, 48, .12);
+  border-radius: var(--afp-card-radius);
+  box-shadow: 0 3px 10px rgba(18, 28, 45, .04);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.apex-product-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 30px rgba(18, 28, 45, .09);
+}
+
+.apex-product-card__media {
+  position: relative;
+}
+
+.apex-product-card__image {
+  position: relative;
+  display: block;
+  width: calc(100% - 16px);
+  aspect-ratio: 1.22 / 1;
+  margin: 8px;
+  overflow: hidden;
+  border-radius: var(--afp-image-radius);
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #f2f1ed 0,
+      #f2f1ed 14px,
+      #ebe9e4 14px,
+      #ebe9e4 28px
+    );
+}
+
+.apex-product-card__image img,
+.apex-product-card__placeholder {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.apex-product-card:hover .apex-product-card__image img {
+  transform: scale(1.04);
+}
+
+.apex-product-card__placeholder {
+  opacity: .35;
+}
+
+.apex-product-card__wishlist {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+  width: 32px;
+  height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(24, 34, 48, .10);
+  border-radius: 50%;
+  background: rgba(255,255,255,.96);
+  color: #7b8490;
+  cursor: pointer;
+  transition: color .2s ease, background .2s ease, transform .2s ease;
+}
+
+.apex-product-card__wishlist:hover {
+  transform: scale(1.06);
+  color: var(--afp-accent-color);
+}
+
+.apex-product-card__wishlist.is-added {
+  color: var(--afp-accent-color);
+}
+
+.apex-product-card__wishlist.is-added path {
+  fill: currentColor;
+}
+
+.apex-product-card__content {
+  padding: 12px 14px 16px;
+}
+
+.apex-product-card__brand {
+  margin-bottom: 8px;
+  color: #7c8490;
+  font-size: 10px;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 1.1px;
+  text-transform: uppercase;
+}
+
+.apex-product-card__title {
+  display: -webkit-box;
+  overflow: hidden;
+  color: var(--afp-text-color);
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 650;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  transition: color .2s ease;
+}
+
+.apex-product-card__title:hover {
+  color: var(--afp-accent-color);
+}
+
+.apex-product-card__availability {
+  min-height: 20px;
+  margin-top: 10px;
+}
+
+.apex-product-card__in-stock {
+  color: #3c7c54;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.apex-product-card__sold-out {
+  color: #a83d3d;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.apex-product-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin-top: 8px;
+}
+
+.apex-product-card__price {
+  color: var(--afp-text-color);
+  font-size: 19px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.apex-product-card__sale-price {
+  color: var(--afp-accent-color);
+}
+
+.apex-product-card__compare-price {
+  margin-left: 5px;
+  color: #8a919b;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.apex-product-card__form {
+  margin: 0;
+}
+
+.apex-product-card__add {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 68px;
+  height: 38px;
+  padding: 0 17px;
+  border: 1px solid rgba(24,34,48,.16);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--afp-text-color);
+  cursor: pointer;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background .2s ease, color .2s ease, border-color .2s ease;
+}
+
+.apex-product-card__add:hover {
+  border-color: var(--afp-accent-color);
+  background: var(--afp-accent-color);
+  color: #fff;
+}
+
+.apex-product-card__add--disabled {
+  opacity: .5;
+  cursor: not-allowed;
+}
+
+.apex-featured-parts__empty {
+  padding: 45px 20px;
+  border: 1px solid rgba(24,34,48,.12);
+  border-radius: var(--afp-card-radius);
+  background: var(--afp-card-bg);
+  color: #69727e;
+  text-align: center;
+}
+
+@media screen and (max-width: 1100px) {
+  .apex-featured-parts__grid {
+    grid-template-columns: repeat({{ section.settings.columns_tablet }}, minmax(0, 1fr));
+  }
+}
+
+@media screen and (max-width: 749px) {
+  .apex-featured-parts {
+    padding: max(32px, calc(var(--afp-top-padding) * .75)) 0 max(40px, calc(var(--afp-bottom-padding) * .75));
+  }
+
+  .apex-featured-parts__container {
+    width: min(calc(100% - 28px), 100%);
+  }
+
+  .apex-featured-parts__header {
+    align-items: flex-start;
+    margin-bottom: 24px;
+  }
+
+  .apex-featured-parts__title {
+    font-size: 30px;
+    letter-spacing: -.8px;
+  }
+
+  .apex-featured-parts__view-all {
+    font-size: 13px;
+  }
+
+  .apex-featured-parts__grid {
+    grid-template-columns: repeat({{ section.settings.columns_mobile }}, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .apex-product-card__image {
+    margin: 6px;
+    width: calc(100% - 12px);
+  }
+
+  .apex-product-card__wishlist {
+    top: 14px;
+    right: 14px;
+  }
+
+  .apex-product-card__content {
+    padding: 10px 11px 13px;
+  }
+
+  .apex-product-card__brand {
+    font-size: 9px;
+  }
+
+  .apex-product-card__title {
+    font-size: 13px;
+  }
+
+  .apex-product-card__price {
+    font-size: 16px;
+  }
+
+  .apex-product-card__add {
+    min-width: 55px;
+    height: 34px;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+}
+
+{% endstylesheet %}
+
+{% schema %}
+{
+  "name": "APEX Featured Products",
+  "settings": [
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "Featured parts"
+    },
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Collection"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "View all label",
+      "default": "View all"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "View all link"
+    },
+    {
+      "type": "range",
+      "id": "max_products",
+      "label": "Number of products",
+      "min": 1,
+      "max": 12,
+      "step": 1,
+      "default": 8
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show vendor",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_stock",
+      "label": "Show stock status",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_wishlist",
+      "label": "Show wishlist button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_add_button",
+      "label": "Show add to cart button",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_sale_price",
+      "label": "Show compare at price",
+      "default": true
+    },
+    {
+      "type": "text",
+      "id": "add_label",
+      "label": "Add button label",
+      "default": "Add"
+    },
+    {
+      "type": "text",
+      "id": "in_stock_label",
+      "label": "In stock label",
+      "default": "In stock"
+    },
+    {
+      "type": "text",
+      "id": "sold_out_label",
+      "label": "Sold out label",
+      "default": "Sold out"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "select",
+      "id": "columns_desktop",
+      "label": "Desktop columns",
+      "options": [
+        {"value": "3", "label": "3"},
+        {"value": "4", "label": "4"},
+        {"value": "5", "label": "5"}
+      ],
+      "default": "4"
+    },
+    {
+      "type": "select",
+      "id": "columns_tablet",
+      "label": "Tablet columns",
+      "options": [
+        {"value": "2", "label": "2"},
+        {"value": "3", "label": "3"}
+      ],
+      "default": "3"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "label": "Mobile columns",
+      "options": [
+        {"value": "1", "label": "1"},
+        {"value": "2", "label": "2"}
+      ],
+      "default": "2"
+    },
+    {
+      "type": "range",
+      "id": "grid_gap",
+      "label": "Grid gap",
+      "min": 8,
+      "max": 40,
+      "step": 2,
+      "unit": "px",
+      "default": 18
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Card corner radius",
+      "min": 0,
+      "max": 32,
+      "step": 2,
+      "unit": "px",
+      "default": 22
+    },
+    {
+      "type": "range",
+      "id": "image_radius",
+      "label": "Image corner radius",
+      "min": 0,
+      "max": 28,
+      "step": 2,
+      "unit": "px",
+      "default": 16
+    },
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "section_background",
+      "label": "Section background",
+      "default": "#F8F8F6"
+    },
+    {
+      "type": "color",
+      "id": "card_background",
+      "label": "Card background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "heading_color",
+      "label": "Heading color",
+      "default": "#182230"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#27303B"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#263B61"
+    },
+    {
+      "type": "header",
+      "content": "Section spacing"
+    },
+    {
+      "type": "range",
+      "id": "top_padding",
+      "label": "Top padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 48
+    },
+    {
+      "type": "range",
+      "id": "bottom_padding",
+      "label": "Bottom padding",
+      "min": 0,
+      "max": 160,
+      "step": 4,
+      "unit": "px",
+      "default": 72
+    }
+  ],
+  "presets": [
+    {
+      "name": "APEX Featured Products"
+    }
+  ]
+}
+{% endschema %}

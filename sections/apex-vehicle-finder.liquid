@@ -1,0 +1,31 @@
+<section class="apex-finder apex-section">
+  <div class="apex-finder__glow"></div>
+  <div class="apex-container apex-finder__inner">
+    <div class="apex-finder__copy"><div class="apex-label">{{ section.settings.eyebrow }}</div><h2 class="apex-display">{{ section.settings.heading }}</h2><div class="apex-finder__body">{{ section.settings.body }}</div></div>
+    <div class="apex-finder__panel">
+      <div class="apex-finder__field"><span>01</span><strong>{{ section.settings.make_label }}</strong></div>
+      <div class="apex-finder__field"><span>02</span><strong>{{ section.settings.model_label }}</strong></div>
+      <div class="apex-finder__field"><span>03</span><strong>{{ section.settings.year_label }}</strong></div>
+      <a class="apex-button apex-button--blue" href="{{ section.settings.button_link }}">{{ section.settings.button_label }} →</a>
+    </div>
+  </div>
+</section>
+{% stylesheet %}
+.apex-finder{background:var(--apex-oxford);color:#fff;padding:100px 0;position:relative}.apex-finder__glow{position:absolute;inset:auto -20% -60% auto;width:70vw;height:70vw;background:radial-gradient(circle,var(--apex-brandeis) 0,rgba(2,101,242,0) 65%);opacity:.22}.apex-finder__inner{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center}.apex-finder h2{font-size:58px;line-height:1;text-transform:uppercase;margin:12px 0 20px}.apex-finder__body{max-width:520px;color:rgba(255,255,255,.68);font-size:16px;line-height:1.7}.apex-finder__panel{border:1px solid rgba(255,255,255,.14);background:rgba(0,0,0,.18);padding:18px;backdrop-filter:blur(10px)}.apex-finder__field{display:flex;align-items:center;justify-content:space-between;padding:24px 2px;border-bottom:1px solid rgba(255,255,255,.12);text-transform:uppercase}.apex-finder__field span{font-size:10px;color:var(--apex-electric);letter-spacing:.15em}.apex-finder__field strong{font-size:14px;letter-spacing:.07em}.apex-finder__panel .apex-button{margin-top:18px;width:100%}@media(max-width:800px){.apex-finder{padding:70px 0}.apex-finder__inner{grid-template-columns:1fr;gap:40px}.apex-finder h2{font-size:42px}}
+{% endstylesheet %}
+{% schema %}
+{
+  "name":"APEX Vehicle Finder",
+  "settings":[
+    {"type":"text","id":"eyebrow","label":"Eyebrow","default":"02 / FIND YOUR BUILD"},
+    {"type":"text","id":"heading","label":"Heading","default":"PARTS FOR THE WAY YOU DRIVE."},
+    {"type":"richtext","id":"body","label":"Body","default":"<p>Start with your vehicle, then build a setup around the way you drive. The interface is ready for a future vehicle-fitment integration.</p>"},
+    {"type":"text","id":"make_label","label":"Make label","default":"SELECT MAKE"},
+    {"type":"text","id":"model_label","label":"Model label","default":"SELECT MODEL"},
+    {"type":"text","id":"year_label","label":"Year label","default":"SELECT YEAR"},
+    {"type":"text","id":"button_label","label":"Button","default":"Find parts"},
+    {"type":"url","id":"button_link","label":"Button link"}
+  ],
+  "presets":[{"name":"APEX Vehicle Finder"}]
+}
+{% endschema %}

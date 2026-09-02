@@ -9,667 +9,912 @@
     --adb-benefit-heading: {{ section.settings.benefit_heading_color }};
     --adb-benefit-text: {{ section.settings.benefit_text_color }};
     --adb-icon: {{ section.settings.icon_color }};
+    --adb-accent: {{ section.settings.accent_color }};
+    --adb-max-width: {{ section.settings.content_width }}px;
+    --adb-top-padding: {{ section.settings.top_padding }}px;
+    --adb-bottom-padding: {{ section.settings.bottom_padding }}px;
+    --adb-grid-opacity: {{ section.settings.grid_opacity | divided_by: 100.0 }};
   "
 >
-
   {% if section.settings.show_distributor %}
+    <section class="adb-distributor">
+      <div class="adb-distributor__grid"></div>
 
-    <div class="adb-distributor">
-
-      {% if section.settings.heading != blank %}
-        <h2>
-          {{ section.settings.heading }}
-        </h2>
-      {% endif %}
-
-
-      {% if section.settings.first_description != blank %}
-        <div
-          class="adb-description adb-description--first"
-          style="color: {{ section.settings.first_description_color }} !important;"
-        >
-          {{ section.settings.first_description }}
-        </div>
-      {% endif %}
-
-
-      {% if section.settings.second_description != blank %}
-        <div
-          class="adb-description adb-description--second"
-          style="color: {{ section.settings.second_description_color }} !important;"
-        >
-          {{ section.settings.second_description }}
-        </div>
-      {% endif %}
-
-    </div>
-
-  {% endif %}
-
-
-  {% if section.settings.show_benefits %}
-
-    <div class="adb-benefits">
-
-      {% for block in section.blocks %}
-
-        {% if block.type == 'benefit' %}
-
-          <div
-            class="adb-benefit"
-            {{ block.shopify_attributes }}
-          >
-
-            {% if block.settings.show_icon %}
-
-              <div class="adb-benefit__icon">
-
-                {% case block.settings.icon %}
-
-                  {% when 'support' %}
-
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M4 13v-1a8 8 0 0 1 16 0v1"/>
-                      <path d="M4 13h3v5H4z"/>
-                      <path d="M17 13h3v5h-3z"/>
-                      <path d="M7 18c1 2 3 3 5 3h2"/>
-                    </svg>
-
-
-                  {% when 'shipping' %}
-
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M3 6h11v12H3z"/>
-                      <path d="M14 10h4l3 3v5h-7z"/>
-                      <circle cx="7" cy="19" r="2"/>
-                      <circle cx="18" cy="19" r="2"/>
-                    </svg>
-
-
-                  {% when 'authenticity' %}
-
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <circle cx="12" cy="9" r="5"/>
-                      <path d="M9 14l-2 7 5-3 5 3-2-7"/>
-                    </svg>
-
-
-                  {% when 'experience' %}
-
-                    <svg viewBox="0 0 24 24" aria-hidden="true">
-                      <path d="M5 9h14v10H5z"/>
-                      <path d="M8 9V6h8v3"/>
-                      <path d="M3 9h18"/>
-                    </svg>
-
-                {% endcase %}
-
-              </div>
-
-            {% endif %}
-
-
-            {% if block.settings.title != blank %}
-
-              <h3>
-                {{ block.settings.title }}
-              </h3>
-
-            {% endif %}
-
-
-            {% if block.settings.description != blank %}
-
-              <p>
-                {{ block.settings.description }}
+      <div class="adb-container">
+        <div class="adb-distributor__header adb-reveal">
+          <div class="adb-distributor__title-area">
+            {% if section.settings.kicker != blank %}
+              <p class="adb-kicker">
+                <span></span>
+                {{ section.settings.kicker }}
               </p>
-
             {% endif %}
 
+            {% if section.settings.heading != blank %}
+              <h2>{{ section.settings.heading }}</h2>
+            {% endif %}
+
+            {% if section.settings.accent_heading != blank %}
+              <div class="adb-accent-heading">
+                {{ section.settings.accent_heading }}
+              </div>
+            {% endif %}
           </div>
 
+          <div class="adb-distributor__brand-count">
+            <strong>{{ section.settings.brand_count }}</strong>
+            <span>{{ section.settings.brand_count_label }}</span>
+          </div>
+        </div>
+
+        <div class="adb-distributor__copy adb-reveal">
+          {% if section.settings.first_description != blank %}
+            <div class="adb-description adb-description--first">
+              {{ section.settings.first_description }}
+            </div>
+          {% endif %}
+
+          {% if section.settings.second_description != blank %}
+            <div class="adb-description adb-description--second">
+              {{ section.settings.second_description }}
+            </div>
+          {% endif %}
+        </div>
+
+        {% if section.settings.show_brand_strip %}
+          <div class="adb-brand-strip adb-reveal">
+            <span>AKRAPOVIC</span>
+            <span>DODSON</span>
+            <span>PAGID</span>
+            <span>GIRODISC</span>
+            <span>RECARO</span>
+            <span>EVENTURI</span>
+            <span>HKS</span>
+            <span>AP RACING</span>
+            <span>BBS</span>
+            <span>KW AUTOMOTIVE</span>
+            <span>GARRETT</span>
+          </div>
         {% endif %}
-
-      {% endfor %}
-
-    </div>
-
+      </div>
+    </section>
   {% endif %}
 
+  {% if section.settings.show_benefits %}
+    <section class="adb-benefits">
+      <div class="adb-benefits__grid"></div>
+
+      <div class="adb-benefits__inner adb-container">
+        <div class="adb-benefits__intro adb-reveal">
+          <div>
+            {% if section.settings.benefits_kicker != blank %}
+              <p class="adb-kicker adb-kicker--light">
+                <span></span>
+                {{ section.settings.benefits_kicker }}
+              </p>
+            {% endif %}
+
+            {% if section.settings.benefits_heading != blank %}
+              <h2>{{ section.settings.benefits_heading }}</h2>
+            {% endif %}
+          </div>
+
+          {% if section.settings.benefits_intro != blank %}
+            <div class="adb-benefits__intro-text">
+              {{ section.settings.benefits_intro }}
+            </div>
+          {% endif %}
+        </div>
+
+        <div class="adb-benefits__cards">
+          {% for block in section.blocks %}
+            {% if block.type == 'benefit' %}
+              <article class="adb-benefit adb-reveal" {{ block.shopify_attributes }}>
+                <div class="adb-benefit__top">
+                  <span class="adb-benefit__number">
+                    {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+                  </span>
+
+                  {% if block.settings.show_icon %}
+                    <div class="adb-benefit__icon">
+                      {% case block.settings.icon %}
+                        {% when 'support' %}
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 13v-1a8 8 0 0 1 16 0v1"/>
+                            <path d="M4 13h3v5H4z"/>
+                            <path d="M17 13h3v5h-3z"/>
+                            <path d="M7 18c1 2 3 3 5 3h2"/>
+                          </svg>
+
+                        {% when 'shipping' %}
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M3 6h11v12H3z"/>
+                            <path d="M14 10h4l3 3v5h-7z"/>
+                            <circle cx="7" cy="19" r="2"/>
+                            <circle cx="18" cy="19" r="2"/>
+                          </svg>
+
+                        {% when 'authenticity' %}
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="12" cy="9" r="5"/>
+                            <path d="M9 14l-2 7 5-3 5 3-2-7"/>
+                          </svg>
+
+                        {% when 'experience' %}
+                          <svg viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M5 9h14v10H5z"/>
+                            <path d="M8 9V6h8v3"/>
+                            <path d="M3 9h18"/>
+                          </svg>
+                      {% endcase %}
+                    </div>
+                  {% endif %}
+                </div>
+
+                <div class="adb-benefit__content">
+                  {% if block.settings.title != blank %}
+                    <h3>{{ block.settings.title }}</h3>
+                  {% endif %}
+
+                  {% if block.settings.description != blank %}
+                    <p>{{ block.settings.description }}</p>
+                  {% endif %}
+                </div>
+
+                <div class="adb-benefit__bottom">
+                  <span>{{ section.settings.card_footer_label }}</span>
+                  <span class="adb-benefit__arrow">↗</span>
+                </div>
+              </article>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  {% endif %}
 </section>
 
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+    if (!section) return;
+
+    const items = section.querySelectorAll('.adb-reveal');
+
+    if (!('IntersectionObserver' in window)) {
+      items.forEach((item) => item.classList.add('is-visible'));
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+
+          items.forEach((item, index) => {
+            setTimeout(() => item.classList.add('is-visible'), index * 90);
+          });
+
+          observer.disconnect();
+        });
+      },
+      { threshold: 0.08 }
+    );
+
+    observer.observe(section);
+  })();
+</script>
 
 {% stylesheet %}
 
-/* =========================================
-   MAIN SECTION
-   ========================================= */
-
 .atomic-distributor-benefits {
   width: 100%;
+  overflow: hidden;
+}
+
+.adb-container {
+  width: min(var(--adb-max-width), calc(100% - 48px));
+  margin: 0 auto;
+}
+
+.adb-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 18px;
+  font-size: 10px;
+  line-height: 1;
+  letter-spacing: .18em;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--adb-accent);
+}
+
+.adb-kicker span {
+  width: 28px;
+  height: 1px;
+  background: currentColor;
 }
 
 .adb-distributor {
-  width: 100%;
-  box-sizing: border-box;
-
+  position: relative;
+  overflow: hidden;
+  padding: var(--adb-top-padding) 0 var(--adb-bottom-padding);
   background: var(--adb-top-bg);
-
-  text-align: center;
-
-  padding: 18px 20px 24px;
+  color: var(--adb-heading);
 }
 
-.adb-distributor h2 {
-  max-width: 760px;
-  font-family:"Russo One", san serif;
-  margin: 0 auto 22px;
+.adb-distributor__grid,
+.adb-benefits__grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
 
-  color: var(--adb-heading) !important;
+.adb-distributor__grid {
+  opacity: var(--adb-grid-opacity);
+  background-image:
+    linear-gradient(rgba(11,29,79,.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11,29,79,.08) 1px, transparent 1px);
+  background-size: 54px 54px;
+  mask-image: linear-gradient(to right, black, transparent 85%);
+}
 
-  font-size: 32px;
-  line-height: 1.15;
+.adb-distributor__header {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  gap: 50px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid rgba(0,0,0,.12);
+}
 
-  font-weight: 800;
-
+.adb-distributor__title-area h2 {
+  max-width: 900px;
+  margin: 0;
+  font-family: "Russo One", sans-serif !important;
+  font-size: clamp(42px, 5.3vw, 78px);
+  line-height: .93;
+  font-weight: 400;
+  letter-spacing: -.025em;
   text-transform: uppercase;
+  color: var(--adb-heading) !important;
+}
 
-  letter-spacing: 0;
+.adb-accent-heading {
+  margin-top: 8px;
+  font-family: "Russo One", sans-serif !important;
+  font-size: clamp(28px, 3.4vw, 52px);
+  line-height: 1;
+  text-transform: uppercase;
+  color: var(--adb-accent);
+}
 
-  text-align: center;
+.adb-distributor__brand-count {
+  min-width: 175px;
+  padding: 18px 20px;
+  border-left: 1px solid rgba(0,0,0,.12);
+}
+
+.adb-distributor__brand-count strong {
+  display: block;
+  font-size: clamp(42px, 5vw, 70px);
+  line-height: .9;
+  font-weight: 800;
+  letter-spacing: -.05em;
+  color: var(--adb-accent);
+}
+
+.adb-distributor__brand-count span {
+  display: block;
+  margin-top: 10px;
+  font-size: 9px;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: rgba(0,0,0,.54);
+}
+
+.adb-distributor__copy {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: 1fr .8fr;
+  gap: 55px;
+  padding-top: 28px;
 }
 
 .adb-description {
-  max-width: 780px;
-
-  margin-left: auto;
-  margin-right: auto;
-
-  font-size: 13px;
-
-  line-height: 1.65;
-
+  font-size: 14px;
+  line-height: 1.75;
   font-weight: 400;
-
-  text-align: center;
 }
 
-.adb-description--first {
-  margin-bottom: 20px;
-
-  color: var(--adb-first-text) !important;
-}
-
-.adb-description--first p {
+.adb-description p {
   margin: 0;
-
-  color: var(--adb-first-text) !important;
 }
-
-.adb-description--second {
-  margin-bottom: 0;
-
-  color: var(--adb-second-text) !important;
-}
-
-.adb-description--second p {
-  margin: 0;
-
-  color: var(--adb-second-text) !important;
-}
-
-
-/* =========================================
-   FIRST DESCRIPTION
-   ========================================= */
 
 .adb-description--first,
 .adb-description--first p {
   color: var(--adb-first-text) !important;
 }
 
-
-/* =========================================
-   SECOND DESCRIPTION
-   ========================================= */
-
 .adb-description--second,
 .adb-description--second p {
   color: var(--adb-second-text) !important;
 }
 
-
-/* Remove default richtext margins */
-
-.adb-description p {
-  margin-top: 0;
-  margin-bottom: 0;
+.adb-brand-strip {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 26px;
+  margin-top: 32px;
+  padding: 16px 0;
+  overflow: hidden;
+  white-space: nowrap;
+  border-top: 1px solid rgba(0,0,0,.10);
+  border-bottom: 1px solid rgba(0,0,0,.10);
 }
 
+.adb-brand-strip span {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: .12em;
+  color: rgba(0,0,0,.47);
+}
 
-/* =========================================
-   BENEFITS SECTION
-   ========================================= */
+.adb-brand-strip span::after {
+  content: "•";
+  margin-left: 26px;
+  color: var(--adb-accent);
+}
 
 .adb-benefits {
+  position: relative;
+  overflow: hidden;
+  padding: 72px 0 80px;
+  background: var(--adb-bottom-bg);
+  color: var(--adb-benefit-heading);
+}
+
+.adb-benefits__grid {
+  background-image:
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+  background-size: 52px 52px;
+  mask-image: linear-gradient(to right, black, transparent 90%);
+}
+
+.adb-benefits__inner {
+  position: relative;
+  z-index: 2;
+}
+
+.adb-benefits__intro {
+  display: grid;
+  grid-template-columns: 1fr .65fr;
+  gap: 60px;
+  align-items: end;
+  margin-bottom: 38px;
+}
+
+.adb-benefits__intro h2 {
+  margin: 0;
+  max-width: 760px;
+  font-family: "Russo One", sans-serif !important;
+  font-size: clamp(38px, 4.7vw, 68px);
+  line-height: .92;
+  font-weight: 400;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  color: var(--adb-benefit-heading) !important;
+}
+
+.adb-benefits__intro-text {
+  max-width: 420px;
+  justify-self: end;
+  color: rgba(255,255,255,.57);
+  font-size: 13px;
+  line-height: 1.75;
+}
+
+.adb-benefits__intro-text p {
+  margin: 0;
+}
+
+.adb-benefits__cards {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-
-  background: var(--adb-bottom-bg);
-
-  padding: 30px 35px;
+  gap: 10px;
 }
-
-
-/* =========================================
-   BENEFIT ITEM
-   ========================================= */
 
 .adb-benefit {
-  padding: 0 25px;
-
-  text-align: center;
-
-  border-right: 1px solid rgba(255, 255, 255, .08);
+  position: relative;
+  min-height: 310px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+  border: 1px solid rgba(255,255,255,.12);
+  background: linear-gradient(145deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+  transition: transform .4s cubic-bezier(.22,.61,.36,1), border-color .3s ease, background .3s ease, box-shadow .4s ease;
 }
 
-
-.adb-benefit:last-child {
-  border-right: none;
+.adb-benefit::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 2px;
+  background: var(--adb-accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform .35s ease;
 }
 
+.adb-benefit:hover {
+  transform: translateY(-7px);
+  border-color: var(--adb-accent);
+  background: linear-gradient(145deg, rgba(2,101,242,.15), rgba(255,255,255,.025));
+  box-shadow: 0 20px 50px rgba(0,0,0,.28);
+}
 
-/* =========================================
-   ICON
-   ========================================= */
+.adb-benefit:hover::before {
+  transform: scaleX(1);
+}
+
+.adb-benefit__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.adb-benefit__number {
+  color: var(--adb-accent);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .16em;
+}
 
 .adb-benefit__icon {
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  height: 30px;
-
-  margin-bottom: 10px;
-
+  width: 44px;
+  height: 44px;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(255,255,255,.14);
   color: var(--adb-icon);
+  transition: border-color .25s ease, color .25s ease, transform .25s ease;
 }
 
+.adb-benefit:hover .adb-benefit__icon {
+  border-color: var(--adb-accent);
+  color: var(--adb-accent);
+  transform: translateY(-2px);
+}
 
 .adb-benefit__icon svg {
-  width: 22px;
-  height: 22px;
-
+  width: 23px;
+  height: 23px;
   fill: none;
-
   stroke: currentColor;
-
-  stroke-width: 1.6;
-
+  stroke-width: 1.55;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
-
-/* =========================================
-   BENEFIT TITLE
-   ========================================= */
+.adb-benefit__content {
+  margin-top: 40px;
+}
 
 .adb-benefit h3 {
-  margin: 0 auto 13px;
-
+  margin: 0 0 12px;
   max-width: 260px;
-
-  color: var(--adb-benefit-heading) !important;
-
-  font-size: 14px;
-  line-height: 1.25;
-
+  font-size: 16px;
+  line-height: 1.18;
   font-weight: 800;
+  text-transform: uppercase;
+  color: var(--adb-benefit-heading) !important;
+}
 
+.adb-benefit p {
+  max-width: 270px;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+  font-weight: 400;
+  color: var(--adb-benefit-text) !important;
+  opacity: .72;
+}
+
+.adb-benefit__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+  padding-top: 15px;
+  margin-top: 20px;
+  border-top: 1px solid rgba(255,255,255,.08);
+  color: rgba(255,255,255,.42);
+  font-size: 8px;
+  letter-spacing: .14em;
   text-transform: uppercase;
 }
 
-
-/* =========================================
-   BENEFIT DESCRIPTION
-   ========================================= */
-
-.adb-benefit p {
-  max-width: 280px;
-
-  margin: 0 auto;
-
-  color: var(--adb-benefit-text) !important;
-
-  font-size: 12px;
-  line-height: 1.7;
-
-  font-weight: 500;
+.adb-benefit__arrow {
+  font-size: 19px;
+  color: var(--adb-accent);
+  transition: transform .25s ease;
 }
 
+.adb-benefit:hover .adb-benefit__arrow {
+  transform: translate(3px, -3px);
+}
 
-/* =========================================
-   MOBILE
-   ========================================= */
+.adb-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .75s ease, transform .75s cubic-bezier(.22,.61,.36,1);
+}
+
+.adb-reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media screen and (max-width: 989px) {
+  .adb-distributor__header,
+  .adb-distributor__copy,
+  .adb-benefits__intro {
+    grid-template-columns: 1fr;
+  }
+
+  .adb-distributor__brand-count {
+    width: fit-content;
+    border-left: 0;
+    border-top: 1px solid rgba(0,0,0,.12);
+    padding: 18px 0 0;
+  }
+
+  .adb-benefits__intro-text {
+    justify-self: start;
+  }
+
+  .adb-benefits__cards {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
 
 @media screen and (max-width: 749px) {
+  .adb-container {
+    width: calc(100% - 28px);
+  }
 
   .adb-distributor {
-    padding: 35px 20px;
+    padding: 55px 0 60px;
   }
 
-
-  .adb-distributor h2 {
-    font-size: 26px;
+  .adb-distributor__title-area h2,
+  .adb-benefits__intro h2 {
+    font-size: 40px;
   }
 
+  .adb-accent-heading {
+    font-size: 31px;
+  }
 
   .adb-description {
-    font-size: 12px;
+    font-size: 13px;
   }
 
+  .adb-brand-strip {
+    gap: 18px;
+  }
+
+  .adb-brand-strip span {
+    font-size: 8px;
+  }
 
   .adb-benefits {
-    grid-template-columns: 1fr;
-
-    gap: 30px;
-
-    padding: 35px 20px;
+    padding: 58px 0 62px;
   }
 
+  .adb-benefits__cards {
+    grid-template-columns: 1fr;
+  }
 
   .adb-benefit {
-    padding: 0 10px;
-
-    border-right: none;
-
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
-
-    padding-bottom: 25px;
+    min-height: 260px;
   }
 
-
-  .adb-benefit:last-child {
-    border-bottom: none;
-
-    padding-bottom: 0;
+  .adb-benefit__content {
+    margin-top: 28px;
   }
-
 }
 
 {% endstylesheet %}
 
-
 {% schema %}
-
 {
   "name": "Distributor Benefits",
-
   "tag": "section",
-
   "class": "atomic-distributor-benefits-section",
-
-
   "settings": [
-
     {
       "type": "header",
       "content": "Distributor information"
     },
-
-
     {
       "type": "checkbox",
       "id": "show_distributor",
       "label": "Show distributor section",
       "default": true
     },
-
-
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Kicker",
+      "default": "APEX LAB / AUTHENTIC PERFORMANCE"
+    },
     {
       "type": "textarea",
       "id": "heading",
       "label": "Heading",
-      "default": "Official Distributor of 50+ Global Brands"
+      "default": "OFFICIAL DISTRIBUTOR OF"
     },
-
-
+    {
+      "type": "text",
+      "id": "accent_heading",
+      "label": "Accent heading",
+      "default": "50+ GLOBAL BRANDS"
+    },
+    {
+      "type": "text",
+      "id": "brand_count",
+      "label": "Brand count",
+      "default": "50+"
+    },
+    {
+      "type": "text",
+      "id": "brand_count_label",
+      "label": "Brand count label",
+      "default": "GLOBAL PERFORMANCE BRANDS"
+    },
     {
       "type": "richtext",
       "id": "first_description",
       "label": "First description",
       "default": "<p>We are the authorized source for industry leaders like AKRAPOVIC, DODSON, PAGID, GIRODISC, RED LINE OIL, RECARO, EVENTURI, HKS, CSF, ADRO, AP Racing, BBS, Wheels, KW Automotive, GARRETT, and many more.</p>"
     },
-
-
     {
       "type": "richtext",
       "id": "second_description",
       "label": "Second description",
       "default": "<p>Every part sold through ATOMIC-SHOP is 100% authentic, directly from manufacturers, guaranteeing the best prices and full warranty coverage.</p>"
     },
-
-
+    {
+      "type": "checkbox",
+      "id": "show_brand_strip",
+      "label": "Show brand strip",
+      "default": true
+    },
     {
       "type": "header",
       "content": "Benefits"
     },
-
-
     {
       "type": "checkbox",
       "id": "show_benefits",
       "label": "Show benefits section",
       "default": true
     },
-
-
+    {
+      "type": "text",
+      "id": "benefits_kicker",
+      "label": "Benefits kicker",
+      "default": "WHY ENTHUSIASTS CHOOSE US"
+    },
+    {
+      "type": "text",
+      "id": "benefits_heading",
+      "label": "Benefits heading",
+      "default": "EXPERTISE YOU CAN BUILD ON."
+    },
+    {
+      "type": "richtext",
+      "id": "benefits_intro",
+      "label": "Benefits intro",
+      "default": "<p>From product selection to delivery and warranty support, every part of the experience is built around performance.</p>"
+    },
+    {
+      "type": "text",
+      "id": "card_footer_label",
+      "label": "Benefit card footer",
+      "default": "APEX LAB STANDARD"
+    },
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 1000,
+      "max": 1500,
+      "step": 20,
+      "unit": "px",
+      "default": 1320
+    },
+    {
+      "type": "range",
+      "id": "top_padding",
+      "label": "Top section top padding",
+      "min": 40,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "bottom_padding",
+      "label": "Top section bottom padding",
+      "min": 40,
+      "max": 140,
+      "step": 10,
+      "unit": "px",
+      "default": 70
+    },
+    {
+      "type": "range",
+      "id": "grid_opacity",
+      "label": "Technical grid opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 35
+    },
     {
       "type": "header",
       "content": "Colors"
     },
-
-
     {
       "type": "color",
       "id": "top_background",
       "label": "Top background",
-      "default": "#ffffff"
+      "default": "#FFFFFF"
     },
-
-
     {
       "type": "color",
       "id": "bottom_background",
       "label": "Benefits background",
-      "default": "#242424"
+      "default": "#0B1D4F"
     },
-
-
     {
       "type": "color",
       "id": "heading_color",
       "label": "Heading color",
-      "default": "#292929"
+      "default": "#000000"
     },
-
-
     {
       "type": "color",
       "id": "first_description_color",
       "label": "First description color",
-      "default": "#292929"
+      "default": "#222222"
     },
-
-
     {
       "type": "color",
       "id": "second_description_color",
       "label": "Second description color",
-      "default": "#292929"
+      "default": "#555555"
     },
-
-
     {
       "type": "color",
       "id": "benefit_heading_color",
       "label": "Benefit heading color",
       "default": "#FFFFFF"
     },
-
-
     {
       "type": "color",
       "id": "benefit_text_color",
       "label": "Benefit description color",
       "default": "#FFFFFF"
     },
-
-
     {
       "type": "color",
       "id": "icon_color",
       "label": "Icon color",
       "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "APEX accent",
+      "default": "#0265F2"
     }
-
   ],
-
-
   "blocks": [
-
     {
       "type": "benefit",
-
       "name": "Benefit",
-
       "settings": [
-
         {
           "type": "checkbox",
           "id": "show_icon",
           "label": "Show icon",
           "default": true
         },
-
-
         {
           "type": "select",
           "id": "icon",
           "label": "Icon",
-
           "options": [
-
-            {
-              "value": "support",
-              "label": "Support"
-            },
-
-            {
-              "value": "shipping",
-              "label": "Shipping"
-            },
-
-            {
-              "value": "authenticity",
-              "label": "Authenticity"
-            },
-
-            {
-              "value": "experience",
-              "label": "Experience"
-            }
-
+            { "value": "support", "label": "Support" },
+            { "value": "shipping", "label": "Shipping" },
+            { "value": "authenticity", "label": "Authenticity" },
+            { "value": "experience", "label": "Experience" }
           ],
-
           "default": "support"
         },
-
-
         {
           "type": "text",
           "id": "title",
           "label": "Title",
           "default": "Expert Advice & Support"
         },
-
-
         {
           "type": "textarea",
           "id": "description",
           "label": "Description",
           "default": "Our team has deep product knowledge. We help you select the right parts for your vehicle and performance goals."
         }
-
       ]
-
     }
-
   ],
-
-
   "presets": [
-
     {
       "name": "Distributor Benefits",
-
       "blocks": [
-
         {
           "type": "benefit",
-
           "settings": {
             "icon": "support",
             "title": "Expert Advice & Support",
             "description": "Our team has deep product knowledge. We help you select the right parts for your vehicle and performance goals."
           }
-
         },
-
-
         {
           "type": "benefit",
-
           "settings": {
             "icon": "shipping",
             "title": "Fast & Reliable Shipping Across the UAE",
             "description": "Get the parts you need delivered quickly and securely to your doorstep, anywhere in the Emirates."
           }
-
         },
-
-
         {
           "type": "benefit",
-
           "settings": {
             "icon": "authenticity",
             "title": "Authenticity & Manufacturer Warranty",
             "description": "Every part we sell is genuine and comes with a full manufacturer's warranty for your peace of mind."
           }
-
         },
-
-
         {
           "type": "benefit",
-
           "settings": {
             "icon": "experience",
             "title": "Over 20 Years of Motorsport & Tuning Experience",
             "description": "Our expertise is built on real-world racing experience, so we know what works."
           }
-
         }
-
       ]
-
     }
-
   ]
-
 }
-
 {% endschema %}

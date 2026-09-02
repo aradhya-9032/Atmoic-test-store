@@ -174,14 +174,39 @@
   {% render 'add-to-cart-button-styles' %}
 {% endif %}
 
-{% render 'product-information-content',
-  product: closest.product,
-  section_id: section.id,
-  settings: section.settings,
-  media_gallery: media_gallery,
-  product_details: product_details,
-  additional_blocks: additional_blocks
-%}
+<div
+  class="apex-pdp-shell"
+  style="
+    --apex-pdp-accent: {{ section.settings.accent_color }};
+    --apex-pdp-page-bg: {{ section.settings.page_background_color }};
+    --apex-pdp-panel-bg: {{ section.settings.panel_background_color }};
+    --apex-pdp-button-bg: {{ section.settings.button_background_color }};
+    --apex-pdp-button-text: {{ section.settings.button_text_color }};
+    --apex-pdp-radius: {{ section.settings.card_radius }}px;
+  "
+>
+  <!-- Premium breadcrumbs: presentation only -->
+  <nav class="apex-pdp-breadcrumbs" aria-label="Breadcrumb">
+    <a href="{{ routes.root_url }}">Home</a>
+    <span aria-hidden="true">/</span>
+    {% if collection %}
+      <a href="{{ collection.url }}">{{ collection.title | escape }}</a>
+      <span aria-hidden="true">/</span>
+    {% endif %}
+    <span class="apex-pdp-breadcrumbs__current">
+      {{ closest.product.title | escape }}
+    </span>
+  </nav>
+
+  {% render 'product-information-content',
+    product: closest.product,
+    section_id: section.id,
+    settings: section.settings,
+    media_gallery: media_gallery,
+    product_details: product_details,
+    additional_blocks: additional_blocks
+  %}
+</div>
 
 {% stylesheet %}
   .sticky-add-to-cart__bar {
@@ -366,6 +391,449 @@
       white-space: nowrap;
     }
   }
+
+
+  /* =========================================================
+     APEX LAB PREMIUM PDP UI
+     Visual layer only — product, variant, cart and media logic
+     remain native Shopify/Horizon behavior.
+     ========================================================= */
+
+  .apex-pdp-shell {
+    --apex-pdp-ink: #07182B;
+    --apex-pdp-muted: #667085;
+    --apex-pdp-line: rgba(7, 24, 43, .10);
+    --apex-pdp-soft: #F5F8FC;
+
+    width: 100%;
+    background:
+      linear-gradient(
+        180deg,
+        var(--apex-pdp-page-bg) 0%,
+        color-mix(in srgb, var(--apex-pdp-page-bg) 94%, #EEF4FB) 100%
+      );
+    color: var(--apex-pdp-ink);
+  }
+
+  /* Main PDP spacing */
+  .apex-pdp-shell .product-information {
+    --gap: clamp(18px, 2.4vw, 34px);
+    width: 100%;
+  }
+
+  .apex-pdp-shell .product-information__grid {
+    align-items: start;
+    min-width: 0;
+  }
+
+  /* =========================================================
+     MEDIA SIDE
+     ========================================================= */
+
+  .apex-pdp-shell .product-information__media {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 0;
+    visibility: visible !important;
+    opacity: 1 !important;
+    align-self: start;
+  }
+
+  .apex-pdp-shell media-gallery {
+    display: block !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    height: auto;
+    border-radius: var(--apex-pdp-radius);
+    overflow: visible;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .apex-pdp-shell .media-gallery__grid {
+    display: grid !important;
+    gap: 12px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .apex-pdp-shell .media-gallery__grid .product-media-container {
+    display: flex !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+
+  .apex-pdp-shell .product-media-container {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--apex-pdp-line);
+    border-radius: calc(var(--apex-pdp-radius) - 2px);
+    background: var(--apex-pdp-panel-bg);
+    box-shadow: 0 8px 30px rgba(7,24,43,.045);
+  }
+
+  .apex-pdp-shell .product-media-container .product-media {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .apex-pdp-shell .product-media-container img,
+  .apex-pdp-shell .product-media__image {
+    display: block !important;
+    width: 100%;
+    max-width: 100%;
+    padding:10px;
+    height: auto;
+    visibility: visible !important;
+    opacity: 1 !important;
+    transition: transform .55s cubic-bezier(.22,.61,.36,1);
+  }
+
+  .apex-pdp-shell .product-media-container:hover img,
+  .apex-pdp-shell .product-media-container:hover .product-media__image {
+    transform: scale(1.018);
+  }
+
+  /* Keep native grid presentation visible on desktop.
+     Horizon hides the grid view by default until its media
+     presentation styles apply at the desktop breakpoint. */
+  @media screen and (min-width: 750px) {
+    .apex-pdp-shell media-gallery.media-gallery--grid .media-gallery__grid {
+      display: grid !important;
+    }
+
+    .apex-pdp-shell media-gallery.media-gallery--grid slideshow-component {
+      display: none !important;
+    }
+
+    .apex-pdp-shell .product-media-container {
+      min-height: 0;
+    }
+  }
+
+  /* Mobile: use the native slideshow presentation so the
+     first product image is immediately visible and swipable. */
+  @media screen and (max-width: 749px) {
+    .apex-pdp-shell media-gallery.media-gallery--grid .media-gallery__grid {
+      display: none !important;
+    }
+
+    .apex-pdp-shell media-gallery.media-gallery--grid slideshow-component {
+      display: block !important;
+      width: 100%;
+      min-width: 0;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+
+    .apex-pdp-shell slideshow-component
+    .product-media-container {
+      display: flex !important;
+      width: 100% !important;
+    }
+  }
+
+  /* =========================================================
+     PREMIUM BREADCRUMBS
+     ========================================================= */
+
+  .apex-pdp-breadcrumbs {
+    width: min(100%, 1240px);
+    margin: 0 auto;
+    padding: 18px clamp(18px, 3vw, 42px) 13px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    color: var(--apex-pdp-muted);
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .apex-pdp-breadcrumbs a {
+    color: var(--apex-pdp-muted);
+    text-decoration: none;
+    transition: color .18s ease;
+  }
+
+  .apex-pdp-breadcrumbs a:hover {
+    color: var(--apex-pdp-accent);
+  }
+
+  .apex-pdp-breadcrumbs__current {
+    color: var(--apex-pdp-ink);
+    font-weight: 700;
+  }
+
+  /* Slightly smaller desktop media without changing the native gallery */
+  @media screen and (min-width: 750px) {
+    .apex-pdp-shell .product-information__media {
+      width: 94% !important;
+      max-width: 94%;
+      justify-self: start;
+    }
+
+    .apex-pdp-shell .product-information__media media-gallery {
+      width: 100% !important;
+    }
+  }
+
+  /* =========================================================
+     DETAILS PANEL
+     ========================================================= */
+
+  .apex-pdp-shell .product-details {
+    color: var(--apex-pdp-ink);
+  }
+
+  .apex-pdp-shell .product-details > .group-block {
+    border: 1px solid var(--apex-pdp-line);
+    padding: clamp(20px, 3vw, 34px);
+    box-shadow: 0 12px 34px rgba(7,24,43,.055);
+  }
+
+  /* Titles */
+  .apex-pdp-shell .product-details h1,
+  .apex-pdp-shell .product-details .product-title,
+  .apex-pdp-shell .product-details [class*='product-title'] {
+    color: var(--apex-pdp-ink);
+    letter-spacing: -.025em;
+  }
+
+  /* Price */
+  .apex-pdp-shell .product-details .price,
+  .apex-pdp-shell .product-details [class*='price'] {
+    color: var(--apex-pdp-ink);
+  }
+
+  .apex-pdp-shell .product-details .price-item--sale,
+  .apex-pdp-shell .product-details .sale-price {
+    color: var(--apex-pdp-accent);
+  }
+
+  /* Dividers */
+  .apex-pdp-shell .product-details hr,
+  .apex-pdp-shell .product-details .divider {
+    border-color: var(--apex-pdp-line);
+  }
+
+  /* =========================================================
+     VARIANT / OPTION CONTROLS
+     ========================================================= */
+
+  .apex-pdp-shell .product-details fieldset {
+    border: 0;
+    min-width: 0;
+  }
+
+  .apex-pdp-shell .product-details legend {
+    color: var(--apex-pdp-ink);
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+  }
+
+  .apex-pdp-shell .product-details label {
+    transition:
+      border-color .18s ease,
+      background-color .18s ease,
+      color .18s ease,
+      box-shadow .18s ease,
+      transform .18s ease;
+  }
+
+  .apex-pdp-shell .product-details label:hover {
+    border-color: color-mix(in srgb, var(--apex-pdp-accent) 42%, #ffffff);
+    color: var(--apex-pdp-accent);
+  }
+
+  /* =========================================================
+     QUANTITY
+     ========================================================= */
+
+  .apex-pdp-shell .product-details quantity-input,
+  .apex-pdp-shell .product-details .quantity-selector {
+    border-color: var(--apex-pdp-line);
+    border-radius: 6px;
+    background: var(--apex-pdp-panel-bg);
+  }
+
+  /* =========================================================
+     ADD TO CART / BUY BUTTONS
+     ========================================================= */
+
+  .apex-pdp-shell .product-details button[type='submit'],
+  .apex-pdp-shell .product-details .add-to-cart-button,
+  .apex-pdp-shell .product-details .shopify-payment-button__button,
+  .apex-pdp-shell .product-details .shopify-payment-button__button--unbranded {
+    min-height: 52px;
+    border-radius: 5px;
+    border: 1px solid var(--apex-pdp-button-bg);
+    background: var(--apex-pdp-button-bg);
+    color: var(--apex-pdp-button-text);
+    font-weight: 800;
+    letter-spacing: .025em;
+    transition:
+      transform .2s ease,
+      box-shadow .2s ease,
+      background-color .2s ease,
+      border-color .2s ease;
+  }
+
+  .apex-pdp-shell .product-details button[type='submit']:hover,
+  .apex-pdp-shell .product-details .add-to-cart-button:hover,
+  .apex-pdp-shell .product-details .shopify-payment-button__button:hover,
+  .apex-pdp-shell .product-details .shopify-payment-button__button--unbranded:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px color-mix(in srgb, var(--apex-pdp-button-bg) 22%, transparent);
+  }
+
+  /* Disabled state stays visually disabled */
+  .apex-pdp-shell .product-details button:disabled,
+  .apex-pdp-shell .product-details [aria-disabled='true'] {
+    transform: none;
+    box-shadow: none;
+  }
+
+  /* =========================================================
+     ACCORDIONS / SUPPORTING PDP CONTENT
+     ========================================================= */
+
+  .apex-pdp-shell .product-details details {
+    border-color: var(--apex-pdp-line);
+  }
+
+  .apex-pdp-shell .product-details details > summary {
+    color: var(--apex-pdp-ink);
+    font-weight: 700;
+  }
+
+  .apex-pdp-shell .product-details .accordion__content,
+  .apex-pdp-shell .product-details details .rte {
+    color: var(--apex-pdp-muted);
+  }
+
+  /* =========================================================
+     STICKY ADD TO CART
+     ========================================================= */
+
+  .apex-pdp-shell + sticky-add-to-cart .sticky-add-to-cart__bar,
+  .sticky-add-to-cart .sticky-add-to-cart__bar {
+    border: 1px solid rgba(2,101,242,.16);
+    background: rgba(255,255,255,.94);
+    backdrop-filter: blur(18px) saturate(150%);
+    box-shadow: 0 18px 45px rgba(7,24,43,.14);
+  }
+
+  .sticky-add-to-cart .sticky-add-to-cart__button {
+    border-radius: 5px;
+    background: var(--apex-pdp-button-bg, #0265F2);
+    color: var(--apex-pdp-button-text, #fff);
+  }
+
+  /* =========================================================
+     FOCUS
+     ========================================================= */
+
+  .apex-pdp-shell a:focus-visible,
+  .apex-pdp-shell button:focus-visible,
+  .apex-pdp-shell input:focus-visible,
+  .apex-pdp-shell select:focus-visible {
+    outline: 2px solid var(--apex-pdp-accent);
+    outline-offset: 3px;
+  }
+
+  /* =========================================================
+     DESKTOP
+     ========================================================= */
+
+  @media screen and (min-width: 750px) {
+    .apex-pdp-shell .product-information__grid {
+      column-gap: clamp(18px, 2.5vw, 34px);
+    }
+
+    .apex-pdp-shell .product-information__media {
+      padding-right: 0;
+    }
+
+    .apex-pdp-shell .product-details {
+      padding-left: 0;
+      min-width: 0;
+    }
+
+    .apex-pdp-shell .product-details > .group-block {
+      position: relative;
+      z-index: 1;
+    }
+  }
+
+  /* =========================================================
+     MOBILE
+     ========================================================= */
+
+  @media screen and (max-width: 749px) {
+    .apex-pdp-shell .product-information {
+      --gap: 14px;
+      width: 100%;
+    }
+
+    .apex-pdp-shell .product-information__grid {
+      width: 100%;
+      grid-template-columns: 1fr;
+    }
+
+    .apex-pdp-shell .product-information__media {
+      grid-column: 1 / -1 !important;
+      width: 100% !important;
+      margin: 0;
+      padding: 0;
+    }
+
+    .apex-pdp-shell .product-details {
+      grid-column: 1 / -1 !important;
+      width: 100%;
+      min-width: 0;
+    }
+
+    .apex-pdp-shell .product-details > .group-block {
+      padding: 15px;
+      box-shadow: 0 8px 24px rgba(7,24,43,.045);
+    }
+
+    .apex-pdp-shell media-gallery {
+      width: 100% !important;
+      margin: 0;
+    }
+
+    .apex-pdp-shell media-gallery
+    .media-gallery__mobile-controls {
+      margin-top: 8px;
+    }
+
+    .apex-pdp-shell .product-media-container {
+      width: 100% !important;
+      border-radius: 8px;
+    }
+
+    .apex-pdp-shell .product-details button[type='submit'],
+    .apex-pdp-shell .product-details .add-to-cart-button,
+    .apex-pdp-shell .product-details .shopify-payment-button__button,
+    .apex-pdp-shell .product-details .shopify-payment-button__button--unbranded {
+      min-height: 50px;
+    }
+
+    .apex-pdp-shell .product-details label,
+    .apex-pdp-shell .product-details button,
+    .apex-pdp-shell .product-details input,
+    .apex-pdp-shell .product-details select {
+      max-width: 100%;
+    }
+  }
+
 {% endstylesheet %}
 
 {% schema %}
@@ -380,7 +848,10 @@
     }
   ],
   "disabled_on": {
-    "groups": ["header", "footer"]
+    "groups": [
+      "header",
+      "footer"
+    ]
   },
   "settings": [
     {
@@ -447,6 +918,50 @@
       "id": "enable_sticky_add_to_cart",
       "label": "t:settings.enable_sticky_add_to_cart",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "APEX Premium Appearance"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#0265F2"
+    },
+    {
+      "type": "color",
+      "id": "page_background_color",
+      "label": "Page background",
+      "default": "#F5F8FC"
+    },
+    {
+      "type": "color",
+      "id": "panel_background_color",
+      "label": "Product panel background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "button_background_color",
+      "label": "Primary button color",
+      "default": "#0265F2"
+    },
+    {
+      "type": "color",
+      "id": "button_text_color",
+      "label": "Primary button text",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "range",
+      "id": "card_radius",
+      "label": "Panel corner radius",
+      "min": 0,
+      "max": 24,
+      "step": 2,
+      "unit": "px",
+      "default": 8
     },
     {
       "type": "color",

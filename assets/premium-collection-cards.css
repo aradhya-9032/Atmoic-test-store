@@ -1,0 +1,231 @@
+/* =========================================================
+   APEX PREMIUM COLLECTION
+   Reference-style Collection + Filters + Product Grid
+   ========================================================= */
+
+
+/* -----------------------------
+   MAIN COLLECTION LAYOUT
+------------------------------ */
+
+.apex-collection-wrapper {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 24px 56px 60px;
+  align-items: start;
+}
+
+
+/* -----------------------------
+   COLLECTION WRAPPER
+------------------------------ */
+
+.apex-collection-wrapper {
+  column-gap: 28px;
+}
+
+
+/* =========================================================
+   PRODUCT GRID
+========================================================= */
+
+collection-component .product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  column-gap: 20px;
+  row-gap: 20px;
+  width: 100%;
+}
+
+
+collection-component .product-grid__item {
+  min-width: 0;
+}
+
+
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
+
+collection-component .product-card,
+collection-component .card,
+collection-component .product-grid__item > * {
+  min-width: 0;
+}
+
+
+collection-component .product-grid__item .product-card {
+  height: 100%;
+  border: 1px solid rgba(25, 39, 62, 0.12);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(17, 30, 55, 0.04);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    border-color 0.25s ease;
+}
+
+
+collection-component .product-grid__item .product-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(2, 101, 242, 0.28);
+  box-shadow: 0 14px 34px rgba(17, 30, 55, 0.10);
+}
+
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+collection-component .product-card__media,
+collection-component .product-card .media,
+collection-component .product-card__image {
+  overflow: hidden;
+}
+
+
+collection-component .product-card__media img,
+collection-component .product-card img {
+  transition: transform 0.35s ease;
+}
+
+
+collection-component .product-card:hover img {
+  transform: scale(1.035);
+}
+
+
+/* =========================================================
+   FILTER SIDEBAR
+========================================================= */
+
+.apex-collection-wrapper > *:has(.filters) {
+  align-self: start;
+}
+
+
+/* Main filter card */
+
+.filters,
+.facets {
+  border: 1px solid rgba(25, 39, 62, 0.12);
+  border-radius: 18px;
+  background: #ffffff;
+}
+
+
+/* =========================================================
+   FILTER HEADING
+========================================================= */
+
+.filters__heading,
+.facets__heading {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.6px;
+  text-transform: uppercase;
+}
+
+
+/* =========================================================
+   FILTER ITEMS
+========================================================= */
+
+.filters details,
+.facets details {
+  position: relative;
+}
+
+
+.filters summary,
+.facets summary {
+  cursor: pointer;
+  list-style: none;
+}
+
+
+.filters summary::-webkit-details-marker,
+.facets summary::-webkit-details-marker {
+  display: none;
+}
+
+
+/* =========================================================
+   OPEN FILTER / TYPE PANEL
+   This creates the reference-image style floating panel
+========================================================= */
+
+.filters details[open] > div,
+.facets details[open] > div {
+  z-index: 20;
+}
+
+
+/* =========================================================
+   PRODUCT GRID RESPONSIVE
+========================================================= */
+
+@media screen and (max-width: 1200px) {
+
+  .apex-collection-wrapper {
+    padding-left: 32px;
+    padding-right: 32px;
+  }
+
+  collection-component .product-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+}
+
+
+@media screen and (max-width: 990px) {
+
+  .apex-collection-wrapper {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  collection-component .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 16px;
+    row-gap: 16px;
+  }
+
+}
+
+
+@media screen and (max-width: 749px) {
+
+  .apex-collection-wrapper {
+    padding: 16px 14px 36px;
+  }
+
+  collection-component .product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  collection-component .product-grid__item .product-card {
+    border-radius: 14px;
+  }
+
+}
+
+
+/* =========================================================
+   SAFETY — prevent horizontal overflow
+========================================================= */
+
+collection-component,
+results-list,
+.apex-collection-wrapper {
+  max-width: 100%;
+}
+
+
+.apex-collection-wrapper * {
+  min-width: 0;
+}

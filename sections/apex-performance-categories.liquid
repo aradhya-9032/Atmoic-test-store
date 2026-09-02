@@ -1,0 +1,1756 @@
+{% liquid
+  assign catalog_collection = section.settings.collection
+  assign products = catalog_collection.products
+%}
+
+<section class="apex-catalog" id="ApexCatalog-{{ section.id }}">
+  <div class="apex-catalog__container">
+
+    <!-- BREADCRUMB -->
+    <div class="apex-catalog__breadcrumb">
+      <a href="{{ routes.root_url }}">Home</a>
+      <span>/</span>
+      <span>{{ section.settings.heading }}</span>
+    </div>
+
+    <!-- TOP -->
+    <div class="apex-catalog__top">
+      <h1 class="apex-catalog__title" id="ApexCatalogTitle-{{ section.id }}">{{ section.settings.heading }}</h1>
+
+      {% if catalog_collection != blank %}
+        <div class="apex-catalog__controls">
+          <span class="apex-catalog__count">
+            <span id="ApexVisibleCount-{{ section.id }}">{{ products.size }}</span>
+            items · Sort
+          </span>
+
+          <select class="apex-catalog__sort" id="ApexCatalogSort-{{ section.id }}">
+            <option value="featured">Featured</option>
+            <option value="title-ascending">Name: A-Z</option>
+            <option value="title-descending">Name: Z-A</option>
+            <option value="price-ascending">Price: Low to High</option>
+            <option value="price-descending">Price: High to Low</option>
+          </select>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="apex-catalog__layout">
+
+      <!-- FILTER SIDEBAR -->
+      <aside class="apex-catalog__sidebar">
+        <div class="apex-filter-card">
+
+          <div class="apex-filter-heading">CATEGORY</div>
+
+          {%- assign apex_category_count = 0 -%}
+          {%- for block in section.blocks -%}
+            {%- if block.type == 'category' -%}
+              {%- assign apex_category_count = apex_category_count | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+
+          <div class="apex-category-list" data-apex-category-list>
+            {% if apex_category_count > 0 %}
+              {% assign apex_category_index = 0 %}
+              {% for block in section.blocks %}
+                {% if block.type == 'category' and block.settings.label != blank %}
+                  <button
+                    type="button"
+                    class="apex-filter-row apex-filter-row--category apex-category-toggle{% if apex_category_index == 0 %} is-active{% endif %}"
+                    data-category="{{ block.id }}"
+                    data-category-title="{{ block.settings.label | escape }}"
+                    data-category-filters="{{ block.settings.filter_keys | default: 'price,brand' | downcase | replace: ' ', '' }}"
+                    aria-expanded="{% if apex_category_index == 0 %}true{% else %}false{% endif %}"
+                    {{ block.shopify_attributes }}
+                  >
+                    <span>{{ block.settings.label }}</span>
+                    <span class="apex-filter-arrow">⌃</span>
+                  </button>
+                  {% assign apex_category_index = apex_category_index | plus: 1 %}
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              <button type="button" class="apex-filter-row apex-filter-row--category apex-category-toggle is-active" data-category="brakes" data-category-title="Brakes" data-category-filters="type,price,size,brand,material" aria-expanded="true"><span>Brakes</span><span class="apex-filter-arrow">⌃</span></button>
+              <button type="button" class="apex-filter-row apex-filter-row--category apex-category-toggle" data-category="suspension" data-category-title="Suspension" data-category-filters="price,brand,suspension" aria-expanded="false"><span>Suspension</span><span class="apex-filter-arrow">⌃</span></button>
+              <button type="button" class="apex-filter-row apex-filter-row--category apex-category-toggle" data-category="engine" data-category-title="Engine" data-category-filters="price,brand,engine" aria-expanded="false"><span>Engine</span><span class="apex-filter-arrow">⌃</span></button>
+              <button type="button" class="apex-filter-row apex-filter-row--category apex-category-toggle" data-category="exhaust" data-category-title="Exhaust" data-category-filters="price,brand,exhaust" aria-expanded="false"><span>Exhaust</span><span class="apex-filter-arrow">⌃</span></button>
+              <button type="button" class="apex-filter-row apex-filter-row--category apex-category-toggle" data-category="wheels" data-category-title="Wheels &amp; Tires" data-category-filters="size,brand,wheels" aria-expanded="false"><span>Wheels &amp; Tires</span><span class="apex-filter-arrow">⌃</span></button>
+              <button type="button" class="apex-filter-row apex-filter-row--category apex-category-toggle" data-category="racing-gear" data-category-title="Racing Gear" data-category-filters="brand,material" aria-expanded="false"><span>Racing Gear</span><span class="apex-filter-arrow">⌃</span></button>
+            {% endif %}
+          </div>
+
+          <div class="apex-category-content is-open" data-apex-category-content>
+
+          <!-- TYPE -->
+          <div class="apex-filter-item" data-filter-key="type">
+            <button
+              type="button"
+              class="apex-filter-row apex-filter-trigger"
+              data-filter-panel="type"
+              aria-expanded="false"
+            >
+              <span>Type</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="type">
+              <div class="apex-filter-popup__title">TYPE</div>
+
+              {% assign types_seen = '||' %}
+              {% for product in products %}
+                {% if product.type != blank %}
+                  {% assign type_key = '||' | append: product.type | append: '||' %}
+                  {% unless types_seen contains type_key %}
+                    <label class="apex-checkbox">
+                      <input
+                        type="checkbox"
+                        class="apex-filter-checkbox"
+                        data-filter-group="type"
+                        value="{{ product.type | escape }}"
+                      >
+                      <span class="apex-checkbox-box"></span>
+                      <span>{{ product.type }}</span>
+                    </label>
+                    {% assign types_seen = types_seen | append: product.type | append: '||' %}
+                  {% endunless %}
+                {% endif %}
+              {% endfor %}
+
+              {% if types_seen == '||' %}
+                <div class="apex-filter-empty">No Type values found.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- PRICE -->
+          <div class="apex-filter-item" data-filter-key="price">
+            <button
+              type="button"
+              class="apex-filter-row apex-filter-trigger"
+              data-filter-panel="price"
+              aria-expanded="false"
+            >
+              <span>Price</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="price">
+              <div class="apex-filter-popup__title">PRICE</div>
+
+              <label class="apex-checkbox">
+                <input type="checkbox" class="apex-price-filter" data-min="0" data-max="500000">
+                <span class="apex-checkbox-box"></span>
+                <span>Under ₹5,000</span>
+              </label>
+
+              <label class="apex-checkbox">
+                <input type="checkbox" class="apex-price-filter" data-min="500000" data-max="2000000">
+                <span class="apex-checkbox-box"></span>
+                <span>₹5,000 – ₹20,000</span>
+              </label>
+
+              <label class="apex-checkbox">
+                <input type="checkbox" class="apex-price-filter" data-min="2000000" data-max="10000000">
+                <span class="apex-checkbox-box"></span>
+                <span>₹20,000 – ₹100,000</span>
+              </label>
+
+              <label class="apex-checkbox">
+                <input type="checkbox" class="apex-price-filter" data-min="10000000" data-max="999999999999">
+                <span class="apex-checkbox-box"></span>
+                <span>Above ₹100,000</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- SIZE: PRODUCT TAG FORMAT = Size:18 inch -->
+          <div class="apex-filter-item" data-filter-key="size">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="size" aria-expanded="false">
+              <span>Size</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="size">
+              <div class="apex-filter-popup__title">SIZE</div>
+              {% assign size_seen = '||' %}
+              {% for product in products %}
+                {% for tag in product.tags %}
+                  {% assign prefix = tag | slice: 0, 5 %}
+                  {% if prefix == 'Size:' %}
+                    {% assign option = tag | remove_first: 'Size:' | strip %}
+                    {% assign option_key = '||' | append: option | append: '||' %}
+                    {% unless size_seen contains option_key %}
+                      <label class="apex-checkbox">
+                        <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-size" value="{{ tag | escape }}">
+                        <span class="apex-checkbox-box"></span>
+                        <span>{{ option }}</span>
+                      </label>
+                      {% assign size_seen = size_seen | append: option | append: '||' %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% if size_seen == '||' %}
+                <div class="apex-filter-empty">Add tags like <strong>Size:18 inch</strong>.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- BRAND -->
+          <div class="apex-filter-item" data-filter-key="brand">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="brand" aria-expanded="false">
+              <span>Brand</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="brand">
+              <div class="apex-filter-popup__title">BRAND</div>
+
+              {% assign vendors_seen = '||' %}
+              {% for product in products %}
+                {% if product.vendor != blank %}
+                  {% assign vendor_key = '||' | append: product.vendor | append: '||' %}
+                  {% unless vendors_seen contains vendor_key %}
+                    <label class="apex-checkbox">
+                      <input
+                        type="checkbox"
+                        class="apex-filter-checkbox"
+                        data-filter-group="vendor"
+                        value="{{ product.vendor | escape }}"
+                      >
+                      <span class="apex-checkbox-box"></span>
+                      <span>{{ product.vendor }}</span>
+                    </label>
+                    {% assign vendors_seen = vendors_seen | append: product.vendor | append: '||' %}
+                  {% endunless %}
+                {% endif %}
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- MATERIAL: Material:Carbon -->
+          <div class="apex-filter-item" data-filter-key="material">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="material" aria-expanded="false">
+              <span>Material</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="material">
+              <div class="apex-filter-popup__title">MATERIAL</div>
+              {% assign material_seen = '||' %}
+              {% for product in products %}
+                {% for tag in product.tags %}
+                  {% assign prefix = tag | slice: 0, 9 %}
+                  {% if prefix == 'Material:' %}
+                    {% assign option = tag | remove_first: 'Material:' | strip %}
+                    {% assign option_key = '||' | append: option | append: '||' %}
+                    {% unless material_seen contains option_key %}
+                      <label class="apex-checkbox">
+                        <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-material" value="{{ tag | escape }}">
+                        <span class="apex-checkbox-box"></span>
+                        <span>{{ option }}</span>
+                      </label>
+                      {% assign material_seen = material_seen | append: option | append: '||' %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% if material_seen == '||' %}
+                <div class="apex-filter-empty">Add tags like <strong>Material:Carbon</strong>.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- SUSPENSION: Suspension:Coilovers -->
+          <div class="apex-filter-item" data-filter-key="suspension">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="suspension" aria-expanded="false">
+              <span>Suspension</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="suspension">
+              <div class="apex-filter-popup__title">SUSPENSION</div>
+              {% assign suspension_seen = '||' %}
+              {% for product in products %}
+                {% for tag in product.tags %}
+                  {% assign prefix = tag | slice: 0, 11 %}
+                  {% if prefix == 'Suspension:' %}
+                    {% assign option = tag | remove_first: 'Suspension:' | strip %}
+                    {% assign option_key = '||' | append: option | append: '||' %}
+                    {% unless suspension_seen contains option_key %}
+                      <label class="apex-checkbox">
+                        <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-suspension" value="{{ tag | escape }}">
+                        <span class="apex-checkbox-box"></span>
+                        <span>{{ option }}</span>
+                      </label>
+                      {% assign suspension_seen = suspension_seen | append: option | append: '||' %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% if suspension_seen == '||' %}
+                <div class="apex-filter-empty">Add tags like <strong>Suspension:Coilovers</strong>.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- ENGINE: Engine:Turbo -->
+          <div class="apex-filter-item" data-filter-key="engine">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="engine" aria-expanded="false">
+              <span>Engine</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="engine">
+              <div class="apex-filter-popup__title">ENGINE</div>
+              {% assign engine_seen = '||' %}
+              {% for product in products %}
+                {% for tag in product.tags %}
+                  {% assign prefix = tag | slice: 0, 7 %}
+                  {% if prefix == 'Engine:' %}
+                    {% assign option = tag | remove_first: 'Engine:' | strip %}
+                    {% assign option_key = '||' | append: option | append: '||' %}
+                    {% unless engine_seen contains option_key %}
+                      <label class="apex-checkbox">
+                        <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-engine" value="{{ tag | escape }}">
+                        <span class="apex-checkbox-box"></span>
+                        <span>{{ option }}</span>
+                      </label>
+                      {% assign engine_seen = engine_seen | append: option | append: '||' %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% if engine_seen == '||' %}
+                <div class="apex-filter-empty">Add tags like <strong>Engine:Turbo</strong>.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- EXHAUST: Exhaust:Cat Back -->
+          <div class="apex-filter-item" data-filter-key="exhaust">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="exhaust" aria-expanded="false">
+              <span>Exhaust</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="exhaust">
+              <div class="apex-filter-popup__title">EXHAUST</div>
+              {% assign exhaust_seen = '||' %}
+              {% for product in products %}
+                {% for tag in product.tags %}
+                  {% assign prefix = tag | slice: 0, 8 %}
+                  {% if prefix == 'Exhaust:' %}
+                    {% assign option = tag | remove_first: 'Exhaust:' | strip %}
+                    {% assign option_key = '||' | append: option | append: '||' %}
+                    {% unless exhaust_seen contains option_key %}
+                      <label class="apex-checkbox">
+                        <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-exhaust" value="{{ tag | escape }}">
+                        <span class="apex-checkbox-box"></span>
+                        <span>{{ option }}</span>
+                      </label>
+                      {% assign exhaust_seen = exhaust_seen | append: option | append: '||' %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% if exhaust_seen == '||' %}
+                <div class="apex-filter-empty">Add tags like <strong>Exhaust:Cat Back</strong>.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- WHEELS & TIRES: Wheels:19 inch -->
+          <div class="apex-filter-item" data-filter-key="wheels">
+            <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="wheels" aria-expanded="false">
+              <span>Wheels &amp; Tires</span>
+              <span class="apex-filter-arrow">›</span>
+            </button>
+
+            <div class="apex-filter-popup" data-filter-popup="wheels">
+              <div class="apex-filter-popup__title">WHEELS &amp; TIRES</div>
+              {% assign wheels_seen = '||' %}
+              {% for product in products %}
+                {% for tag in product.tags %}
+                  {% assign prefix = tag | slice: 0, 7 %}
+                  {% if prefix == 'Wheels:' %}
+                    {% assign option = tag | remove_first: 'Wheels:' | strip %}
+                    {% assign option_key = '||' | append: option | append: '||' %}
+                    {% unless wheels_seen contains option_key %}
+                      <label class="apex-checkbox">
+                        <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-wheels" value="{{ tag | escape }}">
+                        <span class="apex-checkbox-box"></span>
+                        <span>{{ option }}</span>
+                      </label>
+                      {% assign wheels_seen = wheels_seen | append: option | append: '||' %}
+                    {% endunless %}
+                  {% endif %}
+                {% endfor %}
+              {% endfor %}
+              {% if wheels_seen == '||' %}
+                <div class="apex-filter-empty">Add tags like <strong>Wheels:19 inch</strong>.</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- OPTIONAL CUSTOM FILTERS FROM THEME EDITOR -->
+          {% for block in section.blocks %}
+            {% if block.type == 'tag_filter' and block.settings.label != blank and block.settings.tag_prefix != blank %}
+              {% assign panel_id = 'custom-' | append: block.id %}
+              {% assign prefix_length = block.settings.tag_prefix | size %}
+
+              <div class="apex-filter-item" data-filter-key="custom-{{ block.id }}" {{ block.shopify_attributes }}>
+                <button type="button" class="apex-filter-row apex-filter-trigger" data-filter-panel="{{ panel_id }}" aria-expanded="false">
+                  <span>{{ block.settings.label }}</span>
+                  <span class="apex-filter-arrow">›</span>
+                </button>
+
+                <div class="apex-filter-popup" data-filter-popup="{{ panel_id }}">
+                  <div class="apex-filter-popup__title">{{ block.settings.label | upcase }}</div>
+                  {% assign custom_seen = '||' %}
+
+                  {% for product in products %}
+                    {% for tag in product.tags %}
+                      {% assign tag_prefix = tag | slice: 0, prefix_length %}
+                      {% if tag_prefix == block.settings.tag_prefix %}
+                        {% assign option = tag | remove_first: block.settings.tag_prefix | strip %}
+                        {% assign option_key = '||' | append: option | append: '||' %}
+                        {% unless custom_seen contains option_key %}
+                          <label class="apex-checkbox">
+                            <input type="checkbox" class="apex-filter-checkbox" data-filter-group="tag-{{ block.id }}" value="{{ tag | escape }}">
+                            <span class="apex-checkbox-box"></span>
+                            <span>{{ option }}</span>
+                          </label>
+                          {% assign custom_seen = custom_seen | append: option | append: '||' %}
+                        {% endunless %}
+                      {% endif %}
+                    {% endfor %}
+                  {% endfor %}
+
+                  {% if custom_seen == '||' %}
+                    <div class="apex-filter-empty">No matching product tags yet.</div>
+                  {% endif %}
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+
+          <button type="button" class="apex-clear-filters" id="ApexClearFilters-{{ section.id }}">
+            Clear filters
+          </button>
+          </div>
+
+        </div>
+      </aside>
+
+      <!-- PRODUCTS -->
+      <div class="apex-catalog__products">
+        {% if catalog_collection != blank %}
+          <div class="apex-product-grid" id="ApexProductGrid-{{ section.id }}">
+
+            {% for product in products %}
+              <article
+                class="apex-catalog-product apc-card"
+                data-title="{{ product.title | escape }}"
+                data-price="{{ product.price }}"
+                data-type="{{ product.type | escape }}"
+                data-vendor="{{ product.vendor | escape }}"
+                data-tags="{{ product.tags | join: '||' | escape }}"
+              >
+                <div class="apex-catalog-product__image">
+
+                  <!-- IMPORTANT: WISHLIST IS NOT INSIDE THE PRODUCT LINK -->
+                  <button
+                    type="button"
+                    class="apex-product-card__wishlist apc-card__wish"
+                    aria-label="Add {{ product.title | escape }} to wishlist"
+                    aria-pressed="false"
+                    data-wishlist-product-handle="{{ product.handle }}"
+                  >
+                    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  </button>
+
+                  <a href="{{ product.url }}" class="apex-catalog-product__image-link">
+                    {% if product.featured_image %}
+                      {{
+                        product.featured_image
+                        | image_url: width: 900
+                        | image_tag:
+                          loading: 'lazy',
+                          class: 'apex-catalog-product__img apc-card__img',
+                          alt: product.title
+                      }}
+                    {% else %}
+                      <div class="apex-catalog-product__placeholder">No image</div>
+                    {% endif %}
+                  </a>
+                </div>
+
+                <div class="apex-catalog-product__content">
+                  {% if product.vendor != blank %}
+                    <div class="apex-catalog-product__vendor">{{ product.vendor }}</div>
+                  {% endif %}
+
+                  <h3 class="apex-catalog-product__title">
+                    <a href="{{ product.url }}" class="apc-card__title">{{ product.title }}</a>
+                  </h3>
+
+                  <div class="apex-catalog-product__stock">
+                    {% if product.available %}
+                      <span class="is-in-stock">In stock</span>
+                    {% else %}
+                      <span class="is-sold-out">Sold out</span>
+                    {% endif %}
+                  </div>
+
+                  <div class="apex-catalog-product__bottom">
+                    <div class="apex-catalog-product__price apc-card__price">{{ product.price | money }}</div>
+
+                    {% if product.available %}
+                      <form method="post" action="{{ routes.cart_add_url }}">
+                        <input type="hidden" name="id" value="{{ product.selected_or_first_available_variant.id }}">
+                        <button type="submit" class="apex-add-button">Add</button>
+                      </form>
+                    {% else %}
+                      <button class="apex-add-button" disabled>Sold out</button>
+                    {% endif %}
+                  </div>
+                </div>
+              </article>
+            {% endfor %}
+
+          </div>
+
+          <div class="apex-no-results" id="ApexNoResults-{{ section.id }}" hidden>
+            No products found.
+          </div>
+        {% else %}
+          <div class="apex-catalog__empty">
+            <h3>Select a collection</h3>
+            <p>Select your product collection in the Theme Editor.</p>
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+.apex-catalog,
+.apex-catalog * { box-sizing: border-box; }
+
+.apex-catalog {
+  background: #f7f6f2;
+  color: #20262e;
+  padding: 42px 0 80px;
+}
+
+.apex-catalog__container {
+  width: min(100% - 64px, 1600px);
+  margin: 0 auto;
+}
+
+.apex-catalog__breadcrumb {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 22px;
+  font-size: 13px;
+  color: #777f89;
+}
+
+.apex-catalog__breadcrumb a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.apex-catalog__top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 20px;
+}
+
+.apex-catalog__title {
+  margin: 0;
+  font-size: 42px;
+  line-height: 1;
+  font-weight: 750;
+  letter-spacing: -1.8px;
+}
+
+.apex-catalog__controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.apex-catalog__count {
+  font-size: 13px;
+  color: #69717b;
+}
+
+.apex-catalog__sort {
+  width: 150px;
+  height: 48px;
+  padding: 0 16px;
+  border: 1px solid #d9dce0;
+  border-radius: 25px;
+  background: #fff;
+  color: #4d5661;
+  outline: none;
+  cursor: pointer;
+}
+
+.apex-catalog__layout {
+  display: grid;
+  grid-template-columns: 190px minmax(0, 1fr);
+  gap: 28px;
+  align-items: start;
+}
+
+.apex-filter-card {
+  position: relative;
+  background: #fff;
+  border: 1px solid #e1e2df;
+  border-radius: 18px;
+  padding: 18px 12px 16px;
+  box-shadow: 0 4px 20px rgba(20, 25, 35, .03);
+}
+
+.apex-filter-heading {
+  padding: 0 10px;
+  margin-bottom: 12px;
+  color: #747b83;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.apex-filter-row {
+  width: 100%;
+  min-height: 39px;
+  padding: 8px 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 22px;
+  background: transparent;
+  color: #5b646e;
+  font-size: 13px;
+  font-weight: 500;
+  text-align: left;
+  cursor: pointer;
+}
+
+.apex-filter-row:hover { background: #f4f4f1; }
+
+.apex-filter-row--category {
+  margin-bottom: 3px;
+}
+
+.apex-filter-row--category.is-active {
+  background: #1f315f;
+  color: #fff;
+  font-weight: 700;
+}
+
+.apex-filter-arrow {
+  font-size: 16px;
+  line-height: 1;
+  transition: transform .2s ease;
+}
+
+.apex-filter-trigger[aria-expanded="true"] .apex-filter-arrow {
+  transform: rotate(90deg);
+}
+
+.apex-filter-item { position: relative; }
+
+.apex-filter-popup {
+  position: absolute;
+  top: 0;
+  left: calc(100% + 14px);
+  width: 290px;
+  max-height: 420px;
+  overflow-y: auto;
+  padding: 22px;
+  background: #fff;
+  border: 1px solid #e2e3df;
+  border-radius: 18px;
+  box-shadow: 0 18px 45px rgba(30, 35, 45, .12);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateX(-8px);
+  transition: .2s ease;
+  z-index: 50;
+}
+
+.apex-filter-popup.is-open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(0);
+}
+
+.apex-filter-popup__title {
+  margin-bottom: 16px;
+  color: #737b85;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+}
+
+.apex-filter-empty {
+  color: #777f89;
+  font-size: 12px;
+  line-height: 1.6;
+}
+
+.apex-filter-empty strong { color: #1f315f; }
+
+.apex-checkbox {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 0;
+  color: #4d5661;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.apex-checkbox input {
+  position: absolute;
+  opacity: 0;
+}
+
+.apex-checkbox-box {
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  border: 1px solid #c9cdd2;
+  border-radius: 2px;
+  background: #fff;
+}
+
+.apex-checkbox input:checked + .apex-checkbox-box {
+  background: #1f315f;
+  border-color: #1f315f;
+}
+
+.apex-checkbox input:checked + .apex-checkbox-box::after {
+  content: "✓";
+  display: block;
+  color: #fff;
+  font-size: 11px;
+  line-height: 13px;
+  text-align: center;
+}
+
+.apex-clear-filters {
+  width: 100%;
+  margin-top: 12px;
+  padding: 10px;
+  border: 0;
+  background: transparent;
+  color: #1f315f;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.apex-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.apex-catalog-product {
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #e0e2e4;
+  border-radius: 20px;
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.apex-catalog-product:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 35px rgba(30, 35, 45, .09);
+}
+
+.apex-catalog-product__image {
+  position: relative;
+  aspect-ratio: 1 / .76;
+  overflow: hidden;
+  background: repeating-linear-gradient(45deg, #f4f3ef, #f4f3ef 14px, #ecebe7 14px, #ecebe7 28px);
+}
+
+.apex-catalog-product__image-link {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.apex-catalog-product__img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  transition: transform .4s ease;
+}
+
+.apex-catalog-product:hover .apex-catalog-product__img {
+  transform: scale(1.04);
+}
+
+.apex-catalog-product__placeholder {
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  color: #858c94;
+  font-size: 12px;
+}
+
+.apex-catalog-product__content { padding: 17px; }
+
+.apex-catalog-product__vendor {
+  margin-bottom: 8px;
+  color: #858c95;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.4px;
+  text-transform: uppercase;
+}
+
+.apex-catalog-product__title {
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.45;
+  font-weight: 700;
+}
+
+.apex-catalog-product__title a {
+  color: #3c4651;
+  text-decoration: none;
+}
+
+.apex-catalog-product__stock {
+  margin-top: 10px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.is-in-stock { color: #4f805f; }
+.is-sold-out { color: #b85050; }
+
+.apex-catalog-product__bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.apex-catalog-product__price {
+  color: #242b34;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.apex-add-button {
+  min-width: 56px;
+  height: 38px;
+  padding: 0 15px;
+  border: 1px solid #d6d9dd;
+  border-radius: 22px;
+  background: #fff;
+  color: #47515b;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: .2s ease;
+}
+
+.apex-add-button:hover {
+  background: #1f315f;
+  border-color: #1f315f;
+  color: #fff;
+}
+
+.apex-no-results {
+  padding: 60px;
+  text-align: center;
+  color: #707781;
+}
+
+.apc-card__wish {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 20;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 1px solid #e2e2e2;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  color: #07182B;
+  cursor: pointer;
+  transition: transform .2s ease, background .2s ease, color .2s ease;
+}
+
+.apc-card__wish:hover { transform: scale(1.06); }
+
+.apc-card__wish svg {
+  width: 22px;
+  height: 22px;
+}
+
+.apc-card__wish.is-added {
+  background: White;
+  border-color: #1f315f;
+  color: #1B2A5B;
+}
+
+.apc-card__wish.is-added svg { fill: currentColor; }
+
+@media (max-width: 1200px) {
+  .apex-product-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 900px) {
+  .apex-catalog__layout { grid-template-columns: 1fr; }
+  .apex-filter-popup {
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-top: 6px;
+  }
+}
+
+@media (max-width: 749px) {
+  .apex-catalog { padding: 25px 0 50px; }
+  .apex-catalog__container { width: min(100% - 28px, 1600px); }
+  .apex-catalog__top { align-items: flex-start; flex-direction: column; }
+  .apex-catalog__controls { width: 100%; justify-content: space-between; }
+  .apex-product-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+  .apex-catalog-product__content { padding: 13px; }
+}
+/* =========================================
+   CATEGORY + FILTER ACCORDION
+========================================= */
+
+.apex-category-list {
+  display: grid;
+  gap: 4px;
+}
+
+.apex-filter-row--category {
+  margin: 0;
+}
+
+.apex-filter-row--category.is-active {
+  background: #1f315f;
+  color: #fff;
+  font-weight: 700;
+}
+
+.apex-filter-row--category .apex-filter-arrow {
+  transform: rotate(180deg);
+}
+
+.apex-filter-row--category[aria-expanded="true"] .apex-filter-arrow {
+  transform: rotate(0deg);
+}
+
+.apex-category-content {
+  display: block;
+  margin-top: 4px;
+}
+
+.apex-category-content.is-collapsed {
+  display: none;
+}
+
+.apex-filter-item[hidden] {
+  display: none !important;
+}
+
+.apex-filter-item.is-active > .apex-filter-row {
+  background: #1f315f;
+  color: #fff;
+  font-weight: 700;
+}
+
+.apex-filter-item > .apex-filter-popup {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.apex-filter-item.is-open > .apex-filter-popup {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateX(0);
+}
+
+.apex-filter-item.is-open > .apex-filter-row .apex-filter-arrow {
+  transform: rotate(90deg);
+}
+
+@media (max-width: 900px) {
+  .apex-filter-item > .apex-filter-popup {
+    display: none;
+    position: relative;
+    top: auto;
+    left: auto;
+    width: 100%;
+    margin-top: 6px;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: none;
+  }
+
+  .apex-filter-item.is-open > .apex-filter-popup {
+    display: block;
+  }
+}
+</style>
+
+<script>
+(function() {
+  const section = document.getElementById('ApexCatalog-{{ section.id }}');
+  if (!section) return;
+
+  const products = Array.from(section.querySelectorAll('.apex-catalog-product'));
+  const count = section.querySelector('#ApexVisibleCount-{{ section.id }}');
+  const noResults = section.querySelector('#ApexNoResults-{{ section.id }}');
+  const title = section.querySelector('#ApexCatalogTitle-{{ section.id }}');
+  const defaultHeading = {{ section.settings.heading | json }};
+
+  const categoryButtons = Array.from(section.querySelectorAll('.apex-category-toggle'));
+  const categoryContent = section.querySelector('[data-apex-category-content]');
+  const filterItems = Array.from(section.querySelectorAll('.apex-filter-item[data-filter-key]'));
+  const triggers = Array.from(section.querySelectorAll('.apex-filter-trigger'));
+
+  function closeAllFilters() {
+    filterItems.forEach(function(item) {
+      item.classList.remove('is-open', 'is-active');
+      const trigger = item.querySelector('.apex-filter-trigger');
+      if (trigger) trigger.setAttribute('aria-expanded', 'false');
+    });
+  }
+
+ function setCategory(button, allowCollapse) {
+  if (!button || !categoryContent) return;
+
+  const alreadyActive = button.classList.contains('is-active');
+  const isCollapsed = categoryContent.classList.contains('is-collapsed');
+
+  /* =========================================
+     SAME CATEGORY CLICK = CLOSE SUBCATEGORIES
+  ========================================= */
+
+  if (allowCollapse && alreadyActive && !isCollapsed) {
+    closeAllFilters();
+
+    categoryContent.classList.add('is-collapsed');
+
+    button.setAttribute('aria-expanded', 'false');
+
+    return;
+  }
+
+
+  /* =========================================
+     ACTIVE CATEGORY
+  ========================================= */
+
+  categoryButtons.forEach(function(item) {
+    const isCurrentCategory = item === button;
+
+    item.classList.toggle(
+      'is-active',
+      isCurrentCategory
+    );
+
+    item.setAttribute(
+      'aria-expanded',
+      isCurrentCategory ? 'true' : 'false'
+    );
+  });
+
+
+  /* =========================================
+     MOVE SUBCATEGORIES DIRECTLY BELOW
+     THE ACTIVE CATEGORY
+  ========================================= */
+
+  button.insertAdjacentElement(
+    'afterend',
+    categoryContent
+  );
+
+
+  /* =========================================
+     OPEN CATEGORY CONTENT
+  ========================================= */
+
+  categoryContent.classList.remove(
+    'is-collapsed'
+  );
+
+
+  /* =========================================
+     CLOSE OPEN FILTER POPUPS
+  ========================================= */
+
+  closeAllFilters();
+
+
+  /* =========================================
+     GET FILTERS FOR CURRENT CATEGORY
+  ========================================= */
+
+  const keys = String(
+    button.dataset.categoryFilters || ''
+  )
+    .split(',')
+    .map(function(key) {
+      return key.trim().toLowerCase();
+    })
+    .filter(Boolean);
+
+
+  /* =========================================
+     SHOW ONLY CURRENT CATEGORY FILTERS
+  ========================================= */
+
+  filterItems.forEach(function(item) {
+
+    const key = String(
+      item.dataset.filterKey || ''
+    ).toLowerCase();
+
+
+    const isCustomFilter =
+      key.indexOf('custom-') === 0;
+
+
+    if (isCustomFilter) {
+
+      item.hidden = false;
+
+    } else {
+
+      item.hidden =
+        keys.length
+          ? !keys.includes(key)
+          : false;
+
+    }
+
+  });
+
+
+  /* =========================================
+     CHANGE PAGE TITLE
+  ========================================= */
+
+  if (title) {
+
+    title.textContent =
+      button.dataset.categoryTitle ||
+      defaultHeading;
+
+  }
+
+}
+
+  categoryButtons.forEach(function(button) {
+    button.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+      setCategory(button, true);
+    });
+  });
+
+  const firstCategory = categoryButtons.find(function(button) {
+    return button.classList.contains('is-active');
+  }) || categoryButtons[0];
+
+  if (firstCategory) setCategory(firstCategory, false);
+
+  triggers.forEach(function(trigger) {
+    trigger.addEventListener('click', function(event) {
+      event.preventDefault();
+      event.stopPropagation();
+
+      const currentItem = trigger.closest('.apex-filter-item');
+      if (!currentItem || currentItem.hidden) return;
+
+      const isOpen = currentItem.classList.contains('is-open');
+      closeAllFilters();
+
+      if (!isOpen) {
+        currentItem.classList.add('is-open', 'is-active');
+        trigger.setAttribute('aria-expanded', 'true');
+      }
+    });
+  });
+
+  document.addEventListener('click', function(event) {
+    if (!section.contains(event.target)) return;
+    if (event.target.closest('.apex-filter-popup, .apex-filter-trigger, .apex-category-toggle')) return;
+    closeAllFilters();
+  });
+
+  /* =========================================
+     PRODUCT FILTERING
+  ========================================= */
+
+  function normalize(value) {
+
+    return String(value || '')
+      .trim()
+      .toLowerCase();
+
+  }
+
+
+  function getSelectedGroups() {
+
+    const selectedGroups = {};
+
+
+    section.querySelectorAll(
+      '.apex-filter-checkbox:checked'
+    ).forEach(function(input) {
+
+      const group = input.dataset.filterGroup;
+
+      const value = normalize(
+        input.value
+      );
+
+
+      if (!group) return;
+
+
+      if (!selectedGroups[group]) {
+
+        selectedGroups[group] = [];
+
+      }
+
+
+      selectedGroups[group].push(value);
+
+    });
+
+
+    return selectedGroups;
+
+  }
+
+
+  function filterProducts() {
+
+    const selectedGroups =
+      getSelectedGroups();
+
+
+    const selectedPrices = Array.from(
+      section.querySelectorAll(
+        '.apex-price-filter:checked'
+      )
+    );
+
+
+    let visibleCount = 0;
+
+
+    products.forEach(function(product) {
+
+      const productType = normalize(
+        product.dataset.type
+      );
+
+      const productVendor = normalize(
+        product.dataset.vendor
+      );
+
+
+      const productTags = String(
+        product.dataset.tags || ''
+      )
+        .split('||')
+        .map(normalize)
+        .filter(Boolean);
+
+
+      const price = parseInt(
+        product.dataset.price || '0',
+        10
+      );
+
+
+      let show = true;
+
+
+      /* =========================
+         FILTER GROUPS
+      ========================= */
+
+      Object.keys(selectedGroups).forEach(
+        function(group) {
+
+          if (!show) return;
+
+
+          const selectedValues =
+            selectedGroups[group];
+
+
+          let match = false;
+
+
+          /* TYPE */
+
+          if (group === 'type') {
+
+            match =
+              selectedValues.includes(
+                productType
+              );
+
+          }
+
+
+          /* BRAND */
+
+          else if (group === 'vendor') {
+
+            match =
+              selectedValues.includes(
+                productVendor
+              );
+
+          }
+
+
+          /*
+            SIZE
+            MATERIAL
+            SUSPENSION
+            ENGINE
+            EXHAUST
+            WHEELS
+            CUSTOM TAG FILTERS
+          */
+
+          else {
+
+            match = selectedValues.some(
+              function(value) {
+
+                return productTags.includes(
+                  value
+                );
+
+              }
+            );
+
+          }
+
+
+          if (!match) {
+
+            show = false;
+
+          }
+
+        }
+      );
+
+
+      /* =========================
+         PRICE FILTER
+      ========================= */
+
+      if (
+        show &&
+        selectedPrices.length
+      ) {
+
+        const priceMatch =
+          selectedPrices.some(
+            function(filter) {
+
+              const min = parseInt(
+                filter.dataset.min || '0',
+                10
+              );
+
+              const max = parseInt(
+                filter.dataset.max ||
+                '999999999999',
+                10
+              );
+
+
+              return (
+                price >= min &&
+                price <= max
+              );
+
+            }
+          );
+
+
+        if (!priceMatch) {
+
+          show = false;
+
+        }
+
+      }
+
+
+      /* =========================
+         SHOW / HIDE PRODUCT
+      ========================= */
+
+      product.style.display =
+        show ? '' : 'none';
+
+
+      if (show) {
+
+        visibleCount++;
+
+      }
+
+    });
+
+
+    /* UPDATE COUNT */
+
+    if (count) {
+
+      count.textContent =
+        visibleCount;
+
+    }
+
+
+    /* NO RESULTS */
+
+    if (noResults) {
+
+      noResults.hidden =
+        visibleCount !== 0;
+
+    }
+
+  }
+
+
+  /* =========================================
+     FILTER CHECKBOX EVENTS
+  ========================================= */
+
+  section.querySelectorAll(
+    '.apex-filter-checkbox, .apex-price-filter'
+  ).forEach(function(input) {
+
+    input.addEventListener(
+      'change',
+      filterProducts
+    );
+
+  });
+
+
+  /* =========================================
+     CLEAR FILTERS
+  ========================================= */
+
+  const clearButton = section.querySelector(
+    '#ApexClearFilters-{{ section.id }}'
+  );
+
+
+  if (clearButton) {
+
+    clearButton.addEventListener(
+      'click',
+      function() {
+
+        section.querySelectorAll(
+          '.apex-filter-checkbox, .apex-price-filter'
+        ).forEach(function(input) {
+
+          input.checked = false;
+
+        });
+
+
+        closeAllFilters();
+
+
+        filterProducts();
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     SORT
+  ========================================= */
+
+  const sortSelect = section.querySelector(
+    '#ApexCatalogSort-{{ section.id }}'
+  );
+
+
+  const grid = section.querySelector(
+    '#ApexProductGrid-{{ section.id }}'
+  );
+
+
+  if (sortSelect && grid) {
+
+    sortSelect.addEventListener(
+      'change',
+      function() {
+
+        const items = Array.from(
+          grid.querySelectorAll(
+            '.apex-catalog-product'
+          )
+        );
+
+
+        const value =
+          sortSelect.value;
+
+
+        if (value === 'featured') {
+
+          return;
+
+        }
+
+
+        items.sort(
+          function(a, b) {
+
+            const titleA = normalize(
+              a.dataset.title
+            );
+
+            const titleB = normalize(
+              b.dataset.title
+            );
+
+
+            const priceA = parseInt(
+              a.dataset.price || '0',
+              10
+            );
+
+            const priceB = parseInt(
+              b.dataset.price || '0',
+              10
+            );
+
+
+            if (
+              value === 'title-ascending'
+            ) {
+
+              return titleA.localeCompare(
+                titleB
+              );
+
+            }
+
+
+            if (
+              value === 'title-descending'
+            ) {
+
+              return titleB.localeCompare(
+                titleA
+              );
+
+            }
+
+
+            if (
+              value === 'price-ascending'
+            ) {
+
+              return priceA - priceB;
+
+            }
+
+
+            if (
+              value === 'price-descending'
+            ) {
+
+              return priceB - priceA;
+
+            }
+
+
+            return 0;
+
+          }
+        );
+
+
+        items.forEach(function(item) {
+
+          grid.appendChild(item);
+
+        });
+
+      }
+    );
+
+  }
+
+
+  /* =========================================
+     WISHLIST COMPATIBILITY
+     The global header wishlist owns add/remove logic.
+     It uses: apex_lab_wishlist_v1
+  ========================================= */
+
+  function syncWishlistButtons() {
+    let items = [];
+
+    try {
+      const saved = JSON.parse(
+        localStorage.getItem('apex_lab_wishlist_v1')
+      );
+
+      items = Array.isArray(saved) ? saved : [];
+    } catch (error) {
+      items = [];
+    }
+
+    const savedIds = new Set(
+      items.map(function(item) {
+        return item && item.id;
+      })
+    );
+
+    section.querySelectorAll('.apc-card__wish').forEach(function(button) {
+      const card = button.closest('.apc-card');
+      const link = card
+        ? card.querySelector('.apc-card__title')
+        : null;
+
+      if (!link || !link.href) return;
+
+      let id = '';
+
+      try {
+        id = new URL(
+          link.href,
+          window.location.origin
+        ).pathname;
+      } catch (error) {
+        return;
+      }
+
+      const isAdded = savedIds.has(id);
+
+      button.classList.toggle('is-added', isAdded);
+      button.classList.toggle('is-active', isAdded);
+      button.setAttribute(
+        'aria-pressed',
+        isAdded ? 'true' : 'false'
+      );
+      button.setAttribute(
+        'aria-label',
+        isAdded
+          ? 'Remove from wishlist'
+          : 'Add to wishlist'
+      );
+    });
+  }
+
+  window.addEventListener(
+    'apex:wishlist:change',
+    syncWishlistButtons
+  );
+
+  window.addEventListener(
+    'storage',
+    function(event) {
+      if (event.key === 'apex_lab_wishlist_v1') {
+        syncWishlistButtons();
+      }
+    }
+  );
+
+  syncWishlistButtons();
+})();
+</script>
+
+{% schema %}
+{
+  "name": "APEX Categories",
+  "tag": "section",
+  "class": "section-apex-performance-categories",
+  "settings": [
+    { "type": "text", "id": "heading", "label": "Default catalog heading", "default": "Catalog" },
+    { "type": "collection", "id": "collection", "label": "Products collection" }
+  ],
+  "blocks": [
+    {
+      "type": "category",
+      "name": "Category",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Category name", "default": "Brakes" },
+        { "type": "text", "id": "filter_keys", "label": "Filters to show (comma separated)", "default": "type,price,size,brand,material", "info": "Available built-in keys: type, price, size, brand, material, suspension, engine, exhaust, wheels. Custom tag filters remain available in every category." }
+      ]
+    },
+    {
+      "type": "tag_filter",
+      "name": "Custom tag filter",
+      "settings": [
+        { "type": "text", "id": "label", "label": "Filter label", "default": "Vehicle" },
+        { "type": "text", "id": "tag_prefix", "label": "Product tag prefix", "default": "Vehicle:" }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    { "name": "APEX Categories" }
+  ]
+}
+{% endschema %}

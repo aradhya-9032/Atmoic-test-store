@@ -1,0 +1,1078 @@
+<section
+  class="apex-faq apex-section"
+  style="
+    --faq-bg: {{ section.settings.background_color }};
+    --faq-panel: {{ section.settings.panel_background }};
+    --faq-text: {{ section.settings.text_color }};
+    --faq-muted: {{ section.settings.muted_text_color }};
+    --faq-accent: {{ section.settings.accent_color }};
+    --faq-border: {{ section.settings.border_color }};
+    --faq-width: {{ section.settings.content_width }}px;
+    --faq-top: {{ section.settings.padding_top }}px;
+    --faq-bottom: {{ section.settings.padding_bottom }}px;
+    --faq-grid-opacity: {{ section.settings.grid_opacity | divided_by: 100.0 }};
+  "
+>
+  <div class="apex-faq__grid"></div>
+
+  <div class="apex-container">
+
+    <div class="apex-faq__layout">
+
+      <!-- LEFT / INTRO -->
+      <div class="apex-faq__head apex-faq__reveal">
+
+        {% if section.settings.eyebrow != blank %}
+          <div class="apex-label">
+            <span></span>
+            {{ section.settings.eyebrow }}
+          </div>
+        {% endif %}
+
+        {% if section.settings.heading != blank %}
+          <h2 class="apex-display">
+            {{ section.settings.heading }}
+          </h2>
+        {% endif %}
+
+        {% if section.settings.copy != blank %}
+          <div class="apex-faq__copy">
+            {{ section.settings.copy }}
+          </div>
+        {% endif %}
+
+        <div class="apex-faq__side-meta">
+          <span>{{ section.settings.meta_label }}</span>
+          <strong>{{ section.blocks.size | prepend: '0' | slice: -2, 2 }}</strong>
+          <small>{{ section.settings.meta_suffix }}</small>
+        </div>
+
+        {% if section.settings.cta_text != blank %}
+          <a
+            href="{{ section.settings.cta_link | default: '#' }}"
+            class="apex-faq__cta"
+          >
+            <span>{{ section.settings.cta_text }}</span>
+          </a>
+        {% endif %}
+
+      </div>
+
+
+      <!-- RIGHT / FAQ LIST -->
+      <div class="apex-faq__list-wrap apex-faq__reveal">
+
+        <div class="apex-faq__list-head">
+          <span>{{ section.settings.list_label }}</span>
+          <span>{{ section.settings.list_hint }}</span>
+        </div>
+
+        <div class="apex-faq__list">
+
+          {% for block in section.blocks %}
+            <details
+              class="apex-faq__item"
+              {% if section.settings.open_first and forloop.first %}open{% endif %}
+              {{ block.shopify_attributes }}
+            >
+
+              <summary>
+                <span class="apex-faq__number">
+                  {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+                </span>
+
+                <span class="apex-faq__question">
+                  {{ block.settings.question }}
+                </span>
+
+                <span class="apex-faq__toggle" aria-hidden="true">
+                  <i></i>
+                  <i></i>
+                </span>
+              </summary>
+
+              <div class="apex-faq__answer">
+                <div class="apex-faq__answer-inner">
+                  {{ block.settings.answer }}
+                </div>
+              </div>
+
+            </details>
+          {% endfor %}
+
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+    if (!section) return;
+
+    const reveals = section.querySelectorAll('.apex-faq__reveal');
+
+    if (!('IntersectionObserver' in window)) {
+      reveals.forEach((item) => item.classList.add('is-visible'));
+    } else {
+      const observer = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          });
+        },
+        { threshold: 0.08 }
+      );
+
+      reveals.forEach((item) => observer.observe(item));
+    }
+
+    const items = section.querySelectorAll('.apex-faq__item');
+
+    items.forEach((item) => {
+      item.addEventListener('toggle', () => {
+        if (!item.open) return;
+
+        items.forEach((other) => {
+          if (other !== item && section.settings?.exclusive !== true) return;
+        });
+      });
+    });
+
+    /* Optional single-open accordion behavior */
+    {% if section.settings.single_open %}
+      items.forEach((item) => {
+        item.addEventListener('toggle', () => {
+          if (!item.open) return;
+
+          items.forEach((other) => {
+            if (other !== item) {
+              other.removeAttribute('open');
+            }
+          });
+        });
+      });
+    {% endif %}
+  })();
+</script>
+
+
+{% stylesheet %}
+
+/* ==========================================================
+   APEX LAB FAQ — PREMIUM
+========================================================== */
+
+.apex-faq {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+
+  padding:
+    var(--faq-top)
+    0
+    var(--faq-bottom);
+
+  background:
+    var(--faq-bg);
+
+  color:
+    var(--faq-text);
+}
+
+.apex-faq,
+.apex-faq * {
+  box-sizing: border-box;
+}
+
+.apex-faq__grid {
+  position: absolute;
+  inset: 0;
+
+  pointer-events: none;
+
+  opacity:
+    var(--faq-grid-opacity);
+
+  background-image:
+    linear-gradient(
+      rgba(2,101,242,.04) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(2,101,242,.04) 1px,
+      transparent 1px
+    );
+
+  background-size: 52px 52px;
+
+  mask-image:
+    linear-gradient(
+      to right,
+      black,
+      transparent 92%
+    );
+}
+
+.apex-container {
+  position: relative;
+  z-index: 2;
+
+  width:
+    min(
+      var(--faq-width),
+      calc(100% - 48px)
+    );
+
+  margin: 0 auto;
+}
+
+/* ==========================================================
+   LAYOUT
+========================================================== */
+
+.apex-faq__layout {
+  display: grid;
+
+  grid-template-columns:
+    minmax(390px, .85fr)
+    minmax(520px, 1.15fr);
+
+  gap: 65px;
+
+  align-items: start;
+}
+
+/* ==========================================================
+   LEFT
+========================================================== */
+
+.apex-faq__head {
+  position: sticky;
+  top: 30px;
+
+  padding:
+    10px 0 0;
+}
+
+.apex-label {
+  display: flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 16px;
+
+  color:
+    var(--faq-accent);
+
+  font-size: 9px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: .18em;
+
+  text-transform: uppercase;
+}
+
+.apex-label span {
+  width: 26px;
+  height: 1px;
+
+  background:
+    currentColor;
+}
+
+.apex-display {
+  margin: 0;
+
+  max-width: 560px;
+
+  font-family:
+    "Russo One",
+    sans-serif !important;
+
+  font-size:
+    clamp(
+      38px,
+      4.4vw,
+      62px
+    );
+
+  line-height: .94;
+
+  font-weight: 400;
+
+  letter-spacing: -.025em;
+
+  text-transform: uppercase;
+
+  white-space: normal;
+
+  color:
+    var(--faq-text) !important;
+}
+
+.apex-faq__copy {
+  max-width: 420px;
+
+  margin-top: 22px;
+
+  color:
+    var(--faq-muted);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+}
+
+.apex-faq__copy p {
+  margin: 0;
+}
+
+.apex-faq__side-meta {
+  display: grid;
+
+  grid-template-columns:
+    auto
+    auto;
+
+  column-gap: 10px;
+  align-items: end;
+
+  width: fit-content;
+
+  margin-top: 34px;
+
+  padding:
+    16px 0 14px;
+
+  border-top:
+    1px solid
+    var(--faq-border);
+
+  border-bottom:
+    1px solid
+    var(--faq-border);
+}
+
+.apex-faq__side-meta span {
+  grid-column: 1 / -1;
+
+  margin-bottom: 5px;
+
+  color:
+    var(--faq-muted);
+
+  font-size: 8px;
+
+  font-weight: 800;
+
+  letter-spacing: .13em;
+
+  text-transform: uppercase;
+}
+
+.apex-faq__side-meta strong {
+  color:
+    var(--faq-accent);
+
+  font-size: 42px;
+
+  line-height: .85;
+
+  font-weight: 800;
+
+  letter-spacing: -.05em;
+}
+
+.apex-faq__side-meta small {
+  align-self: end;
+
+  padding-bottom: 3px;
+
+  color:
+    var(--faq-muted);
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: .11em;
+
+  text-transform: uppercase;
+}
+
+.apex-faq__cta {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  gap: 20px;
+
+  margin-top: 27px;
+
+  min-height: 46px;
+
+  padding:
+    0 17px;
+
+  border:
+    1px solid
+    var(--faq-accent);
+
+  background:
+    var(--faq-accent);
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: .13em;
+
+  text-transform: uppercase;
+
+  transition:
+    background .25s ease,
+    color .25s ease,
+    transform .25s ease;
+}
+
+.apex-faq__cta b {
+  font-size: 16px;
+
+  font-weight: 400;
+
+  transition:
+    transform .25s ease;
+}
+
+.apex-faq__cta:hover {
+  background:
+    #111;
+
+  color:#FFFFFF;
+
+  transform:
+    translateY(-3px);
+}
+
+.apex-faq__cta:hover b {
+  transform:
+    translate(
+      3px,
+      -3px
+    );
+}
+
+/* ==========================================================
+   FAQ LIST
+========================================================== */
+
+.apex-faq__list-wrap {
+  min-width: 0;
+
+  padding-top:
+    3px;
+}
+
+.apex-faq__list-head {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding:
+    0 0 12px;
+
+  color:
+    var(--faq-muted);
+
+  font-size: 8px;
+
+  line-height: 1;
+
+  font-weight: 800;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+}
+
+.apex-faq__list-head span:first-child {
+  color:
+    var(--faq-accent);
+}
+
+.apex-faq__list {
+  border-top:
+    1px solid
+    var(--faq-border);
+}
+
+.apex-faq__item {
+  position: relative;
+
+  border-bottom:
+    1px solid
+    var(--faq-border);
+
+  background:
+    transparent;
+}
+
+.apex-faq__item::before {
+  content: "";
+
+  position: absolute;
+
+  left: 0;
+  top: 0;
+
+  width: 2px;
+  height: 100%;
+
+  background:
+    var(--faq-accent);
+
+  transform:
+    scaleY(0);
+
+  transform-origin:
+    center;
+
+  transition:
+    transform .3s ease;
+}
+
+.apex-faq__item[open]::before {
+  transform:
+    scaleY(1);
+}
+
+.apex-faq__item summary {
+  list-style: none;
+
+  cursor: pointer;
+
+  display: grid;
+
+  grid-template-columns:
+    40px
+    minmax(0,1fr)
+    32px;
+
+  align-items: center;
+
+  gap: 17px;
+
+  min-height: 78px;
+
+  padding:
+    0 18px;
+
+  user-select: none;
+
+  transition:
+    background .25s ease;
+}
+
+.apex-faq__item summary::-webkit-details-marker {
+  display: none;
+}
+
+.apex-faq__item summary:hover {
+  background:
+    rgba(2,101,242,.035);
+}
+
+.apex-faq__number {
+  color:
+    var(--faq-accent);
+
+  font-size: 9px;
+
+  font-weight: 800;
+
+  letter-spacing: .14em;
+}
+
+.apex-faq__question {
+  color:
+    var(--faq-text);
+
+  font-size: 14px;
+
+  line-height: 1.35;
+
+  font-weight: 750;
+
+  transition:
+    color .25s ease;
+}
+
+.apex-faq__item[open]
+.apex-faq__question {
+  color:
+    var(--faq-accent);
+}
+
+.apex-faq__toggle {
+  position: relative;
+
+  width: 28px;
+  height: 28px;
+
+  display: grid;
+
+  place-items: center;
+
+  border:
+    1px solid
+    var(--faq-border);
+
+  background:
+    var(--faq-panel);
+
+  transition:
+    border-color .25s ease,
+    background .25s ease;
+}
+
+.apex-faq__toggle i {
+  position: absolute;
+
+  width: 10px;
+  height: 1px;
+
+  background:
+    currentColor;
+
+  transition:
+    transform .25s ease;
+}
+
+.apex-faq__toggle i:last-child {
+  transform:
+    rotate(90deg);
+}
+
+.apex-faq__item[open]
+.apex-faq__toggle {
+  border-color:
+    var(--faq-accent);
+
+  background:
+    var(--faq-accent);
+
+  color:
+    #ffffff;
+}
+
+.apex-faq__item[open]
+.apex-faq__toggle i:last-child {
+  transform:
+    rotate(0);
+}
+
+.apex-faq__answer {
+  display: grid;
+
+  grid-template-rows:
+    0fr;
+
+  transition:
+    grid-template-rows .35s ease;
+}
+
+.apex-faq__item[open]
+.apex-faq__answer {
+  grid-template-rows:
+    1fr;
+}
+
+.apex-faq__answer-inner {
+  min-height: 0;
+
+  overflow: hidden;
+
+  padding:
+    0 72px 0 75px;
+
+  color:
+    var(--faq-muted);
+
+  font-size: 13px;
+
+  line-height: 1.8;
+
+  opacity: 0;
+
+  transition:
+    padding .35s ease,
+    opacity .28s ease;
+}
+
+.apex-faq__item[open]
+.apex-faq__answer-inner {
+  padding:
+    0 72px 26px 75px;
+
+  opacity: 1;
+}
+
+.apex-faq__answer-inner p {
+  margin: 0;
+}
+
+/* ==========================================================
+   REVEAL
+========================================================== */
+
+.apex-faq__reveal {
+  opacity: 0;
+
+  transform:
+    translateY(22px);
+
+  transition:
+    opacity .75s ease,
+    transform .75s cubic-bezier(.22,.61,.36,1);
+}
+
+.apex-faq__reveal.is-visible {
+  opacity: 1;
+
+  transform: none;
+}
+
+/* ==========================================================
+   TABLET
+========================================================== */
+
+@media screen and (max-width: 989px) {
+
+  .apex-faq__layout {
+    grid-template-columns:
+      1fr;
+
+    gap: 45px;
+  }
+
+  .apex-faq__head {
+    position: relative;
+    top: auto;
+    max-width: 720px;
+  }
+
+  .apex-display {
+    max-width: 720px;
+  }
+
+  .apex-faq__copy {
+    max-width: 650px;
+  }
+}
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media screen and (max-width: 749px) {
+
+  .apex-faq {
+    padding:
+      52px 0
+      58px;
+  }
+
+  .apex-container {
+    width:
+      calc(100% - 28px);
+  }
+
+  .apex-display {
+    font-size:
+      36px;
+  }
+
+  .apex-faq__copy {
+    margin-top: 17px;
+    font-size: 12px;
+  }
+
+  .apex-faq__side-meta {
+    margin-top: 25px;
+  }
+
+  .apex-faq__list-head {
+    font-size: 7px;
+  }
+
+  .apex-faq__item summary {
+    grid-template-columns:
+      28px
+      minmax(0,1fr)
+      30px;
+
+    gap: 10px;
+
+    min-height: 70px;
+
+    padding:
+      0 10px;
+  }
+
+  .apex-faq__number {
+    font-size: 8px;
+  }
+
+  .apex-faq__question {
+    font-size: 12px;
+  }
+
+  .apex-faq__answer-inner {
+    padding:
+      0 40px 0 48px;
+
+    font-size: 12px;
+  }
+
+  .apex-faq__item[open]
+  .apex-faq__answer-inner {
+    padding:
+      0 40px 21px 48px;
+  }
+
+  .apex-faq__cta {
+    width:
+      100%;
+  }
+}
+
+{% endstylesheet %}
+
+
+{% schema %}
+{
+  "name": "APEX FAQ",
+  "settings": [
+    {
+      "type": "header",
+      "content": "Content"
+    },
+    {
+      "type": "text",
+      "id": "eyebrow",
+      "label": "Eyebrow",
+      "default": "07 / FREQUENTLY ASKED"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "label": "Heading",
+      "default": "QUESTIONS, ANSWERED."
+    },
+    {
+      "type": "richtext",
+      "id": "copy",
+      "label": "Copy",
+      "default": "<p>Clear answers on authenticity, warranty, fitment, ordering and performance parts.</p>"
+    },
+    {
+      "type": "text",
+      "id": "meta_label",
+      "label": "FAQ count label",
+      "default": "QUESTIONS COVERED"
+    },
+    {
+      "type": "text",
+      "id": "meta_suffix",
+      "label": "FAQ count suffix",
+      "default": "IN THIS SECTION"
+    },
+    {
+      "type": "text",
+      "id": "list_label",
+      "label": "List label",
+      "default": "FAQ / KNOWLEDGE BASE"
+    },
+    {
+      "type": "text",
+      "id": "list_hint",
+      "label": "List hint",
+      "default": "SELECT TO EXPAND"
+    },
+    {
+      "type": "text",
+      "id": "cta_text",
+      "label": "CTA text",
+      "default": "CONTACT OUR TEAM"
+    },
+    {
+      "type": "url",
+      "id": "cta_link",
+      "label": "CTA link"
+    },
+
+    {
+      "type": "header",
+      "content": "Accordion"
+    },
+    {
+      "type": "checkbox",
+      "id": "open_first",
+      "label": "Open first FAQ item",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "single_open",
+      "label": "Allow only one item open at a time",
+      "default": true
+    },
+
+    {
+      "type": "header",
+      "content": "Colors"
+    },
+    {
+      "type": "color",
+      "id": "background_color",
+      "label": "Section background",
+      "default": "#F7F9FC"
+    },
+    {
+      "type": "color",
+      "id": "panel_background",
+      "label": "FAQ control background",
+      "default": "#FFFFFF"
+    },
+    {
+      "type": "color",
+      "id": "text_color",
+      "label": "Text color",
+      "default": "#07182B"
+    },
+    {
+      "type": "color",
+      "id": "muted_text_color",
+      "label": "Muted text",
+      "default": "#657184"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "APEX accent",
+      "default": "#0265F2"
+    },
+    {
+      "type": "color",
+      "id": "border_color",
+      "label": "Border color",
+      "default": "#D8DFEA"
+    },
+
+    {
+      "type": "header",
+      "content": "Layout"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content width",
+      "min": 1000,
+      "max": 1500,
+      "step": 20,
+      "unit": "px",
+      "default": 1240
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "label": "Top padding",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "label": "Bottom padding",
+      "min": 40,
+      "max": 120,
+      "step": 5,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "range",
+      "id": "grid_opacity",
+      "label": "Technical grid opacity",
+      "min": 0,
+      "max": 100,
+      "step": 5,
+      "unit": "%",
+      "default": 20
+    }
+  ],
+
+  "blocks": [
+    {
+      "type": "faq",
+      "name": "FAQ item",
+      "settings": [
+        {
+          "type": "text",
+          "id": "question",
+          "label": "Question",
+          "default": "Are your performance parts genuine?"
+        },
+        {
+          "type": "richtext",
+          "id": "answer",
+          "label": "Answer",
+          "default": "<p>Yes. APEX LAB prioritizes genuine parts and authentic brands selected around performance and reliability.</p>"
+        }
+      ]
+    }
+  ],
+
+  "presets": [
+    {
+      "name": "APEX FAQ",
+      "blocks": [
+        {
+          "type": "faq"
+        },
+        {
+          "type": "faq"
+        },
+        {
+          "type": "faq"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

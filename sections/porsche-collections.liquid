@@ -3,46 +3,140 @@
   style="
     --section-height: {{ section.settings.section_height }}px;
     --overlay-opacity: {{ section.settings.overlay_opacity | divided_by: 100.0 }};
+    --accent-color: {{ section.settings.accent_color }};
+    --content-width: {{ section.settings.content_width }}px;
+    --card-height: {{ section.settings.card_height }}px;
+    --card-gap: {{ section.settings.card_gap }}px;
   "
 >
   {% if section.settings.background_image != blank %}
-    <div
-      class="porsche-collections__background"
-      style="background-image: url('{{ section.settings.background_image | image_url: width: 2400 }}');"
-    ></div>
+    <div class="porsche-collections__background">
+      {{
+        section.settings.background_image
+        | image_url: width: 2400
+        | image_tag:
+          loading: 'lazy',
+          widths: '900,1200,1600,2000,2400',
+          class: 'porsche-collections__background-image'
+      }}
+    </div>
   {% endif %}
 
+  <div class="porsche-collections__base"></div>
   <div class="porsche-collections__overlay"></div>
+  <div class="porsche-collections__grid-lines"></div>
 
   <div class="porsche-collections__content">
 
     {% if section.settings.heading != blank %}
-      <h2 class="porsche-collections__heading">
-        {{ section.settings.heading }}
-      </h2>
+      <div class="porsche-collections__header">
+
+        <div class="porsche-collections__heading-wrap">
+
+          {% if section.settings.kicker != blank %}
+            <div class="porsche-collections__kicker">
+              <span></span>
+              {{ section.settings.kicker }}
+            </div>
+          {% endif %}
+
+          <h2 class="porsche-collections__heading">
+            {{ section.settings.heading }}
+          </h2>
+
+          {% if section.settings.accent_heading != blank %}
+            <h3 class="porsche-collections__accent-heading">
+              {{ section.settings.accent_heading }}
+            </h3>
+          {% endif %}
+
+        </div>
+
+        {% if section.settings.description != blank %}
+          <div class="porsche-collections__description">
+            {{ section.settings.description }}
+          </div>
+        {% endif %}
+
+      </div>
     {% endif %}
+
 
     <div class="porsche-collections__grid">
 
       {% for block in section.blocks %}
+
         <a
-          href="{{ block.settings.link }}"
+          href="{{ block.settings.link | default: '#' }}"
           class="porsche-collections__card"
           {{ block.shopify_attributes }}
         >
 
-          <span class="porsche-collections__red-square"></span>
+          {% if block.settings.image != blank %}
+            <div class="porsche-collections__card-media">
 
-          <h3 class="porsche-collections__title">
-            {{ block.settings.title }}
-          </h3>
+              {{
+                block.settings.image
+                | image_url: width: 1200
+                | image_tag:
+                  loading: 'lazy',
+                  widths: '400,700,1000,1200',
+                  class: 'porsche-collections__card-image'
+              }}
 
-          <span class="porsche-collections__link">
-            {{ block.settings.link_text }}
-            <span class="arrow"> &gt; </span>
-          </span>
+            </div>
+          {% endif %}
+
+          <div class="porsche-collections__card-overlay"></div>
+
+          <div class="porsche-collections__card-content">
+
+            <div class="porsche-collections__card-top">
+
+              <span class="porsche-collections__card-number">
+                {{ forloop.index | prepend: '0' | slice: -2, 2 }}
+              </span>
+
+              {% if block.settings.label != blank %}
+                <span class="porsche-collections__card-label">
+                  {{ block.settings.label }}
+                </span>
+              {% endif %}
+
+            </div>
+
+
+            <div class="porsche-collections__card-bottom">
+
+              <div class="porsche-collections__card-copy">
+
+                <h3 class="porsche-collections__title">
+                  {{ block.settings.title }}
+                </h3>
+
+                {% if block.settings.subtitle != blank %}
+                  <p class="porsche-collections__subtitle">
+                    {{ block.settings.subtitle }}
+                  </p>
+                {% endif %}
+
+                <span class="porsche-collections__link">
+                  {{ block.settings.link_text }}
+                </span>
+
+              </div>
+
+
+              <span class="porsche-collections__arrow">
+                ↗
+              </span>
+
+            </div>
+
+          </div>
 
         </a>
+
       {% endfor %}
 
     </div>
@@ -50,210 +144,882 @@
   </div>
 </section>
 
+
+<script>
+  (() => {
+    const section = document.currentScript.previousElementSibling;
+
+    if (!section) return;
+
+    const cards = section.querySelectorAll(
+      '.porsche-collections__card'
+    );
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+
+        entries.forEach((entry) => {
+
+          if (!entry.isIntersecting) return;
+
+          cards.forEach((card, index) => {
+
+            setTimeout(() => {
+              card.classList.add('is-visible');
+            }, index * 90);
+
+          });
+
+          observer.disconnect();
+
+        });
+
+      },
+      {
+        threshold: 0.12
+      }
+    );
+
+    observer.observe(section);
+  })();
+</script>
+
+
 {% stylesheet %}
 
+/* ==========================================================
+   APEX LAB — PORSCHE COLLECTIONS
+========================================================== */
+
 .porsche-collections {
+
   position: relative;
+
   width: 100%;
-  height: var(--section-height);
-  min-height: 500px;
+
+  min-height: var(--section-height);
+
   overflow: hidden;
+
+  background: #000;
+
   color: #fff;
 }
 
+
+/* ==========================================================
+   BACKGROUND IMAGE
+========================================================== */
+
 .porsche-collections__background {
+
   position: absolute;
+
   inset: 0;
+
   z-index: 0;
 
-  background-position: center center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  overflow: hidden;
 }
 
-.porsche-collections__overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
 
-  background: rgba(0, 0, 0, var(--overlay-opacity));
-}
-
-.porsche-collections__content {
-  position: relative;
-  z-index: 2;
+.porsche-collections__background-image {
 
   width: 100%;
+
   height: 100%;
 
-  padding: 65px 5%;
+  display: block;
+
+  object-fit: cover;
+
+  object-position: center;
+
+  filter:
+    saturate(.78)
+    contrast(1.06);
+
+  transform: scale(1.01);
+
+  transition:
+    transform 1.2s
+    cubic-bezier(.22,.61,.36,1);
+}
+
+
+.porsche-collections:hover
+.porsche-collections__background-image {
+
+  transform:
+    scale(1.035);
+}
+
+
+/* ==========================================================
+   DARK BASE
+========================================================== */
+
+.porsche-collections__base {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 1;
+
+  background:
+    linear-gradient(
+      135deg,
+      #000 0%,
+      #071329 50%,
+      #000 100%
+    );
+
+  opacity: .42;
+}
+
+
+/* ==========================================================
+   OVERLAY
+========================================================== */
+
+.porsche-collections__overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  background:
+    linear-gradient(
+      90deg,
+      rgba(0,0,0,.92) 0%,
+      rgba(0,0,0,.72) 33%,
+      rgba(0,0,0,.24) 72%,
+      rgba(0,0,0,.68) 100%
+    );
+
+  opacity:
+    var(--overlay-opacity);
+}
+
+
+/* ==========================================================
+   GRID LINES
+========================================================== */
+
+.porsche-collections__grid-lines {
+
+  position: absolute;
+
+  inset: 0;
+
+  z-index: 2;
+
+  pointer-events: none;
+
+  background-image:
+    linear-gradient(
+      rgba(255,255,255,.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255,255,255,.035) 1px,
+      transparent 1px
+    );
+
+  background-size:
+    52px 52px;
+
+  mask-image:
+    linear-gradient(
+      to right,
+      #000,
+      transparent 92%
+    );
+}
+
+
+/* ==========================================================
+   MAIN CONTENT
+========================================================== */
+
+.porsche-collections__content {
+
+  position: relative;
+
+  z-index: 4;
+
+  width:
+    min(
+      var(--content-width),
+      calc(100% - 48px)
+    );
+
+  margin: 0 auto;
+
+  padding:
+    36px 0
+    40px;
+
   box-sizing: border-box;
 }
 
-.porsche-collections__heading {
-  margin: 0 0 32px;
-  font-family:"Russo One", san serif;
-  color: #fff;
 
-  font-size: 42px;
-  line-height: 1.1;
-  font-weight: 800;
+/* ==========================================================
+   HEADER
+========================================================== */
 
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
+.porsche-collections__header {
 
-.porsche-collections__grid {
   display: grid;
 
-  grid-template-columns: repeat(2, 310px);
+  grid-template-columns:
+    minmax(0, 1.15fr)
+    minmax(280px, .55fr);
 
-  gap: 15px;
+  gap: 60px;
 
-  width: 625px;
+  align-items: end;
+
+  margin-bottom: 18px;
 }
 
+
+.porsche-collections__heading-wrap {
+
+  max-width: 800px;
+}
+
+
+/* ==========================================================
+   KICKER
+========================================================== */
+
+.porsche-collections__kicker {
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 10px;
+
+  margin-bottom: 17px;
+
+  color:
+    rgba(255,255,255,.62);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: .17em;
+
+  text-transform: uppercase;
+}
+
+
+.porsche-collections__kicker span {
+
+  width: 28px;
+
+  height: 1px;
+
+  background:
+    var(--accent-color);
+}
+
+
+/* ==========================================================
+   MAIN HEADING
+========================================================== */
+
+.porsche-collections__heading {
+
+  margin: 0;
+
+  font-family:
+    "Russo One",
+    sans-serif !important;
+
+  color: #fff;
+
+  font-size:
+    clamp(
+      32px,
+      3.6vw,
+      50px
+    );
+
+  line-height: .95;
+
+  font-weight: 400;
+
+  letter-spacing:
+    -.025em;
+
+  text-transform: uppercase;
+}
+
+
+.porsche-collections__accent-heading {
+
+  margin:
+    7px 0 0;
+
+  font-family:
+    "Russo One",
+    sans-serif !important;
+
+  font-size:
+    clamp(
+      23px,
+      2.8vw,
+      36px
+    );
+
+  line-height: 1;
+
+  font-weight: 400;
+
+  letter-spacing:
+    -.02em;
+
+  text-transform: uppercase;
+
+  color:
+    var(--accent-color);
+}
+
+
+/* ==========================================================
+   DESCRIPTION
+========================================================== */
+
+.porsche-collections__description {
+
+  max-width: 380px;
+
+  justify-self: end;
+
+  color:
+    rgba(255,255,255,.67);
+
+  font-size: 11px;
+
+  line-height: 1.55;
+}
+
+
+/* ==========================================================
+   CARD GRID
+========================================================== */
+
+.porsche-collections__grid {
+
+  display: grid;
+
+  grid-template-columns:
+    repeat(
+      3,
+      minmax(0, 1fr)
+    );
+
+  gap:
+    var(--card-gap);
+}
+
+
+/* ==========================================================
+   CARD
+========================================================== */
+
 .porsche-collections__card {
+
   position: relative;
 
   display: block;
 
-  min-height: 145px;
+  overflow: hidden;
 
-  padding: 42px 18px 18px;
+  color: #fff;
+
+  text-decoration: none;
+
+  border:
+    1px solid
+    rgba(255,255,255,.13);
+
+  background:
+    rgba(0,0,0,.22);
+
+  backdrop-filter:
+    blur(3px);
+
+  transform:
+    translateY(24px);
+
+  opacity: 0;
+
+  transition:
+    transform .55s
+      cubic-bezier(.22,.61,.36,1),
+
+    opacity .7s ease,
+
+    border-color .3s ease,
+
+    box-shadow .4s ease;
+}
+
+
+.porsche-collections__card.is-visible {
+
+  opacity: 1;
+
+  transform:
+    translateY(0);
+}
+
+
+.porsche-collections__card:hover {
+
+  border-color:
+    var(--accent-color);
+
+  transform:
+    translateY(-6px);
+
+  box-shadow:
+    0 22px 60px
+    rgba(0,0,0,.42);
+}
+
+
+/* ==========================================================
+   CARD IMAGE
+========================================================== */
+
+.porsche-collections__card-media {
+
+  position: absolute;
+
+  inset: 0;
+
+  overflow: hidden;
+}
+
+
+.porsche-collections__card-image {
+
+  width: 100%;
+
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  filter:
+    saturate(.75)
+    brightness(.7);
+
+  transform:
+    scale(1.015);
+
+  transition:
+    transform .65s
+      cubic-bezier(.22,.61,.36,1),
+
+    filter .45s ease;
+}
+
+
+.porsche-collections__card:hover
+.porsche-collections__card-image {
+
+  transform:
+    scale(1.07);
+
+  filter:
+    saturate(.95)
+    brightness(.82);
+}
+
+
+/* ==========================================================
+   CARD GRADIENT
+========================================================== */
+
+.porsche-collections__card-overlay {
+
+  position: absolute;
+
+  inset: 0;
+
+  background:
+    linear-gradient(
+      to top,
+      rgba(0,0,0,.94),
+      rgba(0,0,0,.36) 57%,
+      rgba(0,0,0,.12)
+    );
+}
+
+
+/* ==========================================================
+   CARD CONTENT
+========================================================== */
+
+.porsche-collections__card-content {
+
+  position: relative;
+
+  z-index: 2;
+
+  width: 100%;
+
+  height: 100%;
+
+  min-height:
+    190px !important;
+
+  padding: 14px;
 
   box-sizing: border-box;
 
-  background: rgba(30, 30, 30, 0.45);
+  display: flex;
 
-  color: #fff;
+  flex-direction: column;
 
-  text-decoration: none;
-
-  transition:
-    background 0.25s ease,
-    transform 0.25s ease;
+  justify-content: space-between;
 }
 
-.porsche-collections__card:hover {
-  background: rgba(20, 20, 20, 0.72);
 
-  transform: translateY(-2px);
+/* ==========================================================
+   CARD TOP
+========================================================== */
+
+.porsche-collections__card-top {
+
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  gap: 12px;
 }
 
-.porsche-collections__red-square {
-  position: absolute;
 
-  top: 18px;
-  left: 18px;
+.porsche-collections__card-number {
 
-  width: 13px;
-  height: 13px;
+  color:
+    var(--accent-color);
 
-  background: #ff1f27;
-}
-
-.porsche-collections__title {
-  margin: 0 0 12px;
-
-  color: #fff;
-
-  font-size: 21px;
-  line-height: 1.25;
+  font-size: 11px;
 
   font-weight: 700;
 
+  letter-spacing: .14em;
+}
+
+
+.porsche-collections__card-label {
+
+  padding:
+    7px 9px;
+
+  border:
+    1px solid
+    rgba(255,255,255,.18);
+
+  background:
+    rgba(0,0,0,.25);
+
+  color:
+    rgba(255,255,255,.7);
+
+  font-size: 8px;
+
+  font-weight: 700;
+
+  letter-spacing: .13em;
+
   text-transform: uppercase;
 }
 
+
+/* ==========================================================
+   CARD BOTTOM
+========================================================== */
+
+.porsche-collections__card-bottom {
+
+  display: flex;
+
+  align-items: flex-end;
+
+  justify-content: space-between;
+
+  gap: 18px;
+}
+
+
+.porsche-collections__title {
+
+  margin: 0;
+
+  font-size: 16px;
+
+  line-height: 1.05;
+
+  font-weight: 700;
+
+  letter-spacing:
+    -.015em;
+
+  text-transform: uppercase;
+}
+
+
+.porsche-collections__subtitle {
+
+  margin:
+    5px 0 8px;
+
+  color:
+    rgba(255,255,255,.55);
+
+  font-size: 9px;
+
+  line-height: 1;
+
+  letter-spacing: .14em;
+
+  text-transform: uppercase;
+}
+
+
 .porsche-collections__link {
-  display: inline-block;
+
+  display: inline-flex;
+
+  align-items: center;
+
+  gap: 7px;
+
+  color:
+    #fff;
+
+  font-size: 9px;
+
+  font-weight: 700;
+
+  letter-spacing: .13em;
+
+  text-transform: uppercase;
+
+  transition:
+    color .25s ease;
+}
+
+
+.porsche-collections__card:hover
+.porsche-collections__link {
+
+  color:
+    var(--accent-color);
+}
+
+
+/* ==========================================================
+   ARROW
+========================================================== */
+
+.porsche-collections__arrow {
+
+  flex: 0 0 auto;
+
+  width: 34px;
+
+  height: 34px;
+
+  display: grid;
+
+  place-items: center;
+
+  background:
+    var(--accent-color);
 
   color: #fff;
 
-  font-size: 12px;
-  line-height: 1;
+  font-size: 16px;
 
-  font-weight: 600;
+  transition:
+    transform .3s ease,
 
-  text-transform: uppercase;
-
-  text-decoration: underline;
-}
-
-.porsche-collections__link .arrow {
-  margin-left: 4px;
-
-  text-decoration: none;
-}
-
-.porsche-collections__card:hover .porsche-collections__link {
-  color: #ff1f27;
+    background .3s ease;
 }
 
 
-/* =========================
+.porsche-collections__card:hover
+.porsche-collections__arrow {
+
+  transform:
+    translate(
+      3px,
+      -3px
+    );
+
+  background:
+    #0343C0;
+}
+
+
+/* ==========================================================
    TABLET
-   ========================= */
+========================================================== */
 
-@media screen and (max-width: 999px) {
-
-  .porsche-collections__content {
-    padding: 50px 30px;
-  }
-
-  .porsche-collections__heading {
-    font-size: 36px;
-    font-family:"Russo One", san serif;
-  }
-
-  .porsche-collections__grid {
-    grid-template-columns: repeat(2, minmax(240px, 310px));
-
-    width: 100%;
-    max-width: 625px;
-  }
-
-}
-
-
-/* =========================
-   MOBILE
-   ========================= */
-
-@media screen and (max-width: 749px) {
-
-  .porsche-collections {
-    height: auto;
-    min-height: auto;
-  }
+@media screen
+and (max-width: 989px) {
 
   .porsche-collections__content {
-    height: auto;
 
-    padding: 40px 20px 50px;
+    width:
+      calc(100% - 56px);
+
+    padding:
+      65px 0
+      70px;
   }
 
-  .porsche-collections__heading {
-    margin-bottom: 25px;
 
-    font-size: 30px;
-  }
+  .porsche-collections__header {
 
-  .porsche-collections__grid {
     grid-template-columns: 1fr;
 
-    width: 100%;
+    gap: 20px;
 
-    gap: 12px;
+    margin-bottom: 32px;
   }
+
+
+  .porsche-collections__description {
+
+    justify-self:
+      start;
+
+    max-width:
+      550px;
+  }
+
+
+  .porsche-collections__grid {
+
+    grid-template-columns:
+      repeat(2, minmax(0,1fr));
+  }
+
 
   .porsche-collections__card {
-    min-height: 130px;
+
+    min-height:
+      210px !important;
   }
 
+
+  .porsche-collections__card-content {
+
+    min-height:
+      210px !important;
+  }
+}
+
+
+/* ==========================================================
+   MOBILE
+========================================================== */
+
+@media screen
+and (max-width: 749px) {
+
+  .porsche-collections {
+
+    min-height:
+      auto;
+  }
+
+
+  .porsche-collections__content {
+
+    width:
+      calc(100% - 28px);
+
+    padding:
+      42px 0
+      48px;
+  }
+
+
+  .porsche-collections__header {
+
+    margin-bottom:
+      28px;
+  }
+
+
+  .porsche-collections__heading {
+
+    font-size:
+      34px;
+  }
+
+
+  .porsche-collections__accent-heading {
+
+    font-size:
+      27px;
+  }
+
+
+  .porsche-collections__description {
+
+    font-size:
+      13px;
+  }
+
+
+  .porsche-collections__grid {
+
+    grid-template-columns:
+      1fr;
+
+    gap:
+      11px;
+  }
+
+
+  .porsche-collections__card {
+
+    min-height:
+      230px !important;
+  }
+
+
+  .porsche-collections__card-content {
+
+    min-height:
+      230px !important;
+  }
+
+
   .porsche-collections__title {
-    font-size: 18px;
+
+    font-size:
+      19px;
   }
 
 }
@@ -262,141 +1028,187 @@
 
 
 {% schema %}
-
 {
   "name": "Porsche Collections",
-
   "tag": "section",
-
   "class": "porsche-collections-section",
-
   "settings": [
-
     {
       "type": "image_picker",
       "id": "background_image",
       "label": "Background image"
     },
-
+    {
+      "type": "text",
+      "id": "kicker",
+      "label": "Eyebrow",
+      "default": "03 / VEHICLE COLLECTIONS"
+    },
     {
       "type": "text",
       "id": "heading",
       "label": "Heading",
-      "default": "Collections for Porsche 911"
+      "default": "BUILT AROUND"
     },
-
+    {
+      "type": "text",
+      "id": "accent_heading",
+      "label": "Accent heading",
+      "default": "THE 911."
+    },
+    {
+      "type": "richtext",
+      "id": "description",
+      "label": "Description",
+      "default": "<p>Explore performance-focused collections built around the cars that define the enthusiast world.</p>"
+    },
     {
       "type": "range",
       "id": "section_height",
       "label": "Section height",
-      "min": 400,
+      "min": 500,
       "max": 900,
       "step": 10,
       "unit": "px",
-      "default": 650
+      "default": 620
     },
-
     {
       "type": "range",
       "id": "overlay_opacity",
       "label": "Image overlay",
       "min": 0,
-      "max": 70,
+      "max": 90,
       "step": 5,
       "unit": "%",
-      "default": 15
+      "default": 45
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#0265F2"
+    },
+    {
+      "type": "range",
+      "id": "content_width",
+      "label": "Content max width",
+      "min": 1000,
+      "max": 1500,
+      "step": 20,
+      "unit": "px",
+      "default": 1240
+    },
+    {
+      "type": "range",
+      "id": "card_height",
+      "label": "Card height",
+      "min": 180,
+      "max": 360,
+      "step": 10,
+      "unit": "px",
+      "default": 190
+    },
+    {
+      "type": "range",
+      "id": "card_gap",
+      "label": "Card gap",
+      "min": 8,
+      "max": 30,
+      "step": 2,
+      "unit": "px",
+      "default": 8
     }
-
   ],
-
   "blocks": [
-
     {
       "type": "collection",
-
       "name": "Collection",
-
       "settings": [
-
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Collection image"
+        },
+        {
+          "type": "text",
+          "id": "label",
+          "label": "Small label",
+          "default": "PORSCHE"
+        },
         {
           "type": "text",
           "id": "title",
           "label": "Collection title",
-          "default": "Porsche 911 GT3 (997)"
+          "default": "PORSCHE 911 GT3"
         },
-
+        {
+          "type": "text",
+          "id": "subtitle",
+          "label": "Subtitle",
+          "default": "992 PLATFORM"
+        },
         {
           "type": "url",
           "id": "link",
           "label": "Collection link"
         },
-
         {
           "type": "text",
           "id": "link_text",
           "label": "Link text",
-          "default": "Explore collection"
+          "default": "EXPLORE COLLECTION"
         }
-
       ]
     }
-
   ],
-
   "presets": [
-
     {
       "name": "Porsche Collections",
-
       "blocks": [
-
         {
           "type": "collection",
           "settings": {
-            "title": "Porsche 911 GT3 (997)"
+            "title": "PORSCHE 911 GT3 (997)",
+            "subtitle": "997 PLATFORM"
           }
         },
-
         {
           "type": "collection",
           "settings": {
-            "title": "Porsche 911 GT3 RS (997)"
+            "title": "PORSCHE 911 GT3 RS (997)",
+            "subtitle": "997 PLATFORM"
           }
         },
-
         {
           "type": "collection",
           "settings": {
-            "title": "Porsche 911 GT3 (991)"
+            "title": "PORSCHE 911 GT3 (991)",
+            "subtitle": "991 PLATFORM"
           }
         },
-
         {
           "type": "collection",
           "settings": {
-            "title": "Porsche 911 GT3 RS (991)"
+            "title": "PORSCHE 911 GT3 RS (991)",
+            "subtitle": "991 PLATFORM"
           }
         },
-
         {
           "type": "collection",
           "settings": {
-            "title": "Porsche 911 GT3 (992)"
+            "title": "PORSCHE 911 GT3 (992)",
+            "subtitle": "992 PLATFORM"
           }
         },
-
         {
           "type": "collection",
           "settings": {
-            "title": "Porsche 911 GT3 RS (992)"
+            "title": "PORSCHE 911 GT3 RS (992)",
+            "subtitle": "992 PLATFORM"
           }
         }
-
       ]
     }
-
   ]
-
 }
-
 {% endschema %}
