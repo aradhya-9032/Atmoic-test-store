@@ -1,0 +1,509 @@
+{% comment %}
+  APEX PREMIUM WISHLIST PAGE
+{% endcomment %}
+
+<section class="apex-wishlist-page">
+
+  <div class="apex-wishlist-container">
+
+    <div class="apex-wishlist-page-header">
+      <span class="apex-wishlist-eyebrow">
+        SAVED PERFORMANCE
+      </span>
+
+      <h1 class="apex-wishlist-title">
+        Your wishlist
+      </h1>
+    </div>
+
+
+    <div
+      id="ApexWishlistPageContent"
+      class="apex-wishlist-page-content"
+    >
+      <!-- Wishlist products render here -->
+    </div>
+
+  </div>
+
+</section>
+
+
+<style>
+
+.apex-wishlist-page {
+  min-height: 70vh;
+  padding: 60px 20px 100px;
+  background: #f7f7f5;
+}
+
+.apex-wishlist-container {
+  width: min(100%, 1550px);
+  margin: 0 auto;
+}
+
+.apex-wishlist-page-header {
+  margin-bottom: 45px;
+}
+
+.apex-wishlist-eyebrow {
+  display: block;
+  margin-bottom: 10px;
+
+  color: #53647c;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 2px;
+}
+
+.apex-wishlist-title {
+  margin: 0;
+
+  color: #1e2f4d;
+
+  font-size: clamp(42px, 5vw, 70px);
+
+  font-weight: 700;
+
+  letter-spacing: -2px;
+}
+
+
+/* EMPTY STATE */
+
+.apex-wishlist-empty {
+  min-height: 330px;
+
+  border: 1px solid #d9dde2;
+
+  border-radius: 30px;
+
+  background: #ffffff;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: center;
+
+  text-align: center;
+
+  padding: 40px;
+}
+
+.apex-wishlist-empty-content {
+  max-width: 500px;
+}
+
+.apex-wishlist-empty h2 {
+  margin: 0 0 15px;
+
+  font-family: Georgia, serif;
+
+  font-size: 32px;
+
+  font-style: italic;
+
+  font-weight: 400;
+
+  color: #8a7255;
+}
+
+.apex-wishlist-empty p {
+  margin: 0 0 28px;
+
+  color: #6c7480;
+
+  font-size: 17px;
+}
+
+.apex-wishlist-browse {
+  display: inline-flex;
+
+  align-items: center;
+  justify-content: center;
+
+  min-height: 56px;
+
+  padding: 0 35px;
+
+  border-radius: 999px;
+
+  background: #26385f;
+
+  color: #ffffff;
+
+  text-decoration: none;
+
+  font-size: 16px;
+
+  font-weight: 700;
+
+  transition: 0.25s ease;
+}
+
+.apex-wishlist-browse:hover {
+  background: #172440;
+
+  transform: translateY(-2px);
+}
+
+
+/* PRODUCT GRID */
+
+.apex-wishlist-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(3, minmax(0, 1fr));
+
+  gap: 24px;
+}
+
+
+/* PRODUCT CARD */
+
+.apex-wishlist-card {
+  position: relative;
+
+  border: 1px solid #dfe3e8;
+
+  background: #ffffff;
+
+  overflow: hidden;
+
+  transition: 0.25s ease;
+}
+
+.apex-wishlist-card:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 15px 45px rgba(20,30,50,.10);
+}
+
+.apex-wishlist-card-image {
+  display: block;
+
+  width: 100%;
+
+  aspect-ratio: 1 / 1;
+
+  background: #f2f3f5;
+
+  overflow: hidden;
+}
+
+.apex-wishlist-card-image img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+}
+
+.apex-wishlist-card-info {
+  padding: 20px;
+}
+
+.apex-wishlist-card-title {
+  margin: 0 0 10px;
+
+  color: #1d2f49;
+
+  font-size: 19px;
+
+  font-weight: 700;
+}
+
+.apex-wishlist-card-price {
+  margin: 0;
+
+  color: #1d2f49;
+
+  font-size: 16px;
+
+  font-weight: 600;
+}
+
+.apex-wishlist-remove {
+  position: absolute;
+
+  top: 15px;
+  right: 15px;
+
+  width: 42px;
+  height: 42px;
+
+  border: none;
+
+  border-radius: 50%;
+
+  background: #ffffff;
+
+  color: #1d2f49;
+
+  font-size: 22px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 4px 15px rgba(0,0,0,.12);
+}
+
+
+/* MOBILE */
+
+@media (max-width: 990px) {
+
+  .apex-wishlist-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+
+}
+
+@media (max-width: 600px) {
+
+  .apex-wishlist-page {
+    padding: 40px 15px 70px;
+  }
+
+  .apex-wishlist-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .apex-wishlist-empty {
+    border-radius: 20px;
+  }
+
+}
+
+</style>
+
+
+<script>
+
+(function () {
+
+  const STORAGE_KEY = 'apex_lab_wishlist_v1';
+
+
+  function getWishlist() {
+
+    try {
+
+      return JSON.parse(
+        localStorage.getItem(STORAGE_KEY)
+      ) || [];
+
+    } catch (error) {
+
+      return [];
+
+    }
+
+  }
+
+
+  function saveWishlist(items) {
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(items)
+    );
+
+  }
+
+
+  function formatPrice(price) {
+
+    if (!price) return '';
+
+    if (typeof price === 'number') {
+
+      return 'Rs. ' +
+        new Intl.NumberFormat('en-IN')
+          .format(price);
+
+    }
+
+    return price;
+
+  }
+
+
+  function renderWishlist() {
+
+    const container = document.getElementById(
+      'ApexWishlistPageContent'
+    );
+
+    if (!container) return;
+
+    const wishlist = getWishlist();
+
+
+    /* EMPTY STATE */
+
+    if (!wishlist.length) {
+
+      container.innerHTML = `
+
+        <div class="apex-wishlist-empty">
+
+          <div class="apex-wishlist-empty-content">
+
+            <h2>
+              Nothing saved yet
+            </h2>
+
+            <p>
+              Tap the ♡ on any part to save it here.
+            </p>
+
+            <a
+              href="/collections/all"
+              class="apex-wishlist-browse"
+            >
+              Browse catalog →
+            </a>
+
+          </div>
+
+        </div>
+
+      `;
+
+      return;
+
+    }
+
+
+    /* PRODUCTS */
+
+    container.innerHTML = `
+
+      <div class="apex-wishlist-grid">
+
+        ${wishlist.map(function(product, index) {
+
+          const title =
+            product.title ||
+            product.name ||
+            'Product';
+
+          const image =
+            product.image ||
+            product.image_url ||
+            '';
+
+          const price =
+            formatPrice(product.price);
+
+          return `
+
+            <article
+              class="apex-wishlist-card"
+            >
+
+              <button
+                class="apex-wishlist-remove"
+                data-index="${index}"
+                aria-label="Remove product"
+              >
+                ×
+              </button>
+
+
+              <a
+                href="${product.url || '#'}"
+                class="apex-wishlist-card-image"
+              >
+
+                ${
+                  image
+                  ? `<img
+                      src="${image}"
+                      alt="${title}"
+                    >`
+                  : ''
+                }
+
+              </a>
+
+
+              <div class="apex-wishlist-card-info">
+
+                <h3 class="apex-wishlist-card-title">
+                  ${title}
+                </h3>
+
+                <p class="apex-wishlist-card-price">
+                  ${price}
+                </p>
+
+              </div>
+
+            </article>
+
+          `;
+
+        }).join('')}
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* REMOVE PRODUCT */
+
+  document.addEventListener(
+    'click',
+    function(event) {
+
+      const button = event.target.closest(
+        '.apex-wishlist-remove'
+      );
+
+      if (!button) return;
+
+      const index =
+        Number(button.dataset.index);
+
+      const wishlist =
+        getWishlist();
+
+      wishlist.splice(index, 1);
+
+      saveWishlist(wishlist);
+
+      renderWishlist();
+
+    }
+  );
+
+
+  document.addEventListener(
+    'DOMContentLoaded',
+    renderWishlist
+  );
+
+
+  renderWishlist();
+
+})();
+
+</script>
+
+
+{% schema %}
+{
+  "name": "Apex Wishlist Page",
+  "settings": []
+}
+{% endschema %}
