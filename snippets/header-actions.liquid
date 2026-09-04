@@ -106,39 +106,104 @@
     </div>
   {% endif %}
 
-  <button
-    type="button"
-    class="header-actions__action automotive-wishlist automotive-wishlist__trigger"
-    aria-label="Wishlist"
-    aria-haspopup="dialog"
-    aria-expanded="false"
-    aria-controls="AutomotiveWishlistDrawer"
-    data-wishlist-trigger
-  >
-    <span class="automotive-wishlist__icon" aria-hidden="true">
-      <svg
-        width="22"
-        height="22"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </span>
+ {% if section.settings.show_wishlist %}
 
-    <span
-      class="automotive-wishlist__bubble"
-      data-wishlist-count
-      aria-hidden="true"
-    >0</span>
-  </button>
+  {% assign wishlist_label = section.settings.wishlist_label | default: 'Wishlist' %}
+
+  {% if section.settings.wishlist_behavior == 'page'
+    and section.settings.wishlist_page_link != blank
+  %}
+
+    <a
+      href="{{ section.settings.wishlist_page_link }}"
+      class="header-actions__action automotive-wishlist automotive-wishlist__trigger"
+      aria-label="{{ wishlist_label }}"
+    >
+
+      <span class="automotive-wishlist__icon" aria-hidden="true">
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      {% if section.settings.show_wishlist_label %}
+        <span class="automotive-wishlist__text">
+          {{ wishlist_label }}
+        </span>
+      {% endif %}
+
+      {% if section.settings.show_wishlist_count %}
+        <span
+          class="automotive-wishlist__bubble"
+          data-wishlist-count
+          aria-hidden="true"
+        >0</span>
+      {% endif %}
+
+    </a>
+
+  {% else %}
+
+    <button
+      type="button"
+      class="header-actions__action automotive-wishlist automotive-wishlist__trigger"
+      aria-label="{{ wishlist_label }}"
+      aria-haspopup="dialog"
+      aria-expanded="false"
+      aria-controls="AutomotiveWishlistDrawer"
+      data-wishlist-trigger
+      data-apex-wishlist-trigger
+    >
+
+      <span class="automotive-wishlist__icon" aria-hidden="true">
+        <svg
+          width="22"
+          height="22"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78L12 21.23l8.84-8.84a5.5 5.5 0 0 0 0-7.78Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </span>
+
+      {% if section.settings.show_wishlist_label %}
+        <span class="automotive-wishlist__text">
+          {{ wishlist_label }}
+        </span>
+      {% endif %}
+
+      {% if section.settings.show_wishlist_count %}
+        <span
+          class="automotive-wishlist__bubble"
+          data-wishlist-count
+          aria-hidden="true"
+        >0</span>
+      {% endif %}
+
+    </button>
+
+  {% endif %}
+
+{% endif %}
 
   {% if settings.cart_type == 'drawer' and template.name != 'cart' %}
     <button
@@ -236,19 +301,40 @@
   (() => {
     const STORAGE_KEY = 'apex_lab_wishlist_v1';
 
-    /* =========================================
-       STORAGE
-    ========================================= */
-
-    const read = () => {
+    const safeParse = (value) => {
       try {
-        const value = localStorage.getItem(STORAGE_KEY);
-        const items = value ? JSON.parse(value) : [];
-
-        return Array.isArray(items) ? items : [];
+        const parsed = value ? JSON.parse(value) : [];
+        return Array.isArray(parsed) ? parsed : [];
       } catch (error) {
         return [];
       }
+    };
+
+    const productKey = (product) => {
+      if (!product) return '';
+      return String(
+        product.handle ||
+        product.product_id ||
+        product.productId ||
+        product.id ||
+        product.url ||
+        ''
+      );
+    };
+
+    const read = () => {
+      const items = safeParse(localStorage.getItem(STORAGE_KEY));
+      const unique = [];
+      const seen = new Set();
+
+      items.forEach((item) => {
+        const key = productKey(item);
+        if (!key || seen.has(key)) return;
+        seen.add(key);
+        unique.push(item);
+      });
+
+      return unique;
     };
 
     const write = (items) => {
@@ -259,607 +345,269 @@
       }
     };
 
-
-    /* =========================================
-       ESCAPE HTML
-    ========================================= */
-
     const escapeHtml = (value) => {
       const div = document.createElement('div');
       div.textContent = String(value ?? '');
       return div.innerHTML;
     };
 
-
-    /* =========================================
-       GET PRODUCT DATA
-    ========================================= */
+    const getText = (root, selectors) => {
+      const element = root?.querySelector(selectors);
+      return element?.textContent?.replace(/\s+/g, ' ').trim() || '';
+    };
 
     const getProduct = (button) => {
       if (!button) return null;
 
-      /*
-       * First use data attributes
-       * This is the most reliable method
-       */
+      const data = button.dataset || {};
+      const card = button.closest(
+        '.apc-card, .apex-product-card, [data-product-card], .product-card'
+      );
 
-      const productId = button.dataset.productId;
+      const link = card?.querySelector('a[href*="/products/"]');
+      const image = card?.querySelector('img');
 
-      if (productId) {
-        return {
-          id: String(productId),
-          handle: button.dataset.productHandle || '',
-          title: button.dataset.productTitle || '',
-          url: button.dataset.productUrl || '',
-          image: button.dataset.productImage || '',
-          price: button.dataset.productPrice || ''
-        };
+      const url =
+        data.productUrl ||
+        data.wishlistProductUrl ||
+        button.getAttribute('data-product-url') ||
+        button.getAttribute('data-wishlist-product-url') ||
+        link?.href ||
+        '';
+
+      let handle =
+        data.productHandle ||
+        data.wishlistProductHandle ||
+        data.wishlistHandle ||
+        button.getAttribute('data-product-handle') ||
+        button.getAttribute('data-wishlist-product-handle') ||
+        '';
+
+      if (!handle && url) {
+        const match = String(url).match(/\/products\/([^/?#]+)/);
+        if (match?.[1]) handle = decodeURIComponent(match[1]);
       }
 
+      const productId =
+        data.productId ||
+        data.wishlistProductId ||
+        button.getAttribute('data-product-id') ||
+        button.getAttribute('data-wishlist-product-id') ||
+        '';
 
-      /*
-       * Fallback for older product cards
-       */
+      const variantId =
+        data.variantId ||
+        data.productVariantId ||
+        button.getAttribute('data-variant-id') ||
+        button.getAttribute('data-product-variant-id') ||
+        '';
 
-      const card = button.closest('.apc-card');
+      const title =
+        data.productTitle ||
+        data.wishlistProductTitle ||
+        getText(card, '.apc-card__title, .apex-product-card__title, .product-card__title, [data-product-title]') ||
+        link?.getAttribute('aria-label') ||
+        '';
 
-      if (!card) return null;
+      const price =
+        data.productPrice ||
+        data.wishlistProductPrice ||
+        getText(card, '.apc-card__price, .apex-product-card__price, .price, [data-product-price]') ||
+        '';
 
-      const title = card.querySelector('.apc-card__title');
-      const image = card.querySelector('.apc-card__img');
-      const price = card.querySelector('.apc-card__price');
-
-      if (!title || !title.href) return null;
-
-      const url = title.href;
-
-      const pathname = new URL(
-        url,
-        window.location.origin
-      ).pathname;
-
-      return {
-        id: pathname,
+      const product = {
+        id: String(productId || handle || url || ''),
+        product_id: String(productId || ''),
+        variant_id: String(variantId || ''),
+        handle: String(handle || ''),
+        title: title,
         url: url,
-        title: title.textContent
-          .replace(/\s+/g, ' ')
-          .trim(),
-        image: image?.currentSrc || image?.src || '',
-        price: price?.textContent
-          .replace(/\s+/g, ' ')
-          .trim() || ''
+        image:
+          data.productImage ||
+          data.wishlistProductImage ||
+          button.getAttribute('data-product-image') ||
+          button.getAttribute('data-wishlist-product-image') ||
+          image?.currentSrc ||
+          image?.src ||
+          '',
+        price: price
       };
+
+      return productKey(product) ? product : null;
     };
 
-
-    /* =========================================
-       UPDATE ALL HEART BUTTONS
-    ========================================= */
+    const isSameProduct = (a, b) => {
+      const aKey = productKey(a);
+      const bKey = productKey(b);
+      if (a.handle && b.handle && String(a.handle) === String(b.handle)) return true;
+      if (a.product_id && b.product_id && String(a.product_id) === String(b.product_id)) return true;
+      return !!aKey && aKey === bKey;
+    };
 
     const updateProductButtons = () => {
       const items = read();
 
-      document
-        .querySelectorAll('.apc-card__wish')
-        .forEach((button) => {
+      document.querySelectorAll('.apc-card__wish').forEach((button) => {
+        const product = getProduct(button);
+        if (!product) return;
 
-          const product = getProduct(button);
-
-          if (!product) return;
-
-          const saved = items.some(
-            (item) => String(item.id) === String(product.id)
-          );
-
-          button.classList.toggle(
-            'is-added',
-            saved
-          );
-
-          button.setAttribute(
-            'aria-pressed',
-            saved ? 'true' : 'false'
-          );
-
-          button.setAttribute(
-            'aria-label',
-            saved
-              ? `Remove ${product.title} from wishlist`
-              : `Add ${product.title} to wishlist`
-          );
-        });
+        const saved = items.some((item) => isSameProduct(item, product));
+        button.classList.toggle('is-added', saved);
+        button.classList.toggle('is-active', saved);
+        button.setAttribute('aria-pressed', saved ? 'true' : 'false');
+        button.setAttribute('aria-label', saved ? 'Remove from wishlist' : 'Add to wishlist');
+      });
     };
-
-
-    /* =========================================
-       UPDATE HEADER COUNT
-    ========================================= */
 
     const updateCount = () => {
-      const items = read();
-
-      document
-        .querySelectorAll('[data-wishlist-count]')
-        .forEach((bubble) => {
-
-          bubble.textContent = items.length;
-
-          bubble.classList.toggle(
-            'is-visible',
-            items.length > 0
-          );
-        });
+      const count = read().length;
+      document.querySelectorAll('[data-wishlist-count]').forEach((bubble) => {
+        bubble.textContent = count;
+        bubble.classList.toggle('is-visible', count > 0);
+      });
     };
-
-
-    /* =========================================
-       SYNC EVERYTHING
-    ========================================= */
 
     const sync = () => {
       updateCount();
       updateProductButtons();
     };
 
-
-    /* =========================================
-       RENDER WISHLIST DRAWER
-    ========================================= */
-
     const render = () => {
-      const drawer = document.querySelector(
-        '[data-wishlist-drawer]'
-      );
-
-      const list = drawer?.querySelector(
-        '[data-wishlist-items]'
-      );
-
-      const empty = drawer?.querySelector(
-        '[data-wishlist-empty]'
-      );
-
+      const drawer = document.querySelector('[data-wishlist-drawer]');
+      const list = drawer?.querySelector('[data-wishlist-items]');
+      const empty = drawer?.querySelector('[data-wishlist-empty]');
       if (!drawer || !list || !empty) return;
 
       const items = read();
-
       list.innerHTML = '';
-
-      if (!items.length) {
-        list.hidden = true;
-        empty.hidden = false;
-        return;
-      }
-
-      list.hidden = false;
-      empty.hidden = true;
-
+      list.hidden = !items.length;
+      empty.hidden = !!items.length;
 
       items.forEach((item) => {
-
         const row = document.createElement('article');
-
-        row.className =
-          'automotive-wishlist-item';
-
-
+        row.className = 'automotive-wishlist-item';
         row.innerHTML = `
-          <a
-            href="${escapeHtml(item.url)}"
-            class="automotive-wishlist-item__image-link"
-            aria-label="${escapeHtml(item.title)}"
-          >
-            ${
-              item.image
-                ? `
-                  <img
-                    class="automotive-wishlist-item__image"
-                    src="${escapeHtml(item.image)}"
-                    alt="${escapeHtml(item.title)}"
-                    loading="lazy"
-                  >
-                `
-                : `
-                  <span
-                    class="automotive-wishlist-item__image"
-                    aria-hidden="true"
-                  ></span>
-                `
-            }
+          <a href="${escapeHtml(item.url || '#')}" class="automotive-wishlist-item__image-link" aria-label="${escapeHtml(item.title)}">
+            ${item.image ? `<img class="automotive-wishlist-item__image" src="${escapeHtml(item.image)}" alt="${escapeHtml(item.title)}" loading="lazy">` : '<span class="automotive-wishlist-item__image"></span>'}
           </a>
-
           <div class="automotive-wishlist-item__content">
-
-            <a
-              class="automotive-wishlist-item__title"
-              href="${escapeHtml(item.url)}"
-            >
-              ${escapeHtml(item.title)}
-            </a>
-
-            ${
-              item.price
-                ? `
-                  <div class="automotive-wishlist-item__price">
-                    ${escapeHtml(item.price)}
-                  </div>
-                `
-                : ''
-            }
-
+            <a class="automotive-wishlist-item__title" href="${escapeHtml(item.url || '#')}">${escapeHtml(item.title || 'Product')}</a>
+            ${item.price ? `<div class="automotive-wishlist-item__price">${escapeHtml(item.price)}</div>` : ''}
           </div>
-
-          <button
-            type="button"
-            class="automotive-wishlist-item__remove"
-            data-wishlist-remove="${escapeHtml(item.id)}"
-            aria-label="Remove ${escapeHtml(item.title)} from wishlist"
-          >
-            ×
-          </button>
+          <button type="button" class="automotive-wishlist-item__remove" aria-label="Remove from wishlist">×</button>
         `;
-
+        row.querySelector('.automotive-wishlist-item__remove').addEventListener('click', () => removeProduct(item));
         list.appendChild(row);
       });
     };
 
-
-    /* =========================================
-       OPEN DRAWER
-    ========================================= */
-
-    const open = () => {
-      const drawer = document.querySelector(
-        '[data-wishlist-drawer]'
-      );
-
-      const triggers = document.querySelectorAll(
-        '[data-wishlist-trigger]'
-      );
-
-      if (!drawer) return;
-
-      render();
-
-      drawer.hidden = false;
-
-      requestAnimationFrame(() => {
-        drawer.classList.add('is-open');
-      });
-
-      triggers.forEach((trigger) => {
-        trigger.setAttribute(
-          'aria-expanded',
-          'true'
-        );
-      });
-
-      document.documentElement.classList.add(
-        'apex-wishlist-open'
-      );
+    const emitChange = (items, product = null, added = null) => {
+      const detail = { items, product, added };
+      window.dispatchEvent(new CustomEvent('apex:wishlist:change', { detail }));
+      window.dispatchEvent(new CustomEvent('apex:wishlist:updated', { detail }));
     };
-
-
-    /* =========================================
-       CLOSE DRAWER
-    ========================================= */
-
-    const close = () => {
-      const drawer = document.querySelector(
-        '[data-wishlist-drawer]'
-      );
-
-      const triggers = document.querySelectorAll(
-        '[data-wishlist-trigger]'
-      );
-
-      if (!drawer) return;
-
-      drawer.classList.remove('is-open');
-
-      triggers.forEach((trigger) => {
-        trigger.setAttribute(
-          'aria-expanded',
-          'false'
-        );
-      });
-
-      document.documentElement.classList.remove(
-        'apex-wishlist-open'
-      );
-
-      setTimeout(() => {
-
-        if (!drawer.classList.contains('is-open')) {
-          drawer.hidden = true;
-        }
-
-      }, 380);
-    };
-
-
-    /* =========================================
-       ADD / REMOVE PRODUCT
-    ========================================= */
 
     const toggleProduct = (button) => {
       const product = getProduct(button);
-
       if (!product) return;
 
       const items = read();
-
-      const exists = items.some(
-        (item) =>
-          String(item.id) === String(product.id)
-      );
-
-      let updated;
-
-      if (exists) {
-
-        updated = items.filter(
-          (item) =>
-            String(item.id) !== String(product.id)
-        );
-
-      } else {
-
-        updated = [
-          product,
-          ...items
-        ].slice(0, 50);
-
-      }
-
+      const exists = items.some((item) => isSameProduct(item, product));
+      const updated = exists
+        ? items.filter((item) => !isSameProduct(item, product))
+        : [product, ...items].slice(0, 50);
 
       write(updated);
 
-      /*
-       * Immediately update UI
-       */
+      /* Force the clicked heart immediately; no refresh required. */
+      const added = !exists;
+      button.classList.toggle('is-added', added);
+      button.classList.toggle('is-active', added);
+      button.setAttribute('aria-pressed', added ? 'true' : 'false');
 
       sync();
       render();
-
-
-      /*
-       * Dispatch event
-       */
-
-      window.dispatchEvent(
-        new CustomEvent('apex:wishlist:change', {
-          detail: {
-            items: updated,
-            product: product,
-            added: !exists
-          }
-        })
-      );
+      emitChange(updated, product, added);
     };
 
-
-    /* =========================================
-       REMOVE FROM DRAWER
-    ========================================= */
-
-    const removeProduct = (id) => {
-
-      if (!id) return;
-
-      const updated = read().filter(
-        (item) =>
-          String(item.id) !== String(id)
-      );
-
+    const removeProduct = (product) => {
+      const updated = read().filter((item) => !isSameProduct(item, product));
       write(updated);
-
       sync();
       render();
-
-      window.dispatchEvent(
-        new CustomEvent('apex:wishlist:change', {
-          detail: {
-            items: updated
-          }
-        })
-      );
+      emitChange(updated, product, false);
     };
 
+    const open = () => {
+      const drawer = document.querySelector('[data-wishlist-drawer]');
+      if (!drawer) return;
+      render();
+      drawer.hidden = false;
+      requestAnimationFrame(() => drawer.classList.add('is-open'));
+      document.querySelectorAll('[data-wishlist-trigger]').forEach((trigger) => trigger.setAttribute('aria-expanded', 'true'));
+      document.documentElement.classList.add('apex-wishlist-open');
+    };
 
-    /* =========================================
-       CLICK EVENTS
-    ========================================= */
+    const close = () => {
+      const drawer = document.querySelector('[data-wishlist-drawer]');
+      if (!drawer) return;
+      drawer.classList.remove('is-open');
+      document.querySelectorAll('[data-wishlist-trigger]').forEach((trigger) => trigger.setAttribute('aria-expanded', 'false'));
+      document.documentElement.classList.remove('apex-wishlist-open');
+      setTimeout(() => {
+        if (!drawer.classList.contains('is-open')) drawer.hidden = true;
+      }, 380);
+    };
 
     document.addEventListener('click', (event) => {
-
-      /*
-       * PRODUCT CARD HEART
-       */
-
-      const productButton = event.target.closest(
-        '.apc-card__wish'
-      );
-
+      const productButton = event.target.closest('.apc-card__wish');
       if (productButton) {
-
         event.preventDefault();
         event.stopPropagation();
-
         toggleProduct(productButton);
-
         return;
       }
 
-
-      /*
-       * HEADER WISHLIST BUTTON
-       */
-
-      const trigger = event.target.closest(
-        '[data-wishlist-trigger]'
-      );
-
+      const trigger = event.target.closest('[data-wishlist-trigger]');
       if (trigger) {
-
         event.preventDefault();
-
-        const drawer = document.querySelector(
-          '[data-wishlist-drawer]'
-        );
-
-        if (
-          drawer &&
-          !drawer.hidden &&
-          drawer.classList.contains('is-open')
-        ) {
-          close();
-        } else {
-          open();
-        }
-
+        const drawer = document.querySelector('[data-wishlist-drawer]');
+        if (drawer && !drawer.hidden && drawer.classList.contains('is-open')) close();
+        else open();
         return;
       }
 
-
-      /*
-       * CLOSE BUTTON
-       */
-
-      const closeButton = event.target.closest(
-        '[data-wishlist-close]'
-      );
-
-      if (closeButton) {
-
+      if (event.target.closest('[data-wishlist-close]')) {
         event.preventDefault();
-
-        close();
-
-        return;
-      }
-
-
-      /*
-       * REMOVE BUTTON
-       */
-
-      const removeButton = event.target.closest(
-        '[data-wishlist-remove]'
-      );
-
-      if (removeButton) {
-
-        event.preventDefault();
-
-        removeProduct(
-          removeButton.dataset.wishlistRemove
-        );
-
-        return;
-      }
-
-
-      /*
-       * CLICK OVERLAY TO CLOSE
-       */
-
-      const overlay = event.target.closest(
-        '[data-wishlist-overlay]'
-      );
-
-      if (overlay) {
         close();
       }
-
     });
 
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') close();
+    });
 
-    /* =========================================
-       ESC KEY
-    ========================================= */
-
-    document.addEventListener(
-      'keydown',
-      (event) => {
-
-        if (event.key === 'Escape') {
-          close();
-        }
-
-      }
-    );
-
-
-    /* =========================================
-       CUSTOM EVENT
-    ========================================= */
-
-    window.addEventListener(
-      'apex:wishlist:change',
-      () => {
+    window.addEventListener('storage', (event) => {
+      if (event.key === STORAGE_KEY) {
         sync();
         render();
       }
-    );
+    });
 
-
-    /* =========================================
-       STORAGE CHANGE
-       Multiple tabs support
-    ========================================= */
-
-    window.addEventListener(
-      'storage',
-      (event) => {
-
-        if (event.key === STORAGE_KEY) {
-          sync();
-          render();
-        }
-
-      }
-    );
-
-
-    /* =========================================
-       SHOPIFY THEME EDITOR
-    ========================================= */
-
-    document.addEventListener(
-      'shopify:section:load',
-      () => {
-        setTimeout(sync, 50);
-      }
-    );
-
-
-    /* =========================================
-       INITIAL LOAD
-    ========================================= */
+    window.addEventListener('apex:wishlist:change', sync);
+    window.addEventListener('apex:wishlist:updated', sync);
+    document.addEventListener('shopify:section:load', () => setTimeout(sync, 50));
 
     const init = () => {
       sync();
       render();
     };
 
-
-    if (
-      document.readyState === 'loading'
-    ) {
-
-      document.addEventListener(
-        'DOMContentLoaded',
-        init,
-        { once: true }
-      );
-
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', init, { once: true });
     } else {
-
       init();
-
     }
-
   })();
 </script>
 
@@ -1360,8 +1108,11 @@
 }
 
 /* Saved wishlist product */
-.apc-card__wish.is-added svg path {
-  fill: currentColor;
+.apc-card__wish.is-added svg path,
+.apc-card__wish[aria-pressed="true"] svg path,
+.apc-card__wish.is-active svg path {
+  fill: currentColor !important;
+  stroke: currentColor !important;
 }
 
 /* Small click animation */

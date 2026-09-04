@@ -112,42 +112,42 @@
           "type": "category",
           "settings": {
             "link": "shopify://pages/whislist",
-            "title": "Category"
+            "title": "Brakes"
           }
         },
         "category_eVe7Kb": {
           "type": "category",
           "settings": {
-            "link": "",
-            "title": "Category"
+            "link": "shopify://pages/whislist",
+            "title": "Suspensions"
           }
         },
         "category_wMJnz3": {
           "type": "category",
           "settings": {
-            "link": "",
-            "title": "Category"
+            "link": "shopify://pages/whislist",
+            "title": "Engine"
           }
         },
         "category_paXwRR": {
           "type": "category",
           "settings": {
-            "link": "",
-            "title": "Category"
+            "link": "shopify://pages/whislist",
+            "title": "Exhaust"
           }
         },
         "category_cpKVBW": {
           "type": "category",
           "settings": {
-            "link": "",
-            "title": "Category"
+            "link": "shopify://pages/whislist",
+            "title": "Wheels &Tires"
           }
         },
         "category_bxCgfk": {
           "type": "category",
           "settings": {
-            "link": "",
-            "title": "Category"
+            "link": "shopify://pages/whislist",
+            "title": "Racing Gear"
           }
         }
       },
@@ -219,7 +219,7 @@
             "quote": "Great products, excellent quality and a very smooth shopping experience.",
             "author": "John Smith",
             "role": "Verified customer",
-            "rating": 5
+            "rating": 3
           }
         },
         "testimonial_tEKcWK": {
@@ -304,6 +304,7 @@
         "brand_RrX7Df": {
           "type": "brand",
           "settings": {
+            "logo": "shopify://shop_images/ap-racing.jpg",
             "name": "Brand",
             "link": ""
           }
@@ -311,6 +312,7 @@
         "brand_GPtVBY": {
           "type": "brand",
           "settings": {
+            "logo": "shopify://shop_images/Black_Vertical.svg",
             "name": "Brand",
             "link": ""
           }
@@ -318,6 +320,7 @@
         "brand_LyrwT9": {
           "type": "brand",
           "settings": {
+            "logo": "shopify://shop_images/KW_Automotive.jpg",
             "name": "Brand",
             "link": ""
           }
@@ -325,6 +328,7 @@
         "brand_kcFPUq": {
           "type": "brand",
           "settings": {
+            "logo": "shopify://shop_images/CSF.jpg",
             "name": "Brand",
             "link": ""
           }
@@ -332,6 +336,7 @@
         "brand_8an4GN": {
           "type": "brand",
           "settings": {
+            "logo": "shopify://shop_images/DODSON.jpg",
             "name": "Brand",
             "link": ""
           }
@@ -339,6 +344,7 @@
         "brand_WEwJfh": {
           "type": "brand",
           "settings": {
+            "logo": "shopify://shop_images/EVENTURI.jpg",
             "name": "Brand",
             "link": ""
           }

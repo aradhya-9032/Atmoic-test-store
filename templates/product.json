@@ -6,7 +6,8 @@
  * or related systems. Please exercise caution as any changes
  * made to this file may be overwritten.
  * ------------------------------------------------------------
- */{
+ */
+{
   "sections": {
     "main": {
       "type": "product-information",
@@ -38,6 +39,7 @@
             "media_columns": "two",
             "image_gap": 4,
             "large_first_image": false,
+            "icons_style": "arrow",
             "slideshow_controls_style": "counter",
             "slideshow_mobile_controls_style": "dots",
             "thumbnail_position": "right",
@@ -116,6 +118,7 @@
                 "border_opacity": 100,
                 "border_color": "",
                 "border_radius": 0,
+                "link": "",
                 "open_in_new_tab": false,
                 "placeholder": "",
                 "padding-block-start": 0,
@@ -319,6 +322,12 @@
         "limit_details_width": false,
         "gap": 48,
         "enable_sticky_add_to_cart": true,
+        "accent_color": "#0265f2",
+        "page_background_color": "#f5f8fc",
+        "panel_background_color": "#ffffff",
+        "button_background_color": "#0265f2",
+        "button_text_color": "#ffffff",
+        "card_radius": 8,
         "background_color": "{{ settings.color_palette.background }}",
         "padding-block-start": 0,
         "padding-block-end": 0
@@ -465,10 +474,45 @@
         "padding-block-start": 48,
         "padding-block-end": 48
       }
+    },
+    "apex_featured_products_G4FTVE": {
+      "type": "apex-featured-products",
+      "disabled": true,
+      "name": "APEX Featured Products",
+      "settings": {
+        "eyebrow": "",
+        "heading": "",
+        "collection": "bmw-m3-g80",
+        "button_label": "View all",
+        "button_link": "",
+        "max_products": 8,
+        "show_vendor": true,
+        "show_stock": false,
+        "show_wishlist": true,
+        "show_add_button": true,
+        "show_sale_price": true,
+        "add_label": "Add",
+        "in_stock_label": "In stock",
+        "sold_out_label": "Sold out",
+        "columns_desktop": "4",
+        "columns_tablet": "3",
+        "columns_mobile": "2",
+        "grid_gap": 18,
+        "card_radius": 22,
+        "image_radius": 16,
+        "section_background": "#F8F8F6",
+        "card_background": "#FFFFFF",
+        "heading_color": "#182230",
+        "text_color": "#27303B",
+        "accent_color": "#263B61",
+        "top_padding": 48,
+        "bottom_padding": 72
+      }
     }
   },
   "order": [
     "main",
-    "product_recommendations_qggXJq"
+    "product_recommendations_qggXJq",
+    "apex_featured_products_G4FTVE"
   ]
 }

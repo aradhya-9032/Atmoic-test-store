@@ -147,11 +147,10 @@
     },
     "apex_announcement_premium_jfjHDi": {
       "type": "apex-announcement-premium",
-      "disabled": true,
       "name": "APEX Announcement",
       "settings": {
-        "text": "FREE SHIPPING ON ORDERS OVER $100 • WORLDWIDE DELIVERY • 30-DAY RETURNS",
-        "background": "#000000",
+        "text": "FREE SHIPPING ON ORDERS OVER $499 • WORLDWIDE DELIVERY • 30-DAY RETURNS",
+        "background": "#1a2954",
         "text_color": "#ffffff",
         "accent": "#0265f2"
       }
@@ -180,8 +179,10 @@
         "show_account": true,
         "account_label": "Account",
         "show_wishlist": true,
+        "wishlist_behavior": "page",
+        "wishlist_page_link": "shopify://pages/whislist-1",
         "wishlist_label": "Wishlist",
-        "show_wishlist_label": true,
+        "show_wishlist_label": false,
         "show_wishlist_count": true,
         "show_cart": true,
         "cart_label": "Cart",

@@ -611,9 +611,9 @@
 
 /* ACCOUNT — native Shopify account action */
 .apex-header__native-actions .account-button {
-  width: 52px;
-  height: 52px;
-  min-width: 52px;
+  width: 45px;
+  height: 45px;
+  min-width: 45px;
   margin: 0;
   padding: 0;
   display: inline-flex;
@@ -650,7 +650,7 @@
   position: relative;
   width: 82px;
   min-width: 82px;
-  height: 45px;
+  height: 35px;
   margin: 0;
   padding: 0 12px 0 10px;
   display: inline-flex;
@@ -1197,6 +1197,7 @@
       "default": 145
     },
 
+
     {
       "type": "header",
       "content": "Navigation"
@@ -1247,6 +1248,7 @@
       "default": true
     },
 
+
     {
       "type": "header",
       "content": "New arrivals"
@@ -1268,6 +1270,7 @@
       "id": "new_arrivals_link",
       "label": "Button link"
     },
+
 
     {
       "type": "header",
@@ -1298,10 +1301,13 @@
       "default": "SEARCH"
     },
 
+
     {
       "type": "header",
       "content": "Header actions"
     },
+
+
     {
       "type": "checkbox",
       "id": "show_account",
@@ -1314,11 +1320,38 @@
       "label": "Account accessibility label",
       "default": "Account"
     },
+
+
+    {
+      "type": "header",
+      "content": "Wishlist settings"
+    },
     {
       "type": "checkbox",
       "id": "show_wishlist",
       "label": "Show wishlist",
       "default": true
+    },
+    {
+      "type": "select",
+      "id": "wishlist_behavior",
+      "label": "Wishlist click behavior",
+      "options": [
+        {
+          "value": "page",
+          "label": "Open wishlist page"
+        },
+        {
+          "value": "drawer",
+          "label": "Open wishlist drawer"
+        }
+      ],
+      "default": "page"
+    },
+    {
+      "type": "url",
+      "id": "wishlist_page_link",
+      "label": "Wishlist page link"
     },
     {
       "type": "text",
@@ -1337,6 +1370,10 @@
       "id": "show_wishlist_count",
       "label": "Show wishlist count",
       "default": true
+    },
+    {
+      "type": "header",
+      "content": "Cart settings"
     },
     {
       "type": "checkbox",
@@ -1362,6 +1399,7 @@
       "label": "Show cart count",
       "default": true
     },
+
 
     {
       "type": "header",
@@ -1403,6 +1441,7 @@
       ],
       "default": "true"
     },
+
 
     {
       "type": "header",

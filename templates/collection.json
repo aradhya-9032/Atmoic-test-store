@@ -15,6 +15,7 @@
         "text_tqQTNE": {
           "type": "text",
           "name": "t:names.title",
+          "disabled": true,
           "settings": {
             "text": "<h1>{{ closest.collection.title }}</h1>",
             "width": "fit-content",
@@ -41,6 +42,7 @@
         "text_twGGkJ": {
           "type": "text",
           "name": "t:names.description",
+          "disabled": true,
           "settings": {
             "text": "{{ closest.collection.description }}",
             "width": "fit-content",
@@ -69,6 +71,7 @@
         "text_tqQTNE",
         "text_twGGkJ"
       ],
+      "disabled": true,
       "name": "t:names.heading",
       "settings": {
         "content_direction": "column",
@@ -213,6 +216,7 @@
           ]
         }
       },
+      "disabled": true,
       "settings": {
         "layout_type": "grid",
         "product_card_size": "medium",
@@ -229,10 +233,19 @@
         "padding-block-start": 0,
         "padding-block-end": 32
       }
+    },
+    "apex_performance_categories_Rmiw8H": {
+      "type": "apex-performance-categories",
+      "name": "APEX Categories",
+      "settings": {
+        "heading": "Catalog",
+        "collection": "bmw-m3-g80"
+      }
     }
   },
   "order": [
     "section",
-    "main"
+    "main",
+    "apex_performance_categories_Rmiw8H"
   ]
 }
