@@ -1,509 +1,803 @@
-{% comment %}
-  APEX PREMIUM WISHLIST PAGE
-{% endcomment %}
-
 <section class="apex-wishlist-page">
+  <div class="apex-wishlist-inner">
 
-  <div class="apex-wishlist-container">
+    <h1 class="apex-wishlist-heading">Your wishlist</h1>
 
-    <div class="apex-wishlist-page-header">
-      <span class="apex-wishlist-eyebrow">
-        SAVED PERFORMANCE
-      </span>
+    <!-- EMPTY WISHLIST -->
+    <div id="apex-wishlist-empty" class="apex-wishlist-empty">
+      <div class="apex-wishlist-empty-content">
 
-      <h1 class="apex-wishlist-title">
-        Your wishlist
-      </h1>
+        <h2>Nothing saved yet</h2>
+
+        <p>
+          Tap the ♡ on any part to save it here.
+        </p>
+
+        <a
+          href="/collections/all"
+          class="apex-wishlist-browse"
+        >
+          <span>Browse catalog</span>
+          <span class="apex-wishlist-arrow">→</span>
+        </a>
+
+      </div>
     </div>
 
-
+    <!-- WISHLIST PRODUCTS -->
     <div
-      id="ApexWishlistPageContent"
-      class="apex-wishlist-page-content"
-    >
-      <!-- Wishlist products render here -->
-    </div>
+      id="apex-wishlist-products"
+      class="apex-wishlist-products"
+    ></div>
 
   </div>
-
 </section>
 
 
 <style>
 
+/* =========================================================
+   APEX WISHLIST PAGE
+========================================================= */
+
 .apex-wishlist-page {
-  min-height: 70vh;
-  padding: 60px 20px 100px;
-  background: #f7f7f5;
+  width: 100%;
+  min-height: 500px;
+  padding: 52px 0 84px;
+  background: #f8f7f5;
+  box-sizing: border-box;
 }
 
-.apex-wishlist-container {
-  width: min(100%, 1550px);
+
+/* =========================================================
+   MAIN CONTAINER
+========================================================= */
+
+.apex-wishlist-inner {
+  width: calc(100% - 160px);
+  max-width: 1470px;
   margin: 0 auto;
 }
 
-.apex-wishlist-page-header {
-  margin-bottom: 45px;
-}
 
-.apex-wishlist-eyebrow {
-  display: block;
-  margin-bottom: 10px;
+/* =========================================================
+   PAGE TITLE
+========================================================= */
 
-  color: #53647c;
+.apex-wishlist-heading {
+  margin: 0 0 40px !important;
+  padding: 0 !important;
 
-  font-size: 11px;
+  color: #20242b;
+
+  font-family: inherit;
+  font-size: 56px;
   font-weight: 700;
 
-  letter-spacing: 2px;
-}
-
-.apex-wishlist-title {
-  margin: 0;
-
-  color: #1e2f4d;
-
-  font-size: clamp(42px, 5vw, 70px);
-
-  font-weight: 700;
-
-  letter-spacing: -2px;
+  line-height: 1.1;
+  letter-spacing: -1.8px;
 }
 
 
-/* EMPTY STATE */
+/* =========================================================
+   EMPTY WISHLIST
+========================================================= */
 
 .apex-wishlist-empty {
-  min-height: 330px;
-
-  border: 1px solid #d9dde2;
-
-  border-radius: 30px;
-
-  background: #ffffff;
+  width: 100%;
+  min-height: 278px;
 
   display: flex;
-
   align-items: center;
   justify-content: center;
+
+  padding: 30px;
+
+  box-sizing: border-box;
+
+  background: #fbfaf8;
+
+  border: 1px solid #ddd9d2;
+  border-radius: 28px;
+}
+
+
+.apex-wishlist-empty-content {
+  width: 100%;
 
   text-align: center;
 
-  padding: 40px;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: center;
 }
 
-.apex-wishlist-empty-content {
-  max-width: 500px;
-}
 
 .apex-wishlist-empty h2 {
-  margin: 0 0 15px;
+  margin: 0 0 18px !important;
+  padding: 0 !important;
 
-  font-family: Georgia, serif;
+  color: #806f5c;
 
-  font-size: 32px;
+  font-family: Georgia, "Times New Roman", serif;
 
+  font-size: 29px;
+  font-weight: 400;
   font-style: italic;
 
-  font-weight: 400;
-
-  color: #8a7255;
+  line-height: 1.2;
 }
+
 
 .apex-wishlist-empty p {
-  margin: 0 0 28px;
+  margin: 0 0 22px !important;
+  padding: 0 !important;
 
-  color: #6c7480;
+  color: #77746f;
 
-  font-size: 17px;
+  font-size: 16px;
+  font-weight: 400;
+
+  line-height: 1.5;
 }
 
+
+/* =========================================================
+   BROWSE CATALOG BUTTON
+========================================================= */
+
 .apex-wishlist-browse {
-  display: inline-flex;
+  min-width: 212px;
+  min-height: 54px;
+
+  display: inline-flex !important;
 
   align-items: center;
   justify-content: center;
 
-  min-height: 56px;
+  gap: 8px;
 
-  padding: 0 35px;
+  padding: 14px 26px;
 
+  box-sizing: border-box;
+
+  background: #26375f;
+
+  border: 1px solid #26375f;
   border-radius: 999px;
 
-  background: #26385f;
+  color: #ffffff !important;
 
-  color: #ffffff;
-
-  text-decoration: none;
+  font-family: inherit;
 
   font-size: 16px;
-
   font-weight: 700;
 
-  transition: 0.25s ease;
+  line-height: 1;
+
+  text-decoration: none !important;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    transform .2s ease;
 }
 
+
 .apex-wishlist-browse:hover {
-  background: #172440;
+  background: #1d2b4c;
+  border-color: #1d2b4c;
+
+  color: #ffffff !important;
 
   transform: translateY(-2px);
 }
 
 
-/* PRODUCT GRID */
+.apex-wishlist-arrow {
+  font-size: 19px;
+  line-height: 1;
 
-.apex-wishlist-grid {
-  display: grid;
+  transition: transform .2s ease;
+}
 
-  grid-template-columns:
-    repeat(3, minmax(0, 1fr));
+
+.apex-wishlist-browse:hover .apex-wishlist-arrow {
+  transform: translateX(3px);
+}
+
+
+/* =========================================================
+   PRODUCTS GRID
+========================================================= */
+
+.apex-wishlist-products {
+  display: none;
+
+  grid-template-columns: repeat(4, minmax(0, 1fr));
 
   gap: 24px;
 }
 
 
-/* PRODUCT CARD */
+/* =========================================================
+   PRODUCT CARD
+========================================================= */
 
 .apex-wishlist-card {
   position: relative;
 
-  border: 1px solid #dfe3e8;
+  overflow: hidden;
 
   background: #ffffff;
 
-  overflow: hidden;
+  border: 1px solid #e2dfd9;
+  border-radius: 18px;
 
-  transition: 0.25s ease;
+  transition:
+    transform .25s ease,
+    box-shadow .25s ease;
 }
+
 
 .apex-wishlist-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-4px);
 
   box-shadow:
-    0 15px 45px rgba(20,30,50,.10);
+    0 16px 35px rgba(0, 0, 0, .08);
 }
 
-.apex-wishlist-card-image {
+
+/* =========================================================
+   PRODUCT IMAGE
+========================================================= */
+
+.apex-wishlist-product-image {
   display: block;
 
   width: 100%;
-
   aspect-ratio: 1 / 1;
 
-  background: #f2f3f5;
-
   overflow: hidden;
+
+  background:
+    repeating-linear-gradient(
+      45deg,
+      #f5f3ef,
+      #f5f3ef 12px,
+      #ece9e3 12px,
+      #ece9e3 24px
+    );
 }
 
-.apex-wishlist-card-image img {
+
+.apex-wishlist-product-image img {
   width: 100%;
   height: 100%;
 
   display: block;
 
   object-fit: cover;
+
+  transition: transform .35s ease;
 }
 
-.apex-wishlist-card-info {
-  padding: 20px;
+
+.apex-wishlist-card:hover
+.apex-wishlist-product-image img {
+  transform: scale(1.04);
 }
 
-.apex-wishlist-card-title {
-  margin: 0 0 10px;
 
-  color: #1d2f49;
+/* =========================================================
+   PRODUCT INFO
+========================================================= */
 
-  font-size: 19px;
+.apex-wishlist-product-info {
+  padding: 18px;
+}
 
+
+.apex-wishlist-product-brand {
+  margin-bottom: 7px;
+
+  color: #8a8178;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+
+.apex-wishlist-product-title {
+  margin: 0 0 8px !important;
+
+  color: #20242b;
+
+  font-size: 18px;
+  font-weight: 700;
+
+  line-height: 1.35;
+}
+
+
+.apex-wishlist-product-title a {
+  color: inherit;
+  text-decoration: none;
+}
+
+
+.apex-wishlist-product-stock {
+  margin-top: 6px;
+
+  color: #77746f;
+
+  font-size: 13px;
+}
+
+
+.apex-wishlist-product-bottom {
+  margin-top: 18px;
+
+  display: flex;
+
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 12px;
+}
+
+
+.apex-wishlist-product-price {
+  color: #26375f;
+
+  font-size: 16px;
   font-weight: 700;
 }
 
-.apex-wishlist-card-price {
-  margin: 0;
 
-  color: #1d2f49;
+/* =========================================================
+   ADD TO CART BUTTON
+========================================================= */
 
-  font-size: 16px;
+.apex-wishlist-add-cart {
+  min-height: 40px;
 
-  font-weight: 600;
+  padding: 9px 16px;
+
+  background: #ffffff;
+
+  border: 1px solid #ddd9d2;
+  border-radius: 999px;
+
+  color: #20242b;
+
+  font-family: inherit;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  white-space: nowrap;
+
+  cursor: pointer;
+
+  transition:
+    background .2s ease,
+    border-color .2s ease,
+    color .2s ease,
+    transform .2s ease;
 }
+
+
+.apex-wishlist-add-cart:hover {
+  background: #26375f;
+  border-color: #26375f;
+
+  color: #ffffff;
+
+  transform: translateY(-1px);
+}
+
+
+.apex-wishlist-add-cart:disabled {
+  opacity: .65;
+  cursor: wait;
+}
+
+
+/* =========================================================
+   REMOVE BUTTON
+========================================================= */
 
 .apex-wishlist-remove {
   position: absolute;
 
-  top: 15px;
-  right: 15px;
+  top: 14px;
+  right: 14px;
 
-  width: 42px;
-  height: 42px;
+  width: 40px;
+  height: 40px;
 
-  border: none;
+  display: flex;
 
-  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
 
   background: #ffffff;
 
-  color: #1d2f49;
+  border: none;
+  border-radius: 50%;
 
-  font-size: 22px;
+  color: #20242b;
+
+  font-size: 25px;
+  font-weight: 400;
+
+  line-height: 1;
 
   cursor: pointer;
 
   box-shadow:
-    0 4px 15px rgba(0,0,0,.12);
+    0 4px 15px rgba(0, 0, 0, .12);
+
+  z-index: 5;
+
+  transition:
+    background .2s ease,
+    color .2s ease,
+    transform .2s ease;
 }
 
 
-/* MOBILE */
+.apex-wishlist-remove:hover {
+  background: #26375f;
 
-@media (max-width: 990px) {
+  color: #ffffff;
 
-  .apex-wishlist-grid {
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+  transform: scale(1.08);
+}
+
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media screen and (max-width: 990px) {
+
+  .apex-wishlist-inner {
+    width: calc(100% - 64px);
+  }
+
+  .apex-wishlist-heading {
+    font-size: 48px;
+  }
+
+  .apex-wishlist-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
 }
 
-@media (max-width: 600px) {
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media screen and (max-width: 749px) {
 
   .apex-wishlist-page {
-    padding: 40px 15px 70px;
+    padding: 38px 0 58px;
   }
 
-  .apex-wishlist-grid {
-    grid-template-columns: 1fr;
+  .apex-wishlist-inner {
+    width: calc(100% - 32px);
+  }
+
+  .apex-wishlist-heading {
+    margin-bottom: 28px !important;
+
+    font-size: 42px;
+
+    letter-spacing: -1px;
   }
 
   .apex-wishlist-empty {
+    min-height: 275px;
+
+    padding: 25px 16px;
+
     border-radius: 20px;
+  }
+
+  .apex-wishlist-empty h2 {
+    font-size: 25px;
+  }
+
+  .apex-wishlist-empty p {
+    font-size: 15px;
+  }
+
+  .apex-wishlist-browse {
+    min-width: 200px;
+  }
+
+  .apex-wishlist-products {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 14px;
+  }
+
+  .apex-wishlist-product-info {
+    padding: 14px;
+  }
+
+  .apex-wishlist-product-title {
+    font-size: 15px;
+  }
+
+  .apex-wishlist-product-bottom {
+    flex-direction: column;
+
+    align-items: stretch;
+  }
+
+  .apex-wishlist-product-price {
+    font-size: 14px;
+  }
+
+  .apex-wishlist-add-cart {
+    width: 100%;
   }
 
 }
 
 </style>
 
-
 <script>
-
 (function () {
-
   const STORAGE_KEY = 'apex_lab_wishlist_v1';
+  const emptyState = document.getElementById('apex-wishlist-empty');
+  const productsContainer = document.getElementById('apex-wishlist-products');
 
+  const safeParse = (value) => {
+    try {
+      const parsed = value ? JSON.parse(value) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      return [];
+    }
+  };
+
+  const normalizeProduct = (product = {}) => {
+    let image = product.image || product.image_url || product.featured_image || product.featuredImage || '';
+    if (image && typeof image === 'object') image = image.url || image.src || '';
+
+    const handle = String(product.handle || product.product_handle || '');
+    const url = product.url || (handle ? `/products/${handle}` : '#');
+    const productId = String(product.product_id || product.productId || product.id || '');
+
+    return {
+      id: String(product.id || productId || handle || url),
+      product_id: productId,
+      variant_id: String(product.variant_id || product.variantId || product.variant || ''),
+      handle,
+      title: product.title || product.name || product.product_title || 'Product',
+      image: String(image || ''),
+      price: product.price || product.formatted_price || product.price_text || '',
+      url
+    };
+  };
+
+  const productKey = (product) => {
+    const p = normalizeProduct(product);
+    return p.handle || p.product_id || p.id || p.url;
+  };
+
+  const sameProduct = (a, b) => {
+    const A = normalizeProduct(a);
+    const B = normalizeProduct(b);
+    if (A.handle && B.handle && A.handle === B.handle) return true;
+    if (A.product_id && B.product_id && A.product_id === B.product_id) return true;
+    return productKey(A) === productKey(B);
+  };
 
   function getWishlist() {
-
-    try {
-
-      return JSON.parse(
-        localStorage.getItem(STORAGE_KEY)
-      ) || [];
-
-    } catch (error) {
-
-      return [];
-
-    }
-
+    const items = safeParse(localStorage.getItem(STORAGE_KEY)).map(normalizeProduct);
+    const seen = new Set();
+    return items.filter((item) => {
+      const key = productKey(item);
+      if (!key || seen.has(key)) return false;
+      seen.add(key);
+      return true;
+    });
   }
-
 
   function saveWishlist(items) {
-
-    localStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify(items)
-    );
-
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
   }
 
+  function updateWishlistCount(items = getWishlist()) {
+    const count = items.length;
+    document.querySelectorAll('[data-wishlist-count]').forEach((element) => {
+      element.textContent = count;
+      element.classList.toggle('is-visible', count > 0);
+    });
+  }
 
-  function formatPrice(price) {
+  function updateCartCount(cart) {
+    const count = Number(cart?.item_count || 0);
+    document.querySelectorAll('[data-cart-count], [data-cart-item-count], .cart-bubble__text-count').forEach((element) => {
+      element.textContent = count || '';
+    });
+  }
 
-    if (!price) return '';
+  async function getCart() {
+    const response = await fetch('/cart.js', { headers: { Accept: 'application/json' } });
+    if (!response.ok) throw new Error('Cart fetch failed');
+    return response.json();
+  }
 
-    if (typeof price === 'number') {
+  async function getVariant(product) {
+    const p = normalizeProduct(product);
+    if (p.variant_id) return p.variant_id;
+    if (!p.handle) return null;
 
-      return 'Rs. ' +
-        new Intl.NumberFormat('en-IN')
-          .format(price);
+    const response = await fetch(`/products/${encodeURIComponent(p.handle)}.js`, { headers: { Accept: 'application/json' } });
+    if (!response.ok) return null;
 
+    const productData = await response.json();
+    const variants = Array.isArray(productData.variants) ? productData.variants : [];
+    const available = variants.filter((variant) => variant.available);
+
+    /* Multiple selectable variants must go to PDP so the customer can choose size/color. */
+    if (variants.length !== 1) return null;
+    return available[0]?.id || null;
+  }
+
+  async function addToCart(variantId) {
+    const response = await fetch('/cart/add.js', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({ items: [{ id: Number(variantId), quantity: 1 }] })
+    });
+
+    if (!response.ok) {
+      let message = 'Cart add failed';
+      try { message = (await response.json()).description || message; } catch (error) {}
+      throw new Error(message);
     }
 
-    return price;
-
+    return response.json();
   }
 
+  function removeProduct(product) {
+    const updated = getWishlist().filter((item) => !sameProduct(item, product));
+    saveWishlist(updated);
+    updateWishlistCount(updated);
+    window.dispatchEvent(new CustomEvent('apex:wishlist:change', { detail: { items: updated, product, added: false } }));
+    window.dispatchEvent(new CustomEvent('apex:wishlist:updated', { detail: { items: updated, product, added: false } }));
+    return updated;
+  }
 
-  function renderWishlist() {
+  const escapeHtml = (value) => {
+    const div = document.createElement('div');
+    div.textContent = String(value ?? '');
+    return div.innerHTML;
+  };
 
-    const container = document.getElementById(
-      'ApexWishlistPageContent'
-    );
+  async function handleAddToCart(product, button) {
+    const originalText = button.textContent;
+    button.disabled = true;
+    button.textContent = 'Adding...';
 
-    if (!container) return;
+    try {
+      const variantId = await getVariant(product);
+
+      if (!variantId) {
+        const url = normalizeProduct(product).url;
+        window.location.href = url;
+        return;
+      }
+
+      await addToCart(variantId);
+      const cart = await getCart();
+
+      /* Remove ONLY the product that was successfully added from this wishlist page. */
+      removeProduct(product);
+      updateCartCount(cart);
+      await renderWishlist();
+
+      window.dispatchEvent(new CustomEvent('cart:updated', { detail: { cart } }));
+    } catch (error) {
+      console.error('Add to cart error:', error);
+      button.disabled = false;
+      button.textContent = originalText;
+      alert(error.message || 'Unable to add this product to cart.');
+    }
+  }
+
+  async function renderWishlist() {
+    if (!emptyState || !productsContainer) return;
 
     const wishlist = getWishlist();
-
-
-    /* EMPTY STATE */
+    productsContainer.innerHTML = '';
+    updateWishlistCount(wishlist);
 
     if (!wishlist.length) {
+      emptyState.style.display = 'flex';
+      productsContainer.style.display = 'none';
+      return;
+    }
 
-      container.innerHTML = `
+    emptyState.style.display = 'none';
+    productsContainer.style.display = 'grid';
 
-        <div class="apex-wishlist-empty">
+    wishlist.forEach((item) => {
+      const product = normalizeProduct(item);
+      const card = document.createElement('article');
+      card.className = 'apex-wishlist-card';
 
-          <div class="apex-wishlist-empty-content">
+      const imageHtml = product.image
+        ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.title)}" loading="lazy">`
+        : '';
 
-            <h2>
-              Nothing saved yet
-            </h2>
-
-            <p>
-              Tap the ♡ on any part to save it here.
-            </p>
-
-            <a
-              href="/collections/all"
-              class="apex-wishlist-browse"
-            >
-              Browse catalog →
-            </a>
-
+      card.innerHTML = `
+        <button type="button" class="apex-wishlist-remove" aria-label="Remove from wishlist">×</button>
+        <a href="${escapeHtml(product.url)}" class="apex-wishlist-product-image">${imageHtml}</a>
+        <div class="apex-wishlist-product-info">
+          <h3 class="apex-wishlist-product-title"><a href="${escapeHtml(product.url)}">${escapeHtml(product.title)}</a></h3>
+          <div class="apex-wishlist-product-bottom">
+            <div class="apex-wishlist-product-price">${escapeHtml(product.price)}</div>
+            <button type="button" class="apex-wishlist-add-cart">Add to cart</button>
           </div>
-
         </div>
-
       `;
 
-      return;
+      card.querySelector('.apex-wishlist-remove').addEventListener('click', () => {
+        removeProduct(product);
+        renderWishlist();
+      });
 
-    }
+      card.querySelector('.apex-wishlist-add-cart').addEventListener('click', () => {
+        handleAddToCart(product, card.querySelector('.apex-wishlist-add-cart'));
+      });
 
-
-    /* PRODUCTS */
-
-    container.innerHTML = `
-
-      <div class="apex-wishlist-grid">
-
-        ${wishlist.map(function(product, index) {
-
-          const title =
-            product.title ||
-            product.name ||
-            'Product';
-
-          const image =
-            product.image ||
-            product.image_url ||
-            '';
-
-          const price =
-            formatPrice(product.price);
-
-          return `
-
-            <article
-              class="apex-wishlist-card"
-            >
-
-              <button
-                class="apex-wishlist-remove"
-                data-index="${index}"
-                aria-label="Remove product"
-              >
-                ×
-              </button>
-
-
-              <a
-                href="${product.url || '#'}"
-                class="apex-wishlist-card-image"
-              >
-
-                ${
-                  image
-                  ? `<img
-                      src="${image}"
-                      alt="${title}"
-                    >`
-                  : ''
-                }
-
-              </a>
-
-
-              <div class="apex-wishlist-card-info">
-
-                <h3 class="apex-wishlist-card-title">
-                  ${title}
-                </h3>
-
-                <p class="apex-wishlist-card-price">
-                  ${price}
-                </p>
-
-              </div>
-
-            </article>
-
-          `;
-
-        }).join('')}
-
-      </div>
-
-    `;
-
+      productsContainer.appendChild(card);
+    });
   }
 
+  const refresh = () => renderWishlist();
 
-  /* REMOVE PRODUCT */
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', refresh, { once: true });
+  } else {
+    refresh();
+  }
 
-  document.addEventListener(
-    'click',
-    function(event) {
-
-      const button = event.target.closest(
-        '.apex-wishlist-remove'
-      );
-
-      if (!button) return;
-
-      const index =
-        Number(button.dataset.index);
-
-      const wishlist =
-        getWishlist();
-
-      wishlist.splice(index, 1);
-
-      saveWishlist(wishlist);
-
-      renderWishlist();
-
-    }
-  );
-
-
-  document.addEventListener(
-    'DOMContentLoaded',
-    renderWishlist
-  );
-
-
-  renderWishlist();
-
+  window.addEventListener('pageshow', refresh);
+  window.addEventListener('focus', refresh);
+  window.addEventListener('apex:wishlist:updated', refresh);
+  window.addEventListener('storage', (event) => {
+    if (event.key === STORAGE_KEY) refresh();
+  });
 })();
-
 </script>
 
 
 {% schema %}
 {
-  "name": "Apex Wishlist Page",
-  "settings": []
+  "name": "APEX Wishlist Page",
+  "settings": [],
+  "presets": [
+    {
+      "name": "APEX Wishlist Page"
+    }
+  ]
 }
 {% endschema %}
